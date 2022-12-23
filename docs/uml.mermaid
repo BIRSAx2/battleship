@@ -1,0 +1,150 @@
+classDiagram-v2
+class Coordinates {
+- int row_
+- int col_
++ Coordinates(int row, int column)
++ int GetRow()
++ int GetCol()
+}
+
+class OccupationType{
+    Empty,
+    Hit,
+    Miss,
+    SupportBattleship,
+    Battleship,
+    Submarine
+}
+<<enumeration>> OccupationType
+
+
+class Tile {
+    - OccupationType occupationType_
+    - Coordinates coordinates_
+    + Tile(int row, int column)
+    + OccupationType GetStatus()
+    + bool IsOccupied()
+    + bool IsRandomAvailable()
+}
+%% when firing random i'ts better to target every other panel
+
+Ship <|-- SupportBattleship
+Ship <|-- Submarine
+Ship <|-- Battleship
+%% Ship *-- OccupationType
+
+Tile *-- OccupationType
+
+
+
+
+class Ship {
+    - string name_
+    - int width_
+    - int hits_
+    - Orientation orientation_
+    + bool IsSunk()
+    + getters()
+    + setters()
+}
+
+Ship *-- Orientation
+class Orientation{
+    HORIZONTAL, VERTICAL
+}
+<<enumeration>> Orientation
+
+class SupportBattleship {
+    + void MoveTo(GameBoard board, Coordinates origin, Coordinate destination)
+    + vector<Tiles> GetProtectedTiles(Board board, Coordinates currentPosition)
+}
+class Submarine{
+    + void MoveTo(GameBoard board, Coordinates origin, Coordinates destination)
+    + vector<Tiles> ScanSurroundings(Coordinates currentPosition, GameBoard opponetBoard)
+}
+class Battleship {
+    + void Shoot(FiringBoard firingBoard, GameBoard opponetBoard, Coordinates target)
+}
+
+class GameBoard{
+    - vector<Tile> tiles_
+    + vector<Tile> GetTiles()
+    + void SetTiles(vector<Tile> tiles)
+    + bool IsInsideBoard(Ship ship, Coordinates startingPoistions)
+    + bool OverlapsShip(Ship ship, Coordiantes startingPosition)
+    + bool ReceiveAttack(Coordinates target)
+    + vector<Tile> ScanSurrounding(Coordinates startingPosition, int range)
+}
+class FiringBoard{
+    + vector<Coordinates> GetOpenRandomTiles()
+    + void ChangeTileType(Coordinates target, TileType newType)
+    + void MarkHit(Coordinates target)
+    + void MarkMiss(Coordiantes target)
+}
+
+GameBoard *-- Tile
+GameBoard <|-- FiringBoard
+
+
+
+Player *-- FiringBoard
+Player *-- GameBoard
+Player *-- Ship
+
+class Player{
+    - string name_
+    - GameBoard gameBoard_
+    - FiringBoard firingBoard_
+    - map<Coordinate,ship> cooridinateShips_
+    + Player(string name)
+    + bool HasLost()
+    + void PlaceShips()
+    + string DisplayBoards()
+    + getters()
+    + setter()
+}
+
+
+class Game {
+    - Player player1_
+    - Player player2_
+    - GameRecorder gameRecorder_
+    + Game()
+    + void PlaceShipsFromUser(Player player)
+    + void PlaceShipsRandomly(Player player)
+    + void PlayRound()
+    + void PlayToEnd()
+    + void ReplayFromFile(string filePath)
+    + getter()
+    + setter()
+}
+
+class GameRecorder {
+    - vector<Action> playerAActions_
+    - vector<Action> playerBActions_
+    - Board playerAInitialBoard_
+    - Board playerBInitialBoard_
+    + GameRecorder(GameBoard playerABoard, GameBoard playerBBoard)
+    + void RecordAction(Action actions);
+    + void RemoveLastAction();
+    + void GetPlayerActions(Player player);
+    + getters()
+    + setters()
+}
+
+GameRecorder *-- Action
+class Action {
+    - Player player_
+    - ActionType type_
+    - Coordinate origin_
+    - Coordinate destination_
+}
+
+Action *-- ActionType
+class ActionType {
+    MOVE_AND_SEARCH, MOVE_AND_COVER, SHOOT
+}
+
+<<enumeration>> ActionType
+Game *-- Player
+Game *-- GameRecorder
