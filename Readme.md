@@ -1,2 +1,3 @@
 # Class Diagram (UML)
-![UML](https://raw.githubusercontent.com/BIRSAx2/battleship/main/docs/uml_battleship_game.svg)
+
+![UML](https://github.com/BIRSAx2/battleship/blob/master/docs/uml_battleship_game.svg)
