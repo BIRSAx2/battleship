@@ -1,13 +1,13 @@
-classDiagram-v2
+@startuml
 class Coordinates {
-- int row_
+ - int row_
 - int col_
 + Coordinates(int row, int column)
 + int GetRow()
 + int GetCol()
 }
 
-class OccupationType{
+enum OccupationType{
     Empty,
     Hit,
     Miss,
@@ -15,9 +15,6 @@ class OccupationType{
     Battleship,
     Submarine
 }
-<<enumeration>> OccupationType
-
-
 class Tile {
     - OccupationType occupationType_
     - Coordinates coordinates_
@@ -26,17 +23,11 @@ class Tile {
     + bool IsOccupied()
     + bool IsRandomAvailable()
 }
-%% when firing random i'ts better to target every other panel
 
 Ship <|-- SupportBattleship
 Ship <|-- Submarine
 Ship <|-- Battleship
-%% Ship *-- OccupationType
-
 Tile *-- OccupationType
-
-
-
 
 class Ship {
     - string name_
@@ -49,10 +40,9 @@ class Ship {
 }
 
 Ship *-- Orientation
-class Orientation{
+enum Orientation{
     HORIZONTAL, VERTICAL
 }
-<<enumeration>> Orientation
 
 class SupportBattleship {
     + void MoveTo(GameBoard board, Coordinates origin, Coordinate destination)
@@ -141,10 +131,11 @@ class Action {
 }
 
 Action *-- ActionType
-class ActionType {
+enum ActionType {
     MOVE_AND_SEARCH, MOVE_AND_COVER, SHOOT
 }
 
-<<enumeration>> ActionType
 Game *-- Player
 Game *-- GameRecorder
+
+@enduml
