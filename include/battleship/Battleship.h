@@ -1,7 +1,20 @@
-#ifndef BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_
-#define BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_
+// Antonio Tangaro 2043429
 
-class Battleship {
+#ifndef BATTLESHIP_H
+#define BATTLESHIP_H
+
+#include "Ship.h"
+#include "FiringBoard.h"
+#include "GameBoard.h"
+#include "Coordinates.h"
+
+class BattleShip : public Ship {
+ public:
+  // Constructor
+  BattleShip(Orientation orientation);
+
+  // Fire on a target
+  void Shoot(FiringBoard firingBoard, GameBoard opponentBoard, Coordinates target);
 };
 
-#endif//BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_
+#endif  // BATTLESHIP_H
