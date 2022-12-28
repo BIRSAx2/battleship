@@ -17,17 +17,18 @@ class GameBoard {
   static const int DEFAULT_BOARD_SIZE = 12;
   GameBoard();
   explicit GameBoard(int size);
-  std::vector<std::vector<Tile>> GetTiles();
+  std::vector<std::vector<Tile>> GetTiles() const;
+  int GetSize() const;
+  void SetSize(int size);
   void SetTiles(std::vector<std::vector<Tile>> tiles);
-  bool IsInsideBoard(Ship ship, Coordinates startingPositions);
-  bool OverlapsShip(Ship ship, Coordinates startingPositions);
+  static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
+  bool OverlapsOtherShip(int width, Orientation orientation, Coordinates& startingPositions);
   bool ReceiveAttack(Coordinates target);
   std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
   void ChangeTileType(Coordinates target, OccupationType type);
   void MarkTile(Coordinates target, OccupationType newType);
   friend std::ostream &operator<<(std::ostream &os, const GameBoard &board);
   bool MoveShip(Coordinates origin, Coordinates target);
-  std::vector<std::vector<Tile>> GetTiles() const;
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

@@ -6,5 +6,8 @@ std::vector<Tile> Submarine::ScanSurroundings(Coordinates currentPosition, GameB
 
   return opponentBoard.ScanSurroundings(currentPosition);
 }
-Submarine::Submarine() : Ship("E", 1) {
+Submarine::Submarine() : Ship("E", DEFAULT_SIZE, SUBMARINE) {
+}
+Submarine::Submarine(Orientation orientation) : Ship("E", DEFAULT_SIZE, SUBMARINE) {
+  orientation_ = orientation;
 }

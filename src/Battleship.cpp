@@ -3,5 +3,7 @@ void Battleship::Shoot(FiringBoard firing_board, GameBoard opponentBoard, Coordi
   bool result = opponentBoard.ReceiveAttack(target);
   firing_board.MarkTile(target, result ? HIT : MISS);
 }
-Battleship::Battleship() : Ship("C", 5) {
+Battleship::Battleship() : Ship("C", DEFAULT_SIZE, BATTLESHIP) {}
+Battleship::Battleship(Orientation orientation) : Ship("C", DEFAULT_SIZE, BATTLESHIP) {
+  orientation_ = orientation;
 }

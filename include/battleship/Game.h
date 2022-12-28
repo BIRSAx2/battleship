@@ -15,7 +15,7 @@ class Game {
   Game();
   Game(Player playerA, Player playerB);
   void PlaceShipsFromUser(Player player);
-  void PlaceShipsRandomly(Player player);
+  static void PlaceShipsRandomly(Player player);
   void PlayRound();
   void PlayToEnd();
   void Replay(GameRecorder game_recorder);
@@ -26,6 +26,9 @@ class Game {
   const GameRecorder &GetGameRecorder() const;
   void SetGameRecorder(const GameRecorder &game_recorder);
   friend std::ostream &operator<<(std::ostream &os, const Game &game);
+  static void HandleAttack(Player &attacker, Player &opponent, Coordinates target);
+  void PlayRandomGame();
+  static std::pair<Coordinates, Coordinates> GenerateRandomMove(Player player);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_

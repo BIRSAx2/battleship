@@ -6,8 +6,10 @@
 #include "GameBoard.h"
 class Battleship : public Ship {
  public:
+  static const int DEFAULT_SIZE = 5;
   static void Shoot(FiringBoard, GameBoard opponentBoard, Coordinates target);
   Battleship();
+  explicit Battleship(Orientation orientation);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_

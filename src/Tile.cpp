@@ -1,4 +1,6 @@
 #include "Tile.h"
+#include "Utility.h"
+#include <iostream>
 Tile::Tile(int row, int column) {
   coordinates_ = Coordinates(row, column);
   occupation_type_ = EMPTY;
@@ -25,22 +27,22 @@ bool Tile::IsRandomlyAvailable() const {
 std::ostream &operator<<(std::ostream &os, const Tile &tile) {
   switch (tile.GetOccupationType()) {
 	case EMPTY:
-	  os << "_";
+	  os << colour_text_256("~", 87);
 	  break;
 	case HIT:
-	  os << "X";
+	  os << colour_text_256("X",1);
 	  break;
 	case MISS:
-	  os << "O";
+	  os << colour_text_256("O", 220);
 	  break;
 	case SUBMARINE:
-	  os << "E";
+	  os << colour_text_256("E", 100);
 	  break;
 	case BATTLESHIP:
-	  os << "C";
+	  os << colour_text_256("C", 127);
 	  break;
 	case SUPPORT_BATTLESHIP:
-	  os << "S";
+	  os << colour_text_256("S", 106);
 	  break;
   }
   return os;

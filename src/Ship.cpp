@@ -1,6 +1,4 @@
 #include "Ship.h"
-
-#include <utility>
 Ship::Ship(std::string name, int width, int hits, Orientation orientation) : name_(std::move(name)), width_(width), hits_(hits), orientation_(orientation) {}
 const std::string &Ship::GetName() const {
   return name_;
@@ -37,4 +35,23 @@ Ship::Ship(int width) : width_(width), name_("/"), hits_(0) {
 }
 Ship::Ship(std::string name, int width) : name_(std::move(name)), width_(width) {
   orientation_ = UNSET;
+}
+Ship::Ship(std::string name, int width, OccupationType occupation_type) : name_(std::move(name)), width_(width),
+																		  occupation_type_(occupation_type) {
+  orientation_ = UNSET;
+}
+OccupationType Ship::GetOccupationType() const {
+  return occupation_type_;
+}
+void Ship::SetOccupationType(OccupationType occupation_type) {
+  occupation_type_ = occupation_type;
+}
+void Ship::IncreaseHits() {
+  hits_++;
+}
+std::ostream &operator<<(std::ostream &os, const Ship &ship) {
+  os << ship.GetOccupationType() << " " << ship.GetOrientation() << " width: " << ship.GetWidth() << " hits: " << ship.GetHits();
+  return os;
+}
+Ship::Ship() : width_(0), hits_(0), orientation_(UNSET), occupation_type_(EMPTY), name_("-") {
 }
