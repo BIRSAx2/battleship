@@ -1,6 +1,10 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 
+#include <stdio.h>
+#include <string>
+#include "Orientation.h"
+
 class Coordinates {
 public:
     Coordinates(int row, int col) : row_{row}, col_{col} {};
@@ -13,26 +17,21 @@ public:
 
     void SetCol(int col) { col_ = col; }
 
+    bool IsInBound(int min, int max);
+
+    bool GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+
+
 private:
     int row_;
     int col_;
 
 };
 
+static Coordinates ParseCoordinates(std::string &coordinates);
+
+
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 
 
-/*
-class Coordinates {
- - int row_
-- int col_
-+ Coordinates(int row, int column)
-+ int GetRow()
-+ int GetCol()
-+ void SetRow(int row);
-+ void SetCol(int col);
-+ bool IsInBounds(int min, int max);
-+ bool GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
-+ static Coordinates(std::string &coordinates);
-}
-*/
+
