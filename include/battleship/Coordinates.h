@@ -9,6 +9,10 @@ public:
 
     int GetCol() { return col_; }
 
+    void SetRow(int row) { row_ = row; }
+
+    void SetCol(int col) { col_ = col; }
+
 private:
     int row_;
     int col_;
