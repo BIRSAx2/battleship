@@ -1,3 +1,0 @@
-/mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage/CMakeFiles/battleship.dir

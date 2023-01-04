@@ -3,7 +3,7 @@
 
 Coordinates GameEngine::GetNextMove(OccupationType occupation_type) {
   if (occupation_type == BATTLESHIP) return GetNextTarget();
-  return GetRandomMove();
+  return GetRandomTarget();
 }
 
 GameEngine::GameEngine(GameBoard &game_board) : game_board_(game_board) {}
