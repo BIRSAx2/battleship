@@ -11,7 +11,7 @@ class Battleship : public Ship {
   Battleship();
   explicit Battleship(Orientation orientation);
   //
-  static bool Shoot(GameBoard &attacker, FiringBoard &opponent, Coordinates target);
+  static bool Shoot(FiringBoard &attacker, GameBoard &opponent, Coordinates target);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_

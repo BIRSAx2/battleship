@@ -5,8 +5,7 @@
 int main() {
 
   Game game = Game();
-//  game.PlayRandomGame();
 
-  std::vector<Coordinates> coordinate = Coordinates::GetAdjacentStarCoordinates({0,0});
+  game.PlayRandomGame();
   return 0;
 }

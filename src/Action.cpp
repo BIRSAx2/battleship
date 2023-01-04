@@ -25,13 +25,13 @@ const Coordinates &Action::GetDestination() const {
 void Action::SetDestination(const Coordinates &destination) {
   destination_ = destination;
 }
-bool Action::operator==(const Action &rhs) const {
-  return player_ == rhs.player_ && action_type_ == rhs.action_type_ && origin_ == rhs.origin_ && destination_ == rhs.destination_;
-}
-bool Action::operator!=(const Action &rhs) const {
-  return !(rhs == *this);
-}
-std::ostream &operator<<(std::ostream &os, const Action &action) {
-  os << "player_: " << action.player_ << " action_type_: " << action.action_type_ << " origin_: " << action.origin_ << " destination_: " << action.destination_;
-  return os;
-}
+//bool Action::operator==(const Action &rhs) const {
+//  return player_ == rhs.player_ && action_type_ == rhs.action_type_ && origin_ == rhs.origin_ && destination_ == rhs.destination_;
+//}
+//bool Action::operator!=(const Action &rhs) const {
+//  return !(rhs == *this);
+//}
+//std::ostream &operator<<(std::ostream &os, Action &action) {
+//  os << "player_: " << action.GetPlayer() << " action_type_: " << action.GetActionType() << " origin_: " << action.GetOrigin() << " destination_: " << action.GetDestination();
+//  return os;
+//}

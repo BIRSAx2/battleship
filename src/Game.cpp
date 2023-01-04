@@ -29,9 +29,16 @@ Game::Game() {
   playerB_ = Player("Random player B");
   playerB_.PlaceShipsRandomly();
 }
-void Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
-  bool attackResult = opponent.HandleAttack(target);
-  attacker.GetFiringBoard().MarkTile(target, attackResult ? HIT : MISS);
+bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
+  bool attackResult = Battleship::Shoot(attacker.GetFiringBoard(), opponent.GetGameBoard(), target);
+  // In caso di attacco andato a buon fine, incremento i colpi ricevuti dalla nave avversaria
+
+  if (attackResult) {
+	opponent.IncreaseShipHits(target);
+	attacker.AddPotentialTargets(target);
+  }
+  std::cout << "Attack result: " << attackResult << std::endl;
+  return attackResult;
 }
 void Game::PlaceShipsFromUser(const Player &player) {
 }
@@ -40,7 +47,7 @@ void Game::PlaceShipsRandomly(Player player) {
 }
 void Game::Replay(const GameRecorder &game_recorder) {
 }
-std::ostream &operator<<(std::ostream &os, const Game &game) {
+std::ostream &operator<<(std::ostream &os, Game &game) {
   os << game.playerA_ << "\n"
 	 << game.playerB_;
   return os;
@@ -59,18 +66,18 @@ void Game::PlayRandomGame() {
 
 	if (playerATurn) {
 	  PlayMove(playerA_, playerB_, move);
+	  std::cout << playerA_ << std::endl;
 
 	} else {
 	  PlayMove(playerB_, playerA_, move);
+	  std::cout << playerB_ << std::endl;
 	}
 
 	playerATurn = !playerATurn;
 
-	std::cout << playerA_ << std::endl;
-	std::cout << playerB_ << std::endl;
 	if (rounds++ == 200) exit(1);
-	std::string c;
-	std::cin >> c;
+//	std::string c;
+//	std::cin >> c;
   }
 }
 
@@ -89,14 +96,9 @@ void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coo
 	case SUPPORT_SHIP:
 	  if (player.GetShips().at(move.first).GetHits() != 0) throw std::invalid_argument("Cannot move ship because it's already shot");
 	  player.MoveShip(move.first, move.second, ship);
-	  //	  if (!successful) { std::cout << "Cannot move this ship because it's already shot" << std::endl; }
 	  break;
 	case BATTLESHIP:
-	  bool result = Battleship::Shoot(player.GetGameBoard(), opponent.GetFiringBoard(), move.second);
-	  if (result) {
-		opponent.IncreaseShipHits(move.second);
-		player.AddPotentialTargets(move.second);
-	  }
+	  HandleAttack(player, opponent, move.second);
 	  break;
   }
 }

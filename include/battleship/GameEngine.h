@@ -4,7 +4,9 @@
 #include "Coordinates.h"
 #include "GameBoard.h"
 #include "Ship.h"
+#include <set>
 #include <stack>
+#include <unordered_set>
 #include <vector>
 
 //  A simple implementation of this refined strategy is to create a stack of potential targets.
@@ -22,8 +24,8 @@
 //  firing at random again looking for another ship.
 class GameEngine {
  private:
-  std::vector<Coordinates> targets_;
-  std::vector<Coordinates> already_shot_;
+  std::unordered_set<Coordinates, CoordinatesHashFunction> targets_;
+  std::unordered_set<Coordinates, CoordinatesHashFunction> already_shot_;
 
  public:
   GameEngine();

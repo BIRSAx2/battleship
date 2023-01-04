@@ -24,7 +24,7 @@ void Player::SetFiringBoard(const FiringBoard &firing_board) {
   firing_board_ = firing_board;
 }
 
-const std::map<Coordinates, Ship> &Player::GetShips() const {
+std::map<Coordinates, Ship> &Player::GetShips() {
   return ships_;
 }
 
@@ -50,7 +50,7 @@ bool Player::HasLost() {
   return std::all_of(ships_.begin(), ships_.end(), [](const std::pair<Coordinates, Ship> &pair) { return pair.second.IsSunk(); });
 }
 
-std::string Player::ToString() const {
+std::string Player::ToString() {
 
   std::stringstream stringstream;
 
@@ -84,7 +84,7 @@ std::string Player::ToString() const {
   return stringstream.str();
 }
 
-std::ostream &operator<<(std::ostream &os, const Player &player) {
+std::ostream &operator<<(std::ostream &os, Player &player) {
   return os << player.ToString();
 }
 
@@ -93,17 +93,17 @@ Player::Player() : name_("unknown player") {
 
 void Player::PlaceShipsRandomly() {
 
-  // 3 Corazzate, dimensione 5
+  // Tre Corazzate, dimensione 5
   for (int i = 0; i < 3; ++i) {
 	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Battleship::DEFAULT_SIZE);
 	PlaceShip(Battleship(randomPosition.second), randomPosition.first);
   }
-  // 3 Navi di supporto, dimensione 3
+  // Tre Navi di supporto, dimensione 3
   for (int i = 0; i < 3; ++i) {
 	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, SupportShip::DEFAULT_SIZE);
 	PlaceShip(SupportShip(randomPosition.second), randomPosition.first);
   }
-  // 2 Sottomarini di esplorazione, dimensione 1
+  // Due Sottomarini di esplorazione, dimensione 1
   for (int i = 0; i < 2; ++i) {
 	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Submarine::DEFAULT_SIZE);
 	PlaceShip(Submarine(randomPosition.second), randomPosition.first);
@@ -152,18 +152,18 @@ bool Player::PlaceShip(const Ship &ship, Coordinates coordinates) {
 
   return true;
 }
-
-bool Player::HandleAttack(Coordinates target) {
-  if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target outside the board");
-  bool result = game_board_.ReceiveAttack(target);
-  // successfull attack
-  if (result) {
-	// TODO: Handle discrepancy between player ships and board ships
-	ships_.at(target).IncreaseHits();
-	game_engine_.AddNearTargets(target);
-  }
-  return result;
-}
+//
+//bool Player::HandleAttack(Coordinates target) {
+//  if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target outside the board's bounds");
+//  bool result = Battleship::Shoot();
+//  // successfull attack
+//  if (result) {
+//	// TODO: Handle discrepancy between player ships and board ships
+//	ships_.at(target).IncreaseHits();
+//	game_engine_.AddNearTargets(target);
+//  }
+//  return result;
+//}
 
 bool Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
   if (game_board_.GetTiles().at(target.GetRow()).at(target.GetCol()).GetOccupationType() == HIT) return false;

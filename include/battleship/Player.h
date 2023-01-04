@@ -29,7 +29,7 @@ class Player {
   void PlaceShips(const std::map<Coordinates, Ship> &ships);
   bool PlaceShip(const Ship &ship, Coordinates coordinates);
   void PlaceShipsRandomly();
-  std::string ToString() const;
+  std::string ToString();
   const std::string &GetName() const;
   void SetName(const std::string &name);
   GameBoard &GetGameBoard();
@@ -38,11 +38,11 @@ class Player {
   void SetGameBoard(const GameBoard &game_board);
   FiringBoard &GetFiringBoard();
   void SetFiringBoard(const FiringBoard &firing_board);
-  const std::map<Coordinates, Ship> &GetShips() const;
+  std::map<Coordinates, Ship> &GetShips();
   void SetShips(const std::map<Coordinates, Ship> &ships);
   bool operator==(const Player &rhs) const;
   bool operator!=(const Player &rhs) const;
-  friend std::ostream &operator<<(std::ostream &os, const Player &player);
+  friend std::ostream &operator<<(std::ostream &os,  Player &player);
   bool MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move);
   void AddPotentialTargets(Coordinates target);
   std::pair<Coordinates, Coordinates> GetRandomMove();

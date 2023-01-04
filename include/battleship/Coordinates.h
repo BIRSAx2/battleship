@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <map>
 #include <ostream>
-
 class Coordinates {
  private:
   int row_, col_;
@@ -33,5 +32,10 @@ class Coordinates {
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
   static Coordinates ParseCoordinate(std::string &coordinates);
 };
-
+struct CoordinatesHashFunction {
+  size_t operator()(const Coordinates &point) const;
+};
+struct CoordinatesComparator {
+  bool operator()(const Coordinates &point, const Coordinates &other) const;
+};
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

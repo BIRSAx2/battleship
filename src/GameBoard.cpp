@@ -2,15 +2,19 @@
 #include "Utility.h"
 #include <iostream>
 #include <utility>
+
 GameBoard::GameBoard() : size_(DEFAULT_BOARD_SIZE) {
   tiles_.resize(size_, std::vector<Tile>(size_, Tile()));
 }
+
 GameBoard::GameBoard(int size) : size_(size) {
   tiles_.resize(size, std::vector<Tile>(size_, Tile()));
 }
-std::vector<std::vector<Tile>> GameBoard::GetTiles() const {
+
+std::vector<std::vector<Tile>> &GameBoard::GetTiles() {
   return tiles_;
 }
+
 bool GameBoard::IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position) {
   if (orientation == UNSET) throw std::invalid_argument("The orientation of the ship is unset");
   if (!starting_position.IsInBounds(0, 12)) return false;
@@ -26,6 +30,7 @@ bool GameBoard::IsInsideBoard(int ship_width, Orientation orientation, Coordinat
 
   return Coordinates(first, last).IsInBounds(0, 12);
 }
+
 bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation, Coordinates &startingPositions) {
   if (orientation == UNSET) throw std::invalid_argument("The orientation of the ship is unset");
   if (!startingPositions.IsInBounds(0, size_)) throw std::invalid_argument("Invalid Coordinates");
@@ -46,15 +51,17 @@ bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation
   }
   return false;
 }
+
 bool GameBoard::ReceiveAttack(Coordinates target) {
   if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target not inside the game board");
-  Tile &targetTile = tiles_[target.GetRow()][target.GetCol()];
+  Tile &targetTile = tiles_.at(target.GetRow()).at(target.GetCol());
   if (targetTile.IsOccupied() || targetTile.GetOccupationType() == HIT) {
 	targetTile.SetOccupationType(HIT);
 	return true;
   }
   return false;
 }
+
 std::vector<Tile> GameBoard::ScanSurroundings(Coordinates coordinates, int range) {
   std::vector<Tile> surroundings;
   for (int i = coordinates.GetRow() - range; i <= coordinates.GetRow() + range; ++i) {
@@ -74,17 +81,19 @@ void GameBoard::MarkTile(Coordinates target, OccupationType new_type) {
 
   tiles_[target.GetRow()][target.GetCol()].SetOccupationType(new_type);
 }
+
 void GameBoard::SetTiles(std::vector<std::vector<Tile>> tiles) {
   tiles_ = std::move(tiles);
 }
-std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
+
+std::ostream &operator<<(std::ostream &os, GameBoard board) {
 
   std::string horizontal_legend = "  1  2  3  4  5  6  7  8  9  10 11 12";
 
   std::string arr[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
   int legend = 0;
   os << colour_text_256(horizontal_legend, 8) << "\n";
-  for (const auto &row : board.GetTiles()) {
+  for (auto &row : board.GetTiles()) {
 	os << colour_text_256(std::string(arr[legend]), 8) << " ";
 	for (auto tile : row) {
 	  os << tile << "  ";
@@ -94,6 +103,7 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
   }
   return os << colour_text_256(horizontal_legend, 8) << "\n";
 }
+
 bool GameBoard::MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation) {
 
   // TODO: Cannot Move ship if it's hit
@@ -117,9 +127,11 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target, int width, Orie
 
   return true;
 }
+
 int GameBoard::GetSize() const {
   return size_;
 }
+
 void GameBoard::SetSize(int size) {
   size_ = size;
 }

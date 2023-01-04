@@ -12,7 +12,7 @@ class SupportShip : public Ship {
   SupportShip();
   explicit SupportShip(Orientation orientation);
   void MoveTo(GameBoard& board, Coordinates origin, Coordinates destination);
-  std::vector<Tile> GetProctectedTiles(GameBoard board, Coordinates currentPosition);
+  std::vector<Tile> GetProctectedTiles(GameBoard &board, Coordinates currentPosition);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SUPPORTSHIP_H_

@@ -25,10 +25,9 @@ class Game {
   void SetPlayerB(const Player &player_b);
   const GameRecorder &GetGameRecorder() const;
   void SetGameRecorder(const GameRecorder &game_recorder);
-  friend std::ostream &operator<<(std::ostream &os, const Game &game);
-  static void HandleAttack(Player &attacker, Player &opponent, Coordinates target);
+  friend std::ostream &operator<<(std::ostream &os, Game &game);
+  static bool HandleAttack(Player &attacker, Player &opponent, Coordinates target);
   void PlayRandomGame();
-  static std::pair<Coordinates, Coordinates> GenerateRandomMove(Player player);
   static void PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coordinates> move);
 };
 
