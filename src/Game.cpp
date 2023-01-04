@@ -2,7 +2,9 @@
 #include "Battleship.h"
 #include "Submarine.h"
 #include "SupportShip.h"
+#include <chrono>
 #include <iostream>
+#include <thread>
 const Player &Game::GetPlayerA() const {
   return playerA_;
 }
@@ -49,13 +51,27 @@ std::ostream &operator<<(std::ostream &os, const Game &game) {
 }
 void Game::PlayRandomGame() {
 
+  bool playerATurn = false;
+  int rounds = 0;
   while (!playerA_.HasLost() || !playerB_.HasLost()) {
-	auto move = GenerateRandomMove(playerA_);
+	std::cout << rounds << " "
+			  << "Turno di : " << (playerATurn ? playerA_.GetName() : playerB_.GetName()) << std::endl;
+	auto move = GenerateRandomMove(playerATurn ? playerA_ : playerB_);
 
-	std::cout << *this << std::endl;
+	if (playerATurn) {
+	  PlayMove(playerA_, playerB_, move);
 
-	std::cout << move.first << "->" << move.second << std::endl;
-	exit(1);
+	} else {
+	  PlayMove(playerB_, playerA_, move);
+	}
+
+	playerATurn = !playerATurn;
+
+	std::cout << playerA_ << std::endl;
+	std::cout << playerB_ << std::endl;
+	if (rounds++ == 200) exit(1);
+	std::string c;
+	std::cin >> c;
   }
 }
 
@@ -66,11 +82,53 @@ std::pair<Coordinates, Coordinates> Game::GenerateRandomMove(Player player) {
   for (const auto &pair : player.GetShips()) {
 	keys.emplace_back(pair.first);
   }
+  Coordinates current;
+  Ship ship;
+  do {
+	current = keys.at(random_int_in_range(0, keys.size() - 1));
+	ship = const_cast<Ship &>(player.GetShips().at(current));
 
-  Coordinates current = keys.at(random_int_in_range(0, keys.size()));
-  Coordinates target = {random_int_in_range(0, player.GetGameBoard().GetSize()), random_int_in_range(0, player.GetGameBoard().GetSize())};
+  } while (ship.GetOccupationType() != BATTLESHIP);
+  Coordinates target;
 
-  std::cout << current << std::endl;
+  // TODO: Ugly change this
 
+  // TODO: Split the logic to handle shooting a target and moving a ship
+  do {
+	target = {random_int_in_range(0, player.GetGameBoard().GetSize() - 1), random_int_in_range(0, player.GetGameBoard().GetSize() - 1)};
+
+	if (ship.GetOccupationType() == BATTLESHIP) break;
+	if (ship.GetOrientation() == HORIZONTAL) {
+	  if (!Coordinates(target.GetRow(), target.GetCol() + ship.GetWidth()).IsInBounds(0, 12)) continue;
+	  else
+		break;
+	} else {
+	  if (!Coordinates(target.GetRow() + ship.GetWidth(), target.GetCol()).IsInBounds(0, 12)) continue;
+	  else
+		break;
+	}
+  } while (true);
   return std::make_pair(current, target);
+}
+void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coordinates> move) {
+  if (!player.GetShips().count(move.first)) throw std::invalid_argument("There is no ship at the specified location");
+  Ship ship = player.GetShips().at(move.first);
+  std::cout << ship.GetOccupationType() << std::endl;
+
+  switch (ship.GetOccupationType()) {
+
+	case EMPTY:
+	  throw std::invalid_argument("There is not Ship at the specified location");
+	case HIT:
+	case MISS:
+	case SUBMARINE:
+	case SUPPORT_BATTLESHIP:
+	  player.MoveShip(move.first, move.second, ship);
+	  break;
+	case BATTLESHIP:
+	  Battleship::Shoot(player.GetFiringBoard(), opponent.GetGameBoard(), move.second);
+	  break;
+  }
+}
+Game::Game(Player playerA, Player playerB) {
 }

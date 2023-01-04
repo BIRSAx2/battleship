@@ -1,6 +1,6 @@
 #include "Submarine.h"
 void Submarine::MoveTo(GameBoard board, Coordinates origin, Coordinates destination) {
-  board.MoveShip(origin, destination);
+//  board.MoveShip(origin, destination);
 }
 std::vector<Tile> Submarine::ScanSurroundings(Coordinates currentPosition, GameBoard opponentBoard) {
 

@@ -1,0 +1,4 @@
+C:\Windows\system32\wsl.exe --distribution Ubuntu --exec /usr/bin/zsh -c "export CMAKE_COLOR_DIAGNOSTICS=ON && export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug '-DCMAKE_CXX_COMPILER=/usr/bin/g++' -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/Users/Mouhi/Documents/Code/battleship -B /mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage"
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/c/Users/Mouhi/Documents/Code/battleship/cmake-build-debug-coverage

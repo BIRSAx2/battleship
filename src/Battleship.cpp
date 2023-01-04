@@ -1,5 +1,7 @@
 #include "Battleship.h"
-void Battleship::Shoot(FiringBoard firing_board, GameBoard opponentBoard, Coordinates target) {
+void Battleship::Shoot(FiringBoard &firing_board, GameBoard &opponentBoard, Coordinates target) {
+  std::cout << "Shooting at target: " << target << std::endl;
+  // TODO: Handle protected areas by support ship
   bool result = opponentBoard.ReceiveAttack(target);
   firing_board.MarkTile(target, result ? HIT : MISS);
 }

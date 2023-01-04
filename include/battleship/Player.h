@@ -6,6 +6,7 @@
 #include "GameBoard.h"
 #include "Submarine.h"
 #include "SupportShip.h"
+#include <iomanip>
 #include <map>
 #include <ostream>
 #include <string>
@@ -24,7 +25,7 @@ class Player {
   explicit Player(std::string name);
   bool HasLost();
   void PlaceShips(std::map<Coordinates, Ship> ships);
-  bool PlaceShip(const Ship& ship, Coordinates coordinates);
+  bool PlaceShip(const Ship &ship, Coordinates coordinates);
   void PlaceShipsRandomly();
   std::string ToString() const;
   const std::string &GetName() const;
@@ -40,6 +41,7 @@ class Player {
   bool operator!=(const Player &rhs) const;
   friend std::ostream &operator<<(std::ostream &os, const Player &player);
   std::pair<Coordinates, Orientation> GetRandomShipPosition(int ship_width);
+  void MoveShip(Coordinates origin, Coordinates target, const Ship& ship_to_move);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_

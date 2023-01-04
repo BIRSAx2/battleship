@@ -22,13 +22,13 @@ class GameBoard {
   void SetSize(int size);
   void SetTiles(std::vector<std::vector<Tile>> tiles);
   static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
-  bool OverlapsOtherShip(int width, Orientation orientation, Coordinates& startingPositions);
+  bool OverlapsOtherShip(int ship_width, Orientation orientation, Coordinates &startingPositions);
   bool ReceiveAttack(Coordinates target);
   std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
   void ChangeTileType(Coordinates target, OccupationType type);
   void MarkTile(Coordinates target, OccupationType newType);
   friend std::ostream &operator<<(std::ostream &os, const GameBoard &board);
-  bool MoveShip(Coordinates origin, Coordinates target);
+  bool MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

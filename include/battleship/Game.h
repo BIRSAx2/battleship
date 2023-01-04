@@ -29,6 +29,7 @@ class Game {
   static void HandleAttack(Player &attacker, Player &opponent, Coordinates target);
   void PlayRandomGame();
   static std::pair<Coordinates, Coordinates> GenerateRandomMove(Player player);
+  static void PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coordinates> move);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_

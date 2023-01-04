@@ -57,16 +57,16 @@ std::string Player::ToString() const {
   std::vector<std::vector<Tile>> game_board = game_board_.GetTiles();
   std::vector<std::vector<Tile>> firing_board = firing_board_.GetTiles();
 
-  std::string horizontal_legend = "  1  2  3  4  5  6  7  8  9  10 11 12";
+  std::string horizontal_legend = "1  2  3  4  5  6  7  8  9  10 11 12";
   std::string vertical_legend[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
 
   int legend = 0;
-  stringstream << "\t  " << colour_text_256("Griglia di difesa", 202) << "\t\t\t" << colour_text_256("Griglia di attacco", 202) << '\n';
-  stringstream << colour_text_256(horizontal_legend, 8) << "  " << colour_text_256(horizontal_legend, 8) << "\n";
+  stringstream << "\t" << colour_text_256("Griglia di difesa", 202) << "\t\t\t" << colour_text_256("Griglia di attacco", 202) << '\n';
+  stringstream << "     " << colour_text_256(horizontal_legend, 8) << "    " << colour_text_256(horizontal_legend, 8) << "\n";
 
   for (int i = 0; i < game_board.size(); ++i) {
 	// Looping throw rows
-	stringstream << colour_text_256(vertical_legend[legend], 8) << " ";
+	stringstream << std::setw(2) << (legend) << " " << colour_text_256(vertical_legend[legend], 8) << " ";
 	// Game Board
 	for (auto tile : game_board.at(i)) {
 	  stringstream << tile << "  ";
@@ -79,7 +79,7 @@ std::string Player::ToString() const {
 	stringstream << colour_text_256(vertical_legend[legend], 8) << "\n";
 	legend++;
   }
-  stringstream << colour_text_256(horizontal_legend, 8) << "  " << colour_text_256(horizontal_legend, 8) << "\n";
+  stringstream << "   " << colour_text_256(horizontal_legend, 8) << "      " << colour_text_256(horizontal_legend, 8) << "\n";
   return stringstream.str();
 }
 
@@ -131,9 +131,8 @@ bool Player::PlaceShip(const Ship &ship, Coordinates coordinates) {
 
   Orientation orientation = ship.GetOrientation();
   int width = ship.GetWidth();
-  int first = 0, last = 0;
 
-  first = orientation == HORIZONTAL ? coordinates.GetCol() : coordinates.GetRow();
+  int first = orientation == HORIZONTAL ? coordinates.GetCol() : coordinates.GetRow();
   first -= (width - 1) / 2;
 
   if (orientation == HORIZONTAL) {
@@ -175,4 +174,12 @@ std::pair<Coordinates, Orientation> Player::GetRandomShipPosition(int ship_width
 	orientation = static_cast<Orientation>(random_int_in_range(0, 1));
   } while (!GameBoard::IsInsideBoard(ship_width, orientation, coordinates) || game_board_.OverlapsOtherShip(ship_width, orientation, coordinates));
   return std::make_pair(coordinates, orientation);
+}
+void Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
+  if (ship_to_move.GetHits() != 0) throw std::invalid_argument("Cannot move ship because it's hit");
+  if (!ships_.count(origin)) throw std::invalid_argument("Ship not found");
+  game_board_.MoveShip(origin, target, ship_to_move.GetWidth(), ship_to_move.GetOrientation());
+  Ship ship = ships_.at(origin);
+  ships_.erase(origin);
+  ships_.emplace(target, ship);
 }

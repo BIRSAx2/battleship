@@ -5,23 +5,31 @@ class Coordinates {
 + Coordinates(int row, int column)
 + int GetRow()
 + int GetCol()
++ void SetRow(int row);
++ void SetCol(int col);
++ bool IsInBounds(int min, int max);
++ bool GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
++ static Coordinates(std::string &coordinates);
 }
 
 enum OccupationType{
-    Empty,
-    Hit,
-    Miss,
-    SupportBattleship,
-    Battleship,
-    Submarine
+  EMPTY = 0,
+  HIT,
+  MISS,
+  SUBMARINE,
+  BATTLESHIP,
+  SUPPORT_BATTLESHIP
 }
 class Tile {
     - OccupationType occupationType_
     - Coordinates coordinates_
     + Tile(int row, int column)
+    + Tile();
+    + Tile(Coordinates coordinates)
     + OccupationType GetStatus()
     + bool IsOccupied()
-    + bool IsRandomAvailable()
+    + getters()
+    + setters();
 }
 
 Ship <|-- SupportBattleship
@@ -34,42 +42,63 @@ class Ship {
     - int width_
     - int hits_
     - Orientation orientation_
+    - OccupationType occupation_type_;
+    # Ship(std::string name, int width);
+    # Ship(std::string name, int width, OccupationType occupation_type);
+    + Ship(std::string name, int width, int hits, Orientation orientation);
+    + Ship(std::string name, int width, int hits);
     + bool IsSunk()
+    + void IncreaseHits();
     + getters()
     + setters()
 }
 
 Ship *-- Orientation
 enum Orientation{
-    HORIZONTAL, VERTICAL
+    HORIZONTAL, VERTICAL, UNSET
 }
 
 class SupportBattleship {
-    + void MoveTo(GameBoard board, Coordinates origin, Coordinate destination)
-    + vector<Tiles> GetProtectedTiles(Board board, Coordinates currentPosition)
+    + static const int DEFAULT_SIZE = 3;
+    + SupportShip();
+    + SupportShip(Orientation orientation);
+    + void MoveTo(GameBoard& board, Coordinates origin, Coordinate destination)
+    + vector<Tiles> GetProtectedTiles(GameBoard& board, Coordinates currentPosition)
 }
 class Submarine{
+    + static const int DEFAULT_SIZE = 1;
+    + Submarine();
+    + Submarine(Orientation orientation);
     + void MoveTo(GameBoard board, Coordinates origin, Coordinates destination)
-    + vector<Tiles> ScanSurroundings(Coordinates currentPosition, GameBoard opponetBoard)
+    + vector<Tiles> ScanSurroundings(Coordinates current_position, GameBoard& opponent_board)
 }
 class Battleship {
-    + void Shoot(FiringBoard firingBoard, GameBoard opponetBoard, Coordinates target)
+    + static const int DEFAULT_SIZE = 5;
+    + Battleship();
+    + Battleship(Orientation orientation);
+    + void Shoot(FiringBoard& firing_board, GameBoard& opponent_board, Coordinates target)
 }
 
 class GameBoard{
     - vector<Tile> tiles_
+    + static const int DEFAULT_BOARD_SIZE = 12;
+    + GameBoard();
+    + GameBoard(int size);
     + vector<Tile> GetTiles()
     + void SetTiles(vector<Tile> tiles)
-    + bool IsInsideBoard(Ship ship, Coordinates startingPoistions)
-    + bool OverlapsShip(Ship ship, Coordiantes startingPosition)
+    + int GetSize();
+    + void SetSize();
+    + static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
+    + bool OverlapsShip(int ship_width, Orientation orientation, Coordinates &startingPositions);
     + bool ReceiveAttack(Coordinates target)
-    + vector<Tile> ScanSurrounding(Coordinates startingPosition, int range)
+    + vector<Tile> ScanSurrounding(Coordinates starting_position, int range = 1);
+    + bool ReceiveAttack(Coordinates target);
+    + void ChangeTileType(Coordinates target, OccupationType type);
+    + bool MoveShip(Coordinate origin, Coordinates target, int width, Orientation orientation);
 }
 class FiringBoard{
-    + vector<Coordinates> GetOpenRandomTiles()
-    + void ChangeTileType(Coordinates target, TileType newType)
-    + void MarkHit(Coordinates target)
-    + void MarkMiss(Coordiantes target)
+    FiringBoard();
+    FiringBoard(int size);
 }
 
 GameBoard *-- Tile
@@ -83,28 +112,40 @@ Player *-- Ship
 
 class Player{
     - string name_
-    - GameBoard gameBoard_
-    - FiringBoard firingBoard_
-    - map<Coordinate,ship> cooridinateShips_
+    - GameBoard game_board_
+    - FiringBoard firing_board_
+    - map<Coordinate,ship> ships_
+    + Player();
     + Player(string name)
     + bool HasLost()
-    + void PlaceShips()
-    + string DisplayBoards()
-    + getters()
-    + setter()
+    + void PlaceShips(map<Coordinates, Ship> ships);
+    + void PlaceShip(const Ship& ship, Coordinates coordinates);
+    + void PlaceShipsRandomly();
+    + string ToString() const;
+    + string GetName();
+    + GameBoard& GetGameBoard();
+    + bool HandleAttack(Coordinates target);
+    + void SetGameBoard(const GameBoard& game_board);
+    + FiringBoard& GetFiringBoard();
+    + void SetFiringBoard(FiringBoard& firing_board);
+    + map<Coordinate, Ship> &GetShips();
+    + void MoveShip(Coordinates origin, Coordinate target, const Ship& ship_to_move);
 }
 
 
 class Game {
     - Player player1_
     - Player player2_
-    - GameRecorder gameRecorder_
+    - GameRecorder game_recorder_
     + Game()
-    + void PlaceShipsFromUser(Player player)
-    + void PlaceShipsRandomly(Player player)
-    + void PlayRound()
-    + void PlayToEnd()
-    + void ReplayFromFile(string filePath)
+    + Game(Player player_a, Player player_b);
+    + PlaceShipsFromUser(Player player);
+    + PlaceShipsRandomly();
+    + void PlayRound();
+    + void Replay(GameRecorder game_recorder);
+    + static void HandleAttack(Player &attacker, Player& opponent, Coordinate target);
+    + void PlayRandomGame();
+    + static void PlayMove(Player& player, Player& opponent, std::pair<Coordinates, Coordinates> move);
     + getter()
     + setter()
 }
