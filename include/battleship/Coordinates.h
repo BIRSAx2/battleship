@@ -4,8 +4,8 @@
 #include "Orientation.h"
 #include "Utility.h"
 #include <algorithm>
-#include <ostream>
 #include <map>
+#include <ostream>
 
 class Coordinates {
  private:
@@ -14,13 +14,14 @@ class Coordinates {
  public:
   Coordinates(int row, int col);
   Coordinates();
-  static std::pair<Coordinates, Coordinates> FromUserCoordinates(const std::string& user_coordinates);
+  static std::pair<Coordinates, Coordinates> FromUserCoordinates(const std::string &user_coordinates);
   int GetRow() const;
   void SetRow(int row);
   int GetCol() const;
   void SetCol(int col);
-  bool IsInBounds(int min, int max);
+  bool IsInBounds(int min, int max) const;
   static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+  static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
   bool operator==(const Coordinates &rhs) const;
   bool operator!=(const Coordinates &rhs) const;
   bool operator<(const Coordinates &rhs) const;
@@ -29,7 +30,6 @@ class Coordinates {
   bool operator>=(const Coordinates &rhs) const;
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
   static Coordinates ParseCoordinate(std::string &coordinates);
-
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

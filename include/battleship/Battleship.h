@@ -7,7 +7,7 @@
 class Battleship : public Ship {
  public:
   static const int DEFAULT_SIZE = 5;
-  static void Shoot(FiringBoard &firing_board, GameBoard &opponent_board, Coordinates target);
+  static bool Shoot(FiringBoard &firing_board, GameBoard &opponent_board, Coordinates target);
   Battleship();
   explicit Battleship(Orientation orientation);
 };

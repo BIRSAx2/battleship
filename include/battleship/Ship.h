@@ -17,6 +17,7 @@ class Ship {
   OccupationType occupation_type_;
 
  public:
+  Ship();
   Ship(std::string name, int width, int hits, Orientation orientation);
   Ship(std::string name, int width, int hits);
   explicit Ship(int width);
@@ -33,7 +34,7 @@ class Ship {
   OccupationType GetOccupationType() const;
   void SetOccupationType(OccupationType occupation_type);
   friend std::ostream &operator<<(std::ostream &os, const Ship &ship);
-  Ship();
+  static int GetShipWidth(OccupationType occupation_type);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SHIP_H_

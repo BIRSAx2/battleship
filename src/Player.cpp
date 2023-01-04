@@ -43,6 +43,7 @@ bool Player::operator!=(const Player &rhs) const {
 Player::Player(std::string name) : name_(std::move(name)) {
   game_board_ = GameBoard();
   firing_board_ = FiringBoard();
+  game_engine_ = GameEngine();
 }
 
 bool Player::HasLost() {
@@ -94,24 +95,24 @@ void Player::PlaceShipsRandomly() {
 
   // 3 Corazzate, dimensione 5
   for (int i = 0; i < 3; ++i) {
-	std::pair<Coordinates, Orientation> randomPosition = GetRandomShipPosition(Battleship::DEFAULT_SIZE);
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Battleship::DEFAULT_SIZE);
 	PlaceShip(Battleship(randomPosition.second), randomPosition.first);
   }
   // 3 Navi di supporto, dimensione 3
   for (int i = 0; i < 3; ++i) {
-	std::pair<Coordinates, Orientation> randomPosition = GetRandomShipPosition(SupportShip::DEFAULT_SIZE);
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, SupportShip::DEFAULT_SIZE);
 	PlaceShip(SupportShip(randomPosition.second), randomPosition.first);
   }
   // 2 Sottomarini di esplorazione, dimensione 1
   for (int i = 0; i < 2; ++i) {
-	std::pair<Coordinates, Orientation> randomPosition = GetRandomShipPosition(Submarine::DEFAULT_SIZE);
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Submarine::DEFAULT_SIZE);
 	PlaceShip(Submarine(randomPosition.second), randomPosition.first);
   }
 }
 
-void Player::PlaceShips(std::map<Coordinates, Ship> ships) {
+void Player::PlaceShips(const std::map<Coordinates, Ship> &ships) {
+  for (const auto &pair : ships) PlaceShip(pair.second, pair.first);
 }
-
 bool Player::PlaceShip(const Ship &ship, Coordinates coordinates) {
 
   // Check if the position is inside the bounds of the board
@@ -140,8 +141,8 @@ bool Player::PlaceShip(const Ship &ship, Coordinates coordinates) {
   } else {
 	coordinates.SetRow(first);
   }
-  std::vector<Coordinates> tiles = Coordinates::GetAdjacentCoordinates(coordinates, orientation, width);
 
+  std::vector<Coordinates> tiles = Coordinates::GetAdjacentCoordinates(coordinates, orientation, width);
   for (auto coordinate : tiles) {
 	game_board_.MarkTile(coordinate, ship.GetOccupationType());
   }
@@ -163,23 +164,27 @@ bool Player::HandleAttack(Coordinates target) {
   return result;
 }
 
-std::pair<Coordinates, Orientation> Player::GetRandomShipPosition(int ship_width) {
+bool Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
+  if (game_board_.GetTiles().at(target.GetRow()).at(target.GetCol()).GetOccupationType() == HIT) return false;
+  if (ship_to_move.GetHits() != 0) return false;
 
-  // TODO: Refactor this to use a more deterministic approach, first generate a list of available positions and the choose randomly between it's elements
-  Orientation orientation;
-  Coordinates coordinates{0, 0};
-  Ship ship;
-  do {
-	coordinates = {random_int_in_range(0, game_board_.GetSize()), random_int_in_range(0, game_board_.GetSize())};
-	orientation = static_cast<Orientation>(random_int_in_range(0, 1));
-  } while (!GameBoard::IsInsideBoard(ship_width, orientation, coordinates) || game_board_.OverlapsOtherShip(ship_width, orientation, coordinates));
-  return std::make_pair(coordinates, orientation);
-}
-void Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
-  if (ship_to_move.GetHits() != 0) throw std::invalid_argument("Cannot move ship because it's hit");
   if (!ships_.count(origin)) throw std::invalid_argument("Ship not found");
+
   game_board_.MoveShip(origin, target, ship_to_move.GetWidth(), ship_to_move.GetOrientation());
   Ship ship = ships_.at(origin);
+
   ships_.erase(origin);
   ships_.emplace(target, ship);
+  return true;
+}
+
+std::pair<Coordinates, Coordinates> Player::GetRandomMove() {
+  return game_engine_.GetRandomMove(game_board_, ships_);
+}
+void Player::AddPotentialTargets(Coordinates target) {
+  game_engine_.AddNearTargets(target);
+}
+void Player::IncreaseShipHits(Coordinates target) {
+  if (ships_.count(target) == 0) return;
+  ships_.at(target).IncreaseHits();
 }

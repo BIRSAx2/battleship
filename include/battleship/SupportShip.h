@@ -10,8 +10,8 @@ class SupportShip : public Ship {
  public:
   static const int DEFAULT_SIZE = 3;
   SupportShip();
-  SupportShip(Orientation orientation);
-//  void MoveTo(GameBoard& board, Coordinates origin, Coordinates destination);
+  explicit SupportShip(Orientation orientation);
+  void MoveTo(GameBoard& board, Coordinates origin, Coordinates destination);
   std::vector<Tile> GetProctectedTiles(GameBoard board, Coordinates currentPosition);
 };
 

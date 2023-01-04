@@ -108,20 +108,12 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target, int width, Orie
   // TODO: Check if we need to keep a spot marked as shot or if when we move the ship it becomes empty regardless
   for (auto cell : occupied_tiles) {
 	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(EMPTY);
-//	tiles_[cell.GetRow()][cell.GetCol()].SetOccupationType(EMPTY);
   }
 
   // marking new ship position
-
   std::vector<Coordinates> new_tiles = Coordinates::GetAdjacentCoordinates(target, orientation, width);
-  for (auto tile : new_tiles) {
-	std::cout << tile <<  ' ';
-  }
-  std::cout << std::endl;
   for (auto cell : new_tiles) {
-//	tiles_[cell.GetRow()][cell.GetCol()].SetOccupationType(occupation_type);
 	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(occupation_type);
-
   }
 
   return true;

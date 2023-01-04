@@ -55,3 +55,16 @@ std::ostream &operator<<(std::ostream &os, const Ship &ship) {
 }
 Ship::Ship() : width_(0), hits_(0), orientation_(UNSET), occupation_type_(EMPTY), name_("-") {
 }
+int Ship::GetShipWidth(OccupationType occupation_type) {
+  switch (occupation_type) {
+	case SUBMARINE:
+	  return 1;
+	case BATTLESHIP:
+	  return 5;
+	case SUPPORT_SHIP:
+	  return 3;
+
+	default:
+	  return 0;
+  }
+}

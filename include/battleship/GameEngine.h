@@ -22,19 +22,18 @@
 //  firing at random again looking for another ship.
 class GameEngine {
  private:
-  std::vector<Coordinates> targets_{};
+  std::vector<Coordinates> targets_;
   std::vector<Coordinates> visited_;
-  GameBoard& game_board_;
 
  public:
-  GameEngine(GameBoard& game_board);
-  Coordinates GetNextMove(OccupationType occupation_type);
-  void AddTargets(const std::vector<Coordinates> &new_targets);
-
- private:
-  Coordinates GetRandomShipPlacement();
-  Coordinates GetNextTarget();
-  Coordinates GetRandomTarget();
+  GameEngine();
+  void AddNearTargets(Coordinates target);
+  std::pair<Coordinates, Orientation> GetRandomShipPlacement(GameBoard game_board, int ship_width);
+  std::pair<Coordinates, Coordinates> GetRandomMove(GameBoard &game_board, const std::map<Coordinates, Ship> &ships);
+  Coordinates GetRandomShipPlacement(GameBoard &game_board, const Ship &ship);
+  Coordinates GetNextTarget(int board_size = GameBoard::DEFAULT_BOARD_SIZE);
+  Coordinates GetRandomShip(const std::map<Coordinates, Ship> &ships);
+  Coordinates GetRandomTarget(int board_size = GameBoard::DEFAULT_BOARD_SIZE);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEENGINE_H_

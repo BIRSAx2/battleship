@@ -41,7 +41,7 @@ std::ostream &operator<<(std::ostream &os, const Tile &tile) {
 	case BATTLESHIP:
 	  os << colour_text_256("C", 127);
 	  break;
-	case SUPPORT_BATTLESHIP:
+	case SUPPORT_SHIP:
 	  os << colour_text_256("S", 106);
 	  break;
   }

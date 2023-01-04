@@ -41,25 +41,26 @@ std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
   os << "(" << coordinates.row_ << "," << coordinates.col_ << ")";
   return os;
 }
-bool Coordinates::IsInBounds(int min, int max) {
+bool Coordinates::IsInBounds(int min, int max) const {
   return row_ >= min and row_ < max and col_ >= min and col_ < max;
 }
 
 std::vector<Coordinates> Coordinates::GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count) {
-  if (!starting.IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate");
+
+  if (!starting.IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate: The starting point is outside the board's bounds.");
 
   std::vector<Coordinates> adjacentCoordinates = std::vector<Coordinates>();
 
   if (orientation == HORIZONTAL) {
 	// loop over the cols
 	for (int i = starting.GetCol(); i < starting.GetCol() + count; ++i) {
-	  if (!Coordinates(starting.GetRow(), i).IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate");
+	  if (!Coordinates(starting.GetRow(), i).IsInBounds(0, 12)) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
 	  adjacentCoordinates.emplace_back(starting.GetRow(), i);
 	}
   } else {
 	// loop over the rows
 	for (int i = starting.GetRow(); i < starting.GetRow() + count; ++i) {
-	  if (!Coordinates(i, starting.GetCol()).IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate");
+	  if (!Coordinates(i, starting.GetCol()).IsInBounds(0, 12)) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
 	  adjacentCoordinates.emplace_back(i, starting.GetCol());
 	}
   }
@@ -93,4 +94,15 @@ Coordinates Coordinates::ParseCoordinate(std::string &origin) {
 
   int col = std::stoi(y);
   return {row, col - 1};
+}
+std::vector<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates starting) {
+
+  // Restituisce le delle celle immediatamente adiacenti a starting. Sopra, sotto. ai lati ma non in diagonale.
+  std::pair<int, int> offsets[] = {{0, -1}, {0, 1}, {1, 0}, {-1, 0}};
+  std::vector<Coordinates> coordinates;
+  for (auto offset : offsets) {
+	Coordinates tmp = {starting.GetRow() + offset.second, starting.GetCol() + offset.second};
+	if (tmp.IsInBounds(0, 12)) coordinates.push_back(tmp);
+  }
+  return coordinates;
 }

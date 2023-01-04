@@ -1,6 +1,7 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
 
+#include "GameEngine.h"
 #include "GameRecorder.h"
 #include "Player.h"
 #include <ostream>
@@ -10,15 +11,16 @@ class Game {
   Player playerA_;
   Player playerB_;
   GameRecorder game_recorder_;
+  GameEngine game_engine_;
 
  public:
   Game();
   Game(Player playerA, Player playerB);
-  void PlaceShipsFromUser(Player player);
+  void PlaceShipsFromUser(const Player& player);
   static void PlaceShipsRandomly(Player player);
   void PlayRound();
   void PlayToEnd();
-  void Replay(GameRecorder game_recorder);
+  void Replay(const GameRecorder& game_recorder);
   const Player &GetPlayerA() const;
   void SetPlayerA(const Player &player_a);
   const Player &GetPlayerB() const;

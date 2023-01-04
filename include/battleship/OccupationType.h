@@ -8,7 +8,7 @@ enum OccupationType {
   MISS,
   SUBMARINE,
   BATTLESHIP,
-  SUPPORT_BATTLESHIP
+  SUPPORT_SHIP
 };
 
 inline std::ostream &operator<<(std::ostream &os, OccupationType occupation_type) {
@@ -18,8 +18,8 @@ inline std::ostream &operator<<(std::ostream &os, OccupationType occupation_type
 	case MISS: return os << "MISS";
 	case SUBMARINE: return os << "SUBMARINE";
 	case BATTLESHIP: return os << "BATTLESHIP";
-	case SUPPORT_BATTLESHIP:
-	  return os << "SUPPORT_BATTLESHIP";
+	case SUPPORT_SHIP:
+	  return os << "SUPPORT_SHIP";
 	default: return os << (int)occupation_type;
   }
 }
