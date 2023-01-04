@@ -48,7 +48,7 @@ bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation
 bool GameBoard::ReceiveAttack(Coordinates target) {
   if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target not inside the game board");
   Tile &targetTile = tiles_[target.GetRow()][target.GetCol()];
-  if (targetTile.IsOccupied()) {
+  if (targetTile.IsOccupied() || targetTile.GetOccupationType() == HIT) {
 	targetTile.SetOccupationType(HIT);
 	return true;
   }

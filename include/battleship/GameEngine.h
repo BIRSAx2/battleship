@@ -23,7 +23,7 @@
 class GameEngine {
  private:
   std::vector<Coordinates> targets_;
-  std::vector<Coordinates> visited_;
+  std::vector<Coordinates> already_shot_;
 
  public:
   GameEngine();

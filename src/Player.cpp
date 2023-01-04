@@ -160,6 +160,7 @@ bool Player::HandleAttack(Coordinates target) {
   if (result) {
 	// TODO: Handle discrepancy between player ships and board ships
 	ships_.at(target).IncreaseHits();
+	game_engine_.AddNearTargets(target);
   }
   return result;
 }
@@ -181,6 +182,7 @@ bool Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_t
 std::pair<Coordinates, Coordinates> Player::GetRandomMove() {
   return game_engine_.GetRandomMove(game_board_, ships_);
 }
+
 void Player::AddPotentialTargets(Coordinates target) {
   game_engine_.AddNearTargets(target);
 }

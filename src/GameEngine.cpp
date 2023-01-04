@@ -4,9 +4,15 @@
 void GameEngine::AddNearTargets(Coordinates target) {
   std::vector<Coordinates> new_targets = Coordinates::GetAdjacentStarCoordinates(target);
 
-  for (auto item : new_targets) {
+  for (Coordinates item : new_targets) {
+
 	if (std::find(targets_.begin(), targets_.end(), item) != targets_.end()) continue;
+	if (std::find(already_shot_.begin(), already_shot_.end(), item) != already_shot_.end()) continue;
 	targets_.emplace_back(item);
+  }
+
+  for (auto t : targets_) {
+	std::cout << t << ' ';
   }
 }
 std::pair<Coordinates, Orientation> GameEngine::GetRandomShipPlacement(GameBoard game_board, int ship_width) {
@@ -27,18 +33,20 @@ Coordinates GameEngine::GetRandomTarget(int board_size) {
   Coordinates coordinates;
   do {
 	coordinates = {random_int_in_range(0, board_size - 1), random_int_in_range(0, board_size - 1)};
-  } while (std::find(already_shot.begin(), already_shot.end(), coordinates) != already_shot.end());
-  already_shot.push_back(coordinates);
-  return coordinates
+  } while (std::find(already_shot_.begin(), already_shot_.end(), coordinates) != already_shot_.end());
+  already_shot_.push_back(coordinates);
+  return coordinates;
 }
 
 Coordinates GameEngine::GetNextTarget(int board_size) {
 
   std::cout << "Targets size: " << targets_.size() << std::endl;
+
+  std::cout << std::endl;
   if (targets_.empty()) return GetRandomTarget(board_size);
 
-  Coordinates target = targets_.at(targets_.size() - 1);
-  targets_.pop_back();
+  Coordinates target = targets_.at(0);
+  std::remove(targets_.begin(), targets_.end(), target);
   return target;
 }
 

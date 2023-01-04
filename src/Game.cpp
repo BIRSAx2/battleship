@@ -92,7 +92,7 @@ void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coo
 	  //	  if (!successful) { std::cout << "Cannot move this ship because it's already shot" << std::endl; }
 	  break;
 	case BATTLESHIP:
-	  bool result = Battleship::Shoot(player.GetFiringBoard(), opponent.GetGameBoard(), move.second);
+	  bool result = Battleship::Shoot(player.GetGameBoard(), opponent.GetFiringBoard(), move.second);
 	  if (result) {
 		opponent.IncreaseShipHits(move.second);
 		player.AddPotentialTargets(move.second);
