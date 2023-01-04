@@ -25,7 +25,6 @@ class GameBoard {
   bool OverlapsOtherShip(int ship_width, Orientation orientation, Coordinates &startingPositions);
   bool ReceiveAttack(Coordinates target);
   std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
-  void ChangeTileType(Coordinates target, OccupationType type);
   void MarkTile(Coordinates target, OccupationType newType);
   friend std::ostream &operator<<(std::ostream &os, const GameBoard &board);
   bool MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation);

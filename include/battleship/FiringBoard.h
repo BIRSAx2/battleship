@@ -10,8 +10,7 @@ class FiringBoard : public GameBoard {
  public:
   FiringBoard();
   explicit FiringBoard(int size);
-  std::vector<Tile> GetOpenRandomTiles();
-//  friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
+  //  friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_

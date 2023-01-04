@@ -16,11 +16,9 @@ class Game {
  public:
   Game();
   Game(Player playerA, Player playerB);
-  void PlaceShipsFromUser(const Player& player);
+  void PlaceShipsFromUser(const Player &player);
   static void PlaceShipsRandomly(Player player);
-  void PlayRound();
-  void PlayToEnd();
-  void Replay(const GameRecorder& game_recorder);
+  void Replay(const GameRecorder &game_recorder);
   const Player &GetPlayerA() const;
   void SetPlayerA(const Player &player_a);
   const Player &GetPlayerB() const;

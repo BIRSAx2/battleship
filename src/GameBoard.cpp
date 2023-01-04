@@ -1,6 +1,7 @@
 #include "GameBoard.h"
 #include "Utility.h"
 #include <iostream>
+#include <utility>
 GameBoard::GameBoard() : size_(DEFAULT_BOARD_SIZE) {
   tiles_.resize(size_, std::vector<Tile>(size_, Tile()));
 }
@@ -66,17 +67,15 @@ std::vector<Tile> GameBoard::ScanSurroundings(Coordinates coordinates, int range
   }
   return surroundings;
 }
-void GameBoard::ChangeTileType(Coordinates target, OccupationType type) {
+
+void GameBoard::MarkTile(Coordinates target, OccupationType new_type) {
   if (target.GetCol() < 0 || target.GetCol() >= size_ || target.GetRow() < 0 || target.GetRow() >= size_)
 	throw std::invalid_argument("Target out of range");
 
-  tiles_[target.GetRow()][target.GetCol()].SetOccupationType(type);
-}
-void GameBoard::MarkTile(Coordinates target, OccupationType newType) {
-  ChangeTileType(target, newType);
+  tiles_[target.GetRow()][target.GetCol()].SetOccupationType(new_type);
 }
 void GameBoard::SetTiles(std::vector<std::vector<Tile>> tiles) {
-  tiles_ = tiles;
+  tiles_ = std::move(tiles);
 }
 std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
 

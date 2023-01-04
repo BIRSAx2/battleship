@@ -20,7 +20,9 @@ class Coordinates {
   int GetCol() const;
   void SetCol(int col);
   bool IsInBounds(int min, int max) const;
+  // Restituisce le count coordinate immediatamente affianco a start in vertical/orizzontale (orientation)
   static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+  // Restituisce le coordinate delle celle sopra, sotto, a destra e a sinistra. (A stella)
   static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
   bool operator==(const Coordinates &rhs) const;
   bool operator!=(const Coordinates &rhs) const;

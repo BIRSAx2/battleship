@@ -31,7 +31,7 @@ Game::Game() {
 }
 void Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
   bool attackResult = opponent.HandleAttack(target);
-  attacker.GetFiringBoard().ChangeTileType(target, attackResult ? HIT : MISS);
+  attacker.GetFiringBoard().MarkTile(target, attackResult ? HIT : MISS);
 }
 void Game::PlaceShipsFromUser(const Player &player) {
 }
