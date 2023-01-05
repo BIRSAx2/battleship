@@ -8,8 +8,8 @@
 #include <string>
 class Game {
  private:
-  Player playerA_;
-  Player playerB_;
+  Player player_a_;
+  Player player_b_;
   GameRecorder game_recorder_;
   GameEngine game_engine_;
 
@@ -17,7 +17,7 @@ class Game {
   Game();
   Game(Player playerA, Player playerB);
   void PlaceShipsFromUser(const Player &player);
-  static void PlaceShipsRandomly(Player player);
+  static void PlaceShipsRandomly(Player &player);
   void Replay(const GameRecorder &game_recorder);
   const Player &GetPlayerA() const;
   void SetPlayerA(const Player &player_a);

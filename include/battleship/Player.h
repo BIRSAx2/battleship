@@ -27,7 +27,7 @@ class Player {
   explicit Player(std::string name);
   bool HasLost();
   void PlaceShips(const std::map<Coordinates, Ship> &ships);
-  bool PlaceShip(const Ship &ship, Coordinates coordinates);
+  bool PlaceShip(Ship ship, Coordinates coordinates);
   void PlaceShipsRandomly();
   std::string ToString();
   const std::string &GetName() const;

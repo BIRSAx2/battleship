@@ -42,21 +42,20 @@ bool Coordinates::IsInBounds(int min, int max) const {
 }
 
 std::vector<Coordinates> Coordinates::GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count) {
-
   if (!starting.IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate: The starting point is outside the board's bounds.");
 
   std::vector<Coordinates> adjacentCoordinates = std::vector<Coordinates>();
 
   if (orientation == HORIZONTAL) {
 	// loop over the cols
-	for (int i = starting.GetCol(); i < starting.GetCol() + count; ++i) {
-	  if (!Coordinates(starting.GetRow(), i).IsInBounds(0, 12)) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
+	for (int i = starting.GetCol(); i < starting.GetCol() + count; i++) {
+	  if (!Coordinates(starting.GetRow(), i).IsInBounds()) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
 	  adjacentCoordinates.emplace_back(starting.GetRow(), i);
 	}
   } else {
 	// loop over the rows
-	for (int i = starting.GetRow(); i < starting.GetRow() + count; ++i) {
-	  if (!Coordinates(i, starting.GetCol()).IsInBounds(0, 12)) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
+	for (int i = starting.GetRow(); i < starting.GetRow() + count; i++) {
+	  if (!Coordinates(i, starting.GetCol()).IsInBounds()) throw std::invalid_argument("Cannot generate the next adjacent coordinates because they are outside the board's bounds");
 	  adjacentCoordinates.emplace_back(i, starting.GetCol());
 	}
   }

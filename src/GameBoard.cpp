@@ -18,42 +18,28 @@ std::vector<std::vector<Tile>> &GameBoard::GetTiles() {
 bool GameBoard::IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position) {
   if (orientation == UNSET) throw std::invalid_argument("The orientation of the ship is unset");
   if (!starting_position.IsInBounds(0, 12)) return false;
-
-  // Le coordinate si riferiscono alla casella centrale di una nave
-
-  int first = 0, last = 0;
-
-  first = orientation == HORIZONTAL ? starting_position.GetCol() : starting_position.GetRow();
-
-  first -= (ship_width - 1) / 2;
-  last = first + ship_width - 1;
-
-  return Coordinates(first, last).IsInBounds(0, 12);
+  if (orientation == HORIZONTAL) return Coordinates(starting_position.GetRow(), starting_position.GetCol() + ship_width).IsInBounds();
+  return Coordinates(starting_position.GetRow() + ship_width, starting_position.GetCol()).IsInBounds();
 }
 
-bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation, Coordinates &startingPositions) {
+bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation, Coordinates &first_cell) {
   if (orientation == UNSET) throw std::invalid_argument("The orientation of the ship is unset");
-  if (!startingPositions.IsInBounds(0, size_)) throw std::invalid_argument("Invalid Coordinates");
+  if (!first_cell.IsInBounds(0, size_)) throw std::invalid_argument("Invalid Coordinates");
 
-  // Le coordinate si riferiscono alla casella centrale di una nave
-
-  int first = 0, last = 0;
-  first = orientation == HORIZONTAL ? startingPositions.GetCol() : startingPositions.GetRow();
-  first -= (width - 1) / 2;
-  last = first + width - 1;
-
-  for (int i = first; i <= last; ++i) {
-	if (orientation == HORIZONTAL) {
-	  if (tiles_[startingPositions.GetRow()][i].IsOccupied()) return true;
-	} else {
-	  if (tiles_[i][startingPositions.GetCol()].IsOccupied()) return true;
+  if (orientation == HORIZONTAL) {
+	for (int i = 0; i < first_cell.GetCol() + width; ++i) {
+	  if (tiles_[first_cell.GetRow()][i].IsOccupied()) return true;
+	}
+  } else {
+	for (int i = 0; i < first_cell.GetRow() + width; ++i) {
+	  if (tiles_[i][first_cell.GetCol()].IsOccupied()) return true;
 	}
   }
   return false;
 }
 
 bool GameBoard::ReceiveAttack(Coordinates target) {
-  if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target not inside the game board");
+  if (!target.IsInBounds()) throw std::invalid_argument("Target not inside the game board");
   Tile &targetTile = tiles_.at(target.GetRow()).at(target.GetCol());
   if (targetTile.IsOccupied() || targetTile.GetOccupationType() == HIT) {
 	targetTile.SetOccupationType(HIT);
@@ -106,25 +92,34 @@ std::ostream &operator<<(std::ostream &os, GameBoard board) {
 
 bool GameBoard::MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation) {
 
+  std::cout << (*this) << std::endl;
   // TODO: Cannot Move ship if it's hit
   // TODO: There might a bug here: The coordinates should point to the center of a ship
   std::cout << "Moving ship from  " << origin << " to " << target << std::endl;
 
-  OccupationType occupation_type = tiles_[origin.GetRow()][origin.GetCol()].GetOccupationType();
+  OccupationType occupation_type = tiles_.at(origin.GetRow()).at(origin.GetCol()).GetOccupationType();
+
+  if (occupation_type == HIT || occupation_type == BATTLESHIP) throw std::invalid_argument("Cannot move this ship either because it's already hit or because it's battleship");
+
   std::vector<Coordinates> occupied_tiles = Coordinates::GetAdjacentCoordinates(origin, orientation, width);
 
   // marking old ship position as empty
   // TODO: Check if we need to keep a spot marked as shot or if when we move the ship it becomes empty regardless
+
+  std::cout << "Occupied cells: ";
   for (auto cell : occupied_tiles) {
+	std::cout << cell << ' ' << tiles_.at(cell.GetRow()).at(cell.GetCol()).GetOccupationType();
 	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(EMPTY);
   }
-
+  std::cout << std::endl;
   // marking new ship position
   std::vector<Coordinates> new_tiles = Coordinates::GetAdjacentCoordinates(target, orientation, width);
+  std::cout << "New cells: ";
   for (auto cell : new_tiles) {
+	std::cout << cell << ' ';
 	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(occupation_type);
   }
-
+  std::cout << std::endl;
   return true;
 }
 

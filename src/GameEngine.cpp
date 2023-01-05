@@ -8,12 +8,11 @@ void GameEngine::AddNearTargets(Coordinates target) {
 	if (already_shot_.find(item) == already_shot_.end()) targets_.insert(item);
   }
 }
-std::pair<Coordinates, Orientation> GameEngine::GetRandomShipPlacement(GameBoard game_board, int ship_width) {
+std::pair<Coordinates, Orientation> GameEngine::GetRandomShipPlacement(GameBoard &game_board, int ship_width) {
 
   // TODO: Refactor this to use a more deterministic approach, first generate a list of available positions and the choose randomly between it's elements
   Orientation orientation;
   Coordinates coordinates{0, 0};
-  Ship ship;
   do {
 	coordinates = {random_int_in_range(0, game_board.GetSize()), random_int_in_range(0, game_board.GetSize())};
 	orientation = static_cast<Orientation>(random_int_in_range(0, 1));
@@ -41,13 +40,12 @@ Coordinates GameEngine::GetNextTarget(int board_size) {
   return target;
 }
 
-Coordinates GameEngine::GetRandomShip(const std::map<Coordinates, Ship> &ships) {
+Coordinates GameEngine::GetRandomShipCoordinates(const std::map<Coordinates, Ship> &ships) {
   std::vector<Coordinates> keys;
   for (const auto &pair : ships) {
 	if (pair.second.GetHits() == 0) keys.emplace_back(pair.first);
   }
-  Ship ship;
-
+std::cout << keys.size() << std::endl;
   return keys.at(random_int_in_range(0, (int)keys.size() - 1));
 }
 
@@ -58,13 +56,17 @@ std::pair<Coordinates, Coordinates> GameEngine::GetRandomMove(GameBoard &game_bo
   // If the ship if a battleship then find a target for it
   // Otherwise find a new placement for the ship
 
-  Coordinates origin = GetRandomShip(ships);
+  Coordinates origin = GetRandomShipCoordinates(ships);
 
   Ship &ship = const_cast<Ship &>(ships.at(origin));
   do {
-	origin = GetRandomShip(ships);
+	origin = GetRandomShipCoordinates(ships);
+	std::cout << origin << std::endl;
 	ship = ships.at(origin);
-  } while (ship.GetOccupationType() != BATTLESHIP);
+	std::cout << ship << std::endl;
+  } while (ship.GetOccupationType() == BATTLESHIP);
+
+  if (ship.GetOccupationType() == BATTLESHIP) throw std::invalid_argument("Cannot move this ship because it's a battle ship");
 
   if (ship.GetOccupationType() == BATTLESHIP) return std::make_pair(origin, GetNextTarget());
 
@@ -76,8 +78,11 @@ Coordinates GameEngine::GetRandomShipPlacement(GameBoard &game_board, const Ship
   Orientation orientation = ship.GetOrientation();
   Coordinates placement{0, 0};
   do {
-	placement = {random_int_in_range(0, game_board.GetSize() - ship.GetWidth() / 2), random_int_in_range(0, game_board.GetSize() - ship.GetWidth() / 2)};
+	placement = {random_int_in_range(0, game_board.GetSize()), random_int_in_range(0, game_board.GetSize())};
   } while (!GameBoard::IsInsideBoard(ship.GetWidth(), orientation, placement) || game_board.OverlapsOtherShip(ship.GetWidth(), orientation, placement));
   return placement;
 }
 GameEngine::GameEngine() = default;
+
+// TODO: Change Coordinates to refer to the first cell
+// Convert the user coordinates to starting

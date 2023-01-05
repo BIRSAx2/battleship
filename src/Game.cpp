@@ -6,16 +6,16 @@
 #include <iostream>
 #include <thread>
 const Player &Game::GetPlayerA() const {
-  return playerA_;
+  return player_a_;
 }
 void Game::SetPlayerA(const Player &player_a) {
-  playerA_ = player_a;
+  player_a_ = player_a;
 }
 const Player &Game::GetPlayerB() const {
-  return playerB_;
+  return player_b_;
 }
 void Game::SetPlayerB(const Player &player_b) {
-  playerB_ = player_b;
+  player_b_ = player_b;
 }
 const GameRecorder &Game::GetGameRecorder() const {
   return game_recorder_;
@@ -24,10 +24,10 @@ void Game::SetGameRecorder(const GameRecorder &game_recorder) {
   game_recorder_ = game_recorder;
 }
 Game::Game() {
-  playerA_ = Player("Random player A");
-  playerA_.PlaceShipsRandomly();
-  playerB_ = Player("Random player B");
-  playerB_.PlaceShipsRandomly();
+  player_a_ = Player("Random player A");
+  player_a_.PlaceShipsRandomly();
+  player_b_ = Player("Random player B");
+  player_b_.PlaceShipsRandomly();
 }
 bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
   bool attackResult = Battleship::Shoot(attacker.GetFiringBoard(), opponent.GetGameBoard(), target);
@@ -42,14 +42,14 @@ bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) 
 }
 void Game::PlaceShipsFromUser(const Player &player) {
 }
-void Game::PlaceShipsRandomly(Player player) {
+void Game::PlaceShipsRandomly(Player& player) {
   player.PlaceShipsRandomly();
 }
 void Game::Replay(const GameRecorder &game_recorder) {
 }
 std::ostream &operator<<(std::ostream &os, Game &game) {
-  os << game.playerA_ << "\n"
-	 << game.playerB_;
+  os << game.player_a_ << "\n"
+	 << game.player_b_;
   return os;
 }
 void Game::PlayRandomGame() {
@@ -57,34 +57,45 @@ void Game::PlayRandomGame() {
   bool playerATurn = false;
   int rounds = 0;
 
-  while (!playerA_.HasLost() || !playerB_.HasLost()) {
+  std::cout << player_a_ << std::endl;
+  std::cout << player_b_ << std::endl;
+
+  while (!player_a_.HasLost() || !player_b_.HasLost()) {
 	std::cout << rounds << " "
-			  << "Turno di : " << (playerATurn ? playerA_.GetName() : playerB_.GetName()) << std::endl;
+			  << "Turno di : " << (playerATurn ? player_a_.GetName() : player_b_.GetName()) << std::endl;
 
-	Player &current_player = playerATurn ? playerA_ : playerB_;
+	Player &current_player = playerATurn ? player_a_ : player_b_;
 	auto move = current_player.GetRandomMove();
-
+	std::cout << move.first << " " << move.second << std::endl;
 	if (playerATurn) {
-	  PlayMove(playerA_, playerB_, move);
-	  std::cout << playerA_ << std::endl;
+	  std::cout << "Before" << std::endl;
+	  std::cout << player_a_ << std::endl;
+	  PlayMove(player_a_, player_b_, move);
+	  std::cout << "After" << std::endl;
+	  std::cout << player_a_ << std::endl;
 
 	} else {
-	  PlayMove(playerB_, playerA_, move);
-	  std::cout << playerB_ << std::endl;
+	  std::cout << "Before" << std::endl;
+	  std::cout << player_b_ << std::endl;
+
+	  PlayMove(player_b_, player_a_, move);
+	  std::cout << "After" << std::endl;
+	  std::cout << player_b_ << std::endl;
 	}
 
+	std::cout << "------------------------------------------------------------------" << std::endl;
 	playerATurn = !playerATurn;
 
 	if (rounds++ == 200) exit(1);
-//	std::string c;
-//	std::cin >> c;
+	std::string c;
+	std::cin >> c;
   }
 }
 
 void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coordinates> move) {
   if (!player.GetShips().count(move.first)) throw std::invalid_argument("There is no ship at the specified location");
   Ship &ship = const_cast<Ship &>(player.GetShips().at(move.first));
-
+  std::cout << ship << std::endl;
   switch (ship.GetOccupationType()) {
 
 	case EMPTY:
