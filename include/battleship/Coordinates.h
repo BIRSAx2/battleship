@@ -1,34 +1,55 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 
-#include <stdio.h>
-#include <string>
 #include "Orientation.h"
+#include <vector>
+#include <iostream>
+// #include <algorithm>
+// #include <map>
+
 
 class Coordinates {
 public:
-    Coordinates(int row, int col) : row_{row}, col_{col} {};
+    Coordinates(): row_{0}, col_{0} {};
+    
+    bool IsValidCoord(int value) const;
 
-    int GetRow() { return row_; }
+    Coordinates(int row, int col);
 
-    int GetCol() { return col_; }
+    int GetRow() const { return row_; }
+
+    int GetCol() const { return col_; }
 
     void SetRow(int row) { row_ = row; }
 
     void SetCol(int col) { col_ = col; }
 
-    bool IsInBound(int min, int max);
+    bool IsInBound(int min, int max) const;
 
-    bool GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+    static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+
+    static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
+
+    // from A8 to (1,8)
+    static Coordinates ParseCoordinates(std::string &coordinates);
+
+    Coordinates& operator=(Coordinates coords);
 
 
 private:
     int row_;
     int col_;
 
+    int const MIN_COORD = 0;\
+    int const MAX_COORD = 11;
+
 };
 
-static Coordinates ParseCoordinates(std::string &coordinates);
+bool operator==(Coordinates c1, Coordinates c2);
+
+bool operator!=(Coordinates c1, Coordinates c2);
+
+std::ostream& operator<<(std::ostream& os, Coordinates coord);
 
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
