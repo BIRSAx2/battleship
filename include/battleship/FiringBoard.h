@@ -10,7 +10,9 @@ class FiringBoard : public GameBoard {
  public:
   FiringBoard();
   explicit FiringBoard(int size);
-  //  friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
+  void ClearSuccessfulShots();
+  void ClearUnsuccessfulShots();
+  void ClearSonarSightings();
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_

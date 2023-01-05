@@ -17,12 +17,6 @@ const Player &Game::GetPlayerB() const {
 void Game::SetPlayerB(const Player &player_b) {
   player_b_ = player_b;
 }
-const GameRecorder &Game::GetGameRecorder() const {
-  return game_recorder_;
-}
-void Game::SetGameRecorder(const GameRecorder &game_recorder) {
-  game_recorder_ = game_recorder;
-}
 Game::Game() {
   player_a_ = Player("Random player A");
   player_a_.PlaceShipsRandomly();
@@ -42,10 +36,10 @@ bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) 
 }
 void Game::PlaceShipsFromUser(const Player &player) {
 }
-void Game::PlaceShipsRandomly(Player& player) {
+void Game::PlaceShipsRandomly(Player &player) {
   player.PlaceShipsRandomly();
 }
-void Game::Replay(const GameRecorder &game_recorder) {
+void Game::Replay(std::string &file_path) {
 }
 std::ostream &operator<<(std::ostream &os, Game &game) {
   os << game.player_a_ << "\n"

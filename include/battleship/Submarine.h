@@ -12,9 +12,8 @@ class Submarine : public Ship {
  public:
   static const int DEFAULT_SIZE = 1;
   Submarine();
-  Submarine(Orientation orientation);
-  static void MoveTo(GameBoard board, Coordinates origin, Coordinates destination);
-  static std::vector<Tile> ScanSurroundings(Coordinates currentPosition, GameBoard opponentBoard);
+  explicit Submarine(Orientation orientation);
+  static std::vector<std::pair<Coordinates, OccupationType>> ScanSurroundings(Coordinates currentPosition, GameBoard opponentBoard);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SUBMARINE_H_

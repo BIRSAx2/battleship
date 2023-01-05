@@ -18,7 +18,7 @@ bool Battleship::Shoot(FiringBoard &attacker, GameBoard &opponent, Coordinates t
   attacker.MarkTile(target, result ? HIT : MISS);
   return result;
 }
-Battleship::Battleship() : Ship("C", DEFAULT_SIZE, BATTLESHIP) {}
-Battleship::Battleship(Orientation orientation) : Ship("C", DEFAULT_SIZE, BATTLESHIP) {
+Battleship::Battleship() : Ship(DEFAULT_SIZE, BATTLESHIP) {}
+Battleship::Battleship(Orientation orientation) : Ship(DEFAULT_SIZE, BATTLESHIP) {
   orientation_ = orientation;
 }

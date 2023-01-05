@@ -21,18 +21,6 @@ bool Coordinates::operator==(const Coordinates &rhs) const {
 bool Coordinates::operator!=(const Coordinates &rhs) const {
   return !(rhs == *this);
 }
-bool Coordinates::operator<(const Coordinates &rhs) const {
-  return row_ < rhs.row_ || (row_ == rhs.row_ && col_ < rhs.col_);
-}
-bool Coordinates::operator>(const Coordinates &rhs) const {
-  return rhs < *this;
-}
-//bool Coordinates::operator<=(const Coordinates &rhs) const {
-//  return !(rhs < *this);
-//}
-//bool Coordinates::operator>=(const Coordinates &rhs) const {
-//  return !(*this < rhs);
-//}
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
   os << "(" << coordinates.row_ << "," << coordinates.col_ << ")";
   return os;
@@ -40,7 +28,6 @@ std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
 bool Coordinates::IsInBounds(int min, int max) const {
   return row_ >= min and row_ < max and col_ >= min and col_ < max;
 }
-
 std::vector<Coordinates> Coordinates::GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count) {
   if (!starting.IsInBounds(0, 12)) throw std::invalid_argument("Invalid adjacent coordinate: The starting point is outside the board's bounds.");
 
@@ -97,18 +84,9 @@ std::vector<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates sta
   std::vector<Coordinates> coordinates;
   for (auto offset : offsets) {
 	Coordinates tmp = {starting.GetRow() + offset.first, starting.GetCol() + offset.second};
-	if (tmp.IsInBounds(0, 12)) {
+	if (tmp.IsInBounds()) {
 	  coordinates.push_back(tmp);
 	}
   }
   return coordinates;
-}
-
-size_t CoordinatesHashFunction::operator()(const Coordinates &point) const {
-  size_t row_hash = std::hash<int>()(point.GetRow());
-  size_t col_hash = std::hash<int>()(point.GetCol()) << 1;
-  return row_hash ^ col_hash;
-}
-bool CoordinatesComparator::operator()(const Coordinates &point, const Coordinates &other) const {
-  return point == other;
 }
