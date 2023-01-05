@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <map>
 #include <ostream>
-
 class Coordinates {
  private:
   int row_, col_;
@@ -19,7 +18,7 @@ class Coordinates {
   void SetRow(int row);
   int GetCol() const;
   void SetCol(int col);
-  bool IsInBounds(int min, int max) const;
+  bool IsInBounds(int min = 0, int max = 12) const;
   // Restituisce le count coordinate immediatamente affianco a start in vertical/orizzontale (orientation)
   static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
   // Restituisce le coordinate delle celle sopra, sotto, a destra e a sinistra. (A stella)
@@ -33,5 +32,10 @@ class Coordinates {
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
   static Coordinates ParseCoordinate(std::string &coordinates);
 };
-
+struct CoordinatesHashFunction {
+  size_t operator()(const Coordinates &point) const;
+};
+struct CoordinatesComparator {
+  bool operator()(const Coordinates &point, const Coordinates &other) const;
+};
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
