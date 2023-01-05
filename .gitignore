@@ -1,2 +1,7 @@
 cmake-build-debug
-.idea
+.vscode
+testCoords.cpp
+testCoords.exe
+testTile.cpp
+testTile.exe
+
