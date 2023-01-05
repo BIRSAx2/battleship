@@ -32,8 +32,3 @@ bool operator!=(Tile t1, Tile t2){
 std::ostream &operator<<(std::ostream &os, const Tile &tile){
     return os << "Coordinate: " << tile.GetCoordinates() << std::endl << "Occupation Type: " << tile.GetOccupationType();
 }
-
-
-
-
-

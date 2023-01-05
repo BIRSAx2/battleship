@@ -88,5 +88,3 @@ bool operator!=(Coordinates c1, Coordinates c2){
 std::ostream& operator<<(std::ostream& os, Coordinates coords){
     return os << "(" << coords.GetRow() << "," << coords.GetCol() << ")" ;
 }
-
-

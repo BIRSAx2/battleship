@@ -2,57 +2,42 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
 
 #include "Orientation.h"
-#include <vector>
-#include <iostream>
-// #include <algorithm>
-// #include <map>
-
-
+#include "Utility.h"
+#include <algorithm>
+#include <map>
+#include <ostream>
 class Coordinates {
-public:
-    Coordinates(): row_{0}, col_{0} {};
-    
-    bool IsValidCoord(int value) const;
+ private:
+  int row_, col_;
 
-    Coordinates(int row, int col);
-
-    int GetRow() const { return row_; }
-
-    int GetCol() const { return col_; }
-
-    void SetRow(int row) { row_ = row; }
-
-    void SetCol(int col) { col_ = col; }
-
-    bool IsInBound(int min, int max) const;
-
-    static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
-
-    static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
-
-    // from A8 to (1,8)
-    static Coordinates ParseCoordinates(std::string &coordinates);
-
-    Coordinates& operator=(Coordinates coords);
-
-
-private:
-    int row_;
-    int col_;
-
-    int const MIN_COORD = 0;\
-    int const MAX_COORD = 11;
-
+ public:
+  Coordinates(int row, int col);
+  Coordinates();
+  static std::pair<Coordinates, Coordinates> FromUserCoordinates(const std::string &user_coordinates);
+  int GetRow() const;
+  void SetRow(int row);
+  int GetCol() const;
+  void SetCol(int col);
+  bool IsInBounds(int min = 0, int max = 12) const;
+  // Restituisce le count coordinate immediatamente affianco a start in vertical/orizzontale (orientation)
+  static std::vector<Coordinates> GetAdjacentCoordinates(Coordinates starting, Orientation orientation, int count);
+  // Restituisce le coordinate delle celle sopra, sotto, a destra e a sinistra. (A stella)
+  static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
+  bool operator==(const Coordinates &rhs) const;
+  bool operator!=(const Coordinates &rhs) const;
+  bool operator<(const Coordinates &rhs) const;
+  bool operator>(const Coordinates &rhs) const;
+  bool operator<=(const Coordinates &rhs) const;
+  bool operator>=(const Coordinates &rhs) const;
+  friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
+  static Coordinates ParseCoordinate(std::string &coordinates);
 };
 
-bool operator==(Coordinates c1, Coordinates c2);
-
-bool operator!=(Coordinates c1, Coordinates c2);
-
-std::ostream& operator<<(std::ostream& os, Coordinates coord);
-
-
+// Queste le implemento io
+struct CoordinatesHashFunction {
+  size_t operator()(const Coordinates &point) const;
+};
+struct CoordinatesComparator {
+  bool operator()(const Coordinates &point, const Coordinates &other) const;
+};
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_
-
-
-

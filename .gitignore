@@ -1,7 +1,9 @@
 cmake-build-debug
+cmake-build-debug-coverage
+build/
 .vscode
 testCoords.cpp
 testCoords.exe
 testTile.cpp
 testTile.exe
-
+.idea

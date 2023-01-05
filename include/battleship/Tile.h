@@ -3,40 +3,24 @@
 
 #include "Coordinates.h"
 #include "OccupationType.h"
-
+#include <ostream>
 class Tile {
-public:
-    Tile(int row, int col);
-    
-    Tile(): occType_{EMPTY}, coords_{Coordinates()} {};
+ private:
+  OccupationType occupation_type_;
+  Coordinates coordinates_;
 
-    Tile(Coordinates coords): occType_{EMPTY}, coords_{coords} {};
-
-    Coordinates GetCoordinates() const { return coords_; };
-
-    OccupationType GetOccupationType() const { return occType_; };
-    
-    void SetCoordinates(const Coordinates coords) { coords_ = coords; };
-
-    void SetOccupationType(const OccupationType occType) { occType_ = occType; };
-
-    bool IsOccupied() const;
-
-    // bool IsRandomlyAvailable() const;
-    
-    Tile& operator=(Tile t);
-
-
-private:
-    OccupationType occType_;
-    Coordinates coords_;
+ public:
+  Tile();
+  Tile(int row, int column);
+  Tile(Coordinates coordinates);
+  OccupationType GetStatus() const;
+  bool IsOccupied() const;
+  bool IsRandomlyAvailable() const;
+  friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
+  OccupationType GetOccupationType() const;
+  void SetOccupationType(OccupationType occupation_type);
+  const Coordinates &GetCoordinates() const;
+  void SetCoordinates(const Coordinates &coordinates);
 };
 
-bool operator==(Tile t1, Tile t2);
-
-bool operator!=(Tile t1, Tile t2);
-
-std::ostream &operator<<(std::ostream &os, const Tile &tile);
-
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_TILE_H_
-

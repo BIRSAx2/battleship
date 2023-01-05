@@ -1,27 +1,32 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_
 
+#include <ostream>
+#include <vector>
+
+#include "Coordinates.h"
+#include "OccupationType.h"
+#include "Ship.h"
+#include "Tile.h"
 class GameBoard {
+ protected:
+  std::vector<std::vector<Tile>> tiles_;
+  int size_;
+
+ public:
+  static const int DEFAULT_BOARD_SIZE = 12;
+  GameBoard();
+  explicit GameBoard(int size);
+  std::vector<std::vector<Tile>> &GetTiles();
+  int GetSize() const;
+  void SetSize(int size);
+  void SetTiles(std::vector<std::vector<Tile>> tiles);
+  static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
+  bool OverlapsOtherShip(int ship_width, Orientation orientation, Coordinates &first_cell);
+  bool ReceiveAttack(Coordinates target);
+  std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
+  void MarkTile(Coordinates target, OccupationType newType);
+  bool MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_
-
-/*
-class GameBoard{
-    - vector<Tile> tiles_
-    + static const int DEFAULT_BOARD_SIZE = 12;
-    + GameBoard();
-    + GameBoard(int size);
-    + vector<Tile> GetTiles()
-    + void SetTiles(vector<Tile> tiles)
-    + int GetSize();
-    + void SetSize();
-    + static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
-    + bool OverlapsShip(int ship_width, Orientation orientation, Coordinates &startingPositions);
-    + bool ReceiveAttack(Coordinates target)
-    + vector<Tile> ScanSurrounding(Coordinates starting_position, int range = 1);
-    + bool ReceiveAttack(Coordinates target);
-    + void ChangeTileType(Coordinates target, OccupationType type);
-    + bool MoveShip(Coordinate origin, Coordinates target, int width, Orientation orientation);
-}
-*/
