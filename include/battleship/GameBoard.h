@@ -19,12 +19,14 @@ class GameBoard {
   explicit GameBoard(int size);
   std::vector<std::vector<Tile>> &GetTiles();
   int GetSize() const;
-  static bool IsInsideBoard(Coordinates bow, Coordinates stern);
-  static bool IsInsideBoard(Coordinates point);
-  bool OverlapsOtherShip(Coordinates bow, Coordinates stern);
+  void SetSize(int size);
+  void SetTiles(std::vector<std::vector<Tile>> tiles);
+  static bool IsInsideBoard(int ship_width, Orientation orientation, Coordinates starting_position);
+  bool OverlapsOtherShip(int ship_width, Orientation orientation, Coordinates &first_cell);
+  bool ReceiveAttack(Coordinates target);
   std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
   void MarkTile(Coordinates target, OccupationType newType);
-  bool MoveShip(Coordinates current_bow, Coordinates current_stern, Coordinates bow, Coordinates stern);
+  bool MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

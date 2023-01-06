@@ -25,7 +25,17 @@ class Coordinates {
   static std::vector<Coordinates> GetAdjacentStarCoordinates(Coordinates starting);
   bool operator==(const Coordinates &rhs) const;
   bool operator!=(const Coordinates &rhs) const;
+  bool operator<(const Coordinates &rhs) const;
+  bool operator>(const Coordinates &rhs) const;
+  bool operator<=(const Coordinates &rhs) const;
+  bool operator>=(const Coordinates &rhs) const;
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
   static Coordinates ParseCoordinate(std::string &coordinates);
+};
+struct CoordinatesHashFunction {
+  size_t operator()(const Coordinates &point) const;
+};
+struct CoordinatesComparator {
+  bool operator()(const Coordinates &point, const Coordinates &other) const;
 };
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

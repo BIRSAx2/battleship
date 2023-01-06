@@ -4,16 +4,32 @@ const std::string &Player::GetName() const {
   return name_;
 }
 
+void Player::SetName(const std::string &name) {
+  name_ = name;
+}
+
 GameBoard &Player::GetGameBoard() {
   return game_board_;
+}
+
+void Player::SetGameBoard(const GameBoard &game_board) {
+  game_board_ = game_board;
 }
 
 FiringBoard &Player::GetFiringBoard() {
   return firing_board_;
 }
 
+void Player::SetFiringBoard(const FiringBoard &firing_board) {
+  firing_board_ = firing_board;
+}
+
 std::map<Coordinates, Ship> &Player::GetShips() {
   return ships_;
+}
+
+void Player::SetShips(const std::map<Coordinates, Ship> &ships) {
+  ships_ = ships;
 }
 
 bool Player::operator==(const Player &rhs) const {
@@ -27,6 +43,7 @@ bool Player::operator!=(const Player &rhs) const {
 Player::Player(std::string name) : name_(std::move(name)) {
   game_board_ = GameBoard();
   firing_board_ = FiringBoard();
+  game_engine_ = GameEngine();
 }
 
 bool Player::HasLost() {
@@ -72,4 +89,92 @@ std::ostream &operator<<(std::ostream &os, Player &player) {
 }
 
 Player::Player() : name_("unknown player") {
+}
+
+void Player::PlaceShipsRandomly() {
+
+  // Tre Corazzate, dimensione 5
+  for (int i = 0; i < 3; ++i) {
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Battleship::DEFAULT_SIZE);
+	Battleship ship = Battleship(randomPosition.second);
+	PlaceShip(ship, randomPosition.first);
+  }
+  // Tre Navi di supporto, dimensione 3
+  for (int i = 0; i < 3; ++i) {
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, SupportShip::DEFAULT_SIZE);
+	SupportShip support_ship = SupportShip(randomPosition.second);
+	PlaceShip(support_ship, randomPosition.first);
+  }
+  // Due Sottomarini di esplorazione, dimensione 1
+  for (int i = 0; i < 2; ++i) {
+	std::pair<Coordinates, Orientation> randomPosition = game_engine_.GetRandomShipPlacement(game_board_, Submarine::DEFAULT_SIZE);
+	Submarine submarine = Submarine(randomPosition.second);
+	PlaceShip(submarine, randomPosition.first);
+  }
+}
+
+void Player::PlaceShips(const std::map<Coordinates, Ship> &ships) {
+  for (const auto &pair : ships) PlaceShip(pair.second, pair.first);
+}
+bool Player::PlaceShip(Ship ship, Coordinates coordinates) {
+
+  // Check if the position is inside the bounds of the board
+
+  if (!GameBoard::IsInsideBoard(ship.GetWidth(), ship.GetOrientation(), coordinates)) {
+	throw std::invalid_argument("Ship outside of the board's bounds");
+  }
+  // Check if the ship doesn't overlap other ships
+
+  if (game_board_.OverlapsOtherShip(ship.GetWidth(), ship.GetOrientation(), coordinates)) {
+	throw std::invalid_argument("Ship overlaps another ship");
+  }
+
+  // Place the ship in the board
+
+  std::vector<Coordinates> tiles = Coordinates::GetAdjacentCoordinates(coordinates, ship.GetOrientation(), ship.GetWidth());
+  for (auto coordinate : tiles) {
+	game_board_.MarkTile(coordinate, ship.GetOccupationType());
+  }
+  // Add the ship to the user's roster
+  ships_.emplace(coordinates, std::move(ship));
+
+  return true;
+}
+//
+//bool Player::HandleAttack(Coordinates target) {
+//  if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target outside the board's bounds");
+//  bool result = Battleship::Shoot();
+//  // successfull attack
+//  if (result) {
+//	// TODO: Handle discrepancy between player ships and board ships
+//	ships_.at(target).IncreaseHits();
+//	game_engine_.AddNearTargets(target);
+//  }
+//  return result;
+//}
+
+bool Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
+  if (game_board_.GetTiles().at(target.GetRow()).at(target.GetCol()).GetOccupationType() == HIT) return false;
+  if (ship_to_move.GetHits() != 0) return false;
+
+  if (!ships_.count(origin)) throw std::invalid_argument("Ship not found");
+
+  game_board_.MoveShip(origin, target, ship_to_move.GetWidth(), ship_to_move.GetOrientation());
+  Ship& ship = ships_.at(origin);
+
+  ships_.erase(origin);
+  ships_.emplace(target, ship);
+  return true;
+}
+
+std::pair<Coordinates, Coordinates> Player::GetRandomMove() {
+  return game_engine_.GetRandomMove(game_board_, ships_);
+}
+
+void Player::AddPotentialTargets(Coordinates target) {
+  game_engine_.AddNearTargets(target);
+}
+void Player::IncreaseShipHits(Coordinates target) {
+  if (ships_.count(target) == 0) return;
+  ships_.at(target).IncreaseHits();
 }
