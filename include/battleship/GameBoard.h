@@ -27,6 +27,7 @@ class GameBoard {
   std::vector<Tile> ScanSurroundings(Coordinates coordinates, int range = 1);
   void MarkTile(Coordinates target, OccupationType newType);
   bool MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation);
+  friend std::ostream &operator<<(std::ostream &os, GameBoard board); //DEBUG Only
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

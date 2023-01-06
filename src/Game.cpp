@@ -24,10 +24,6 @@ void Game::SetGameRecorder(const GameRecorder &game_recorder) {
   game_recorder_ = game_recorder;
 }
 Game::Game() {
-  player_a_ = Player("Random player A");
-  player_a_.PlaceShipsRandomly();
-  player_b_ = Player("Random player B");
-  player_b_.PlaceShipsRandomly();
 }
 bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
   bool attackResult = Battleship::Shoot(attacker.GetFiringBoard(), opponent.GetGameBoard(), target);
@@ -42,9 +38,9 @@ bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) 
 }
 void Game::PlaceShipsFromUser(const Player &player) {
 }
-void Game::PlaceShipsRandomly(Player& player) {
-  player.PlaceShipsRandomly();
-}
+//void Game::PlaceShipsRandomly(Player &player) {
+//  player.PlaceShipsRandomly();
+//}
 void Game::Replay(const GameRecorder &game_recorder) {
 }
 std::ostream &operator<<(std::ostream &os, Game &game) {
@@ -56,6 +52,9 @@ void Game::PlayRandomGame() {
 
   bool playerATurn = false;
   int rounds = 0;
+
+  player_a_.PlaceShipsRandomly();
+  player_b_.PlaceShipsRandomly();
 
   std::cout << player_a_ << std::endl;
   std::cout << player_b_ << std::endl;
@@ -87,8 +86,8 @@ void Game::PlayRandomGame() {
 	playerATurn = !playerATurn;
 
 	if (rounds++ == 200) exit(1);
-	std::string c;
-	std::cin >> c;
+	//	std::string c;
+	//	std::cin >> c;
   }
 }
 
@@ -114,4 +113,83 @@ void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coo
   }
 }
 Game::Game(Player playerA, Player playerB) {
+}
+void Game::PlayUserVsUserGame() {
+  std::string player_a_name;
+  std::string player_b_name;
+
+  // Getting the player's name
+  std::cout << "Please insert player A's name: "
+			<< " ";
+  std::cin >> player_a_name;
+  std::cout << "Please insert player B's name: "
+			<< " ";
+  std::cin >> player_b_name;
+
+  Player player_a = Player(player_a_name);
+
+  Player player_b = Player(player_b_name);
+
+  std::cout << "\033[2J";
+
+  std::cout << "Placing player A's ships" << std::endl;
+  std::cout << player_a << std::endl;
+
+  PlaceBattleshipFromUser(player_a);
+  PlaceSupportshipFromUser(player_a);
+  PlaceSubmarineFromUser(player_a);
+
+
+  PlaceBattleshipFromUser(player_b);
+  PlaceSupportshipFromUser(player_b);
+  PlaceSubmarineFromUser(player_b);
+
+  // Getting for each player place ships
+  // Start a turn based game
+}
+void Game::PlaceBattleshipFromUser(Player &player_a) const {
+  std::string input;
+  for (int i = 0; i < 3; ++i) {
+	std::cout << "Inserire le coordinate per la corazzata " << (i + 1) << ": ";
+	std::cin >> input;
+	Coordinates bow = Coordinates::ParseCoordinate(input);
+	std::cin >> input;
+	Coordinates stern = Coordinates::ParseCoordinate(input);
+
+	Battleship ship = Battleship(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
+	player_a.PlaceShip(ship, bow, stern);
+
+	std::cout << player_a << std::endl;
+  }
+}
+void Game::PlaceSupportshipFromUser(Player &player_a) const {
+  std::string input;
+  for (int i = 0; i < 3; ++i) {
+	std::cout << "Inserire le coordinate per la nave di supporto " << (i + 1) << ": ";
+	std::cin >> input;
+	Coordinates bow = Coordinates::ParseCoordinate(input);
+	std::cin >> input;
+	Coordinates stern = Coordinates::ParseCoordinate(input);
+
+	SupportShip ship = SupportShip(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
+	player_a.PlaceShip(ship, bow, stern);
+
+	std::cout << player_a << std::endl;
+  }
+}
+void Game::PlaceSubmarineFromUser(Player &player) const {
+  for (int i = 0; i < 2; ++i) {
+
+	std::string input;
+	std::cout << "Inserire le coordinate per il sottomarino di esplorazione " << (i + 1) << ": ";
+	std::cin >> input;
+	Coordinates bow = Coordinates::ParseCoordinate(input);
+	std::cin >> input;
+	Coordinates stern = Coordinates::ParseCoordinate(input);
+
+	Submarine ship = Submarine(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
+	player.PlaceShip(ship, bow, stern);
+
+	std::cout << player << std::endl;
+  }
 }

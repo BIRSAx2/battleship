@@ -16,10 +16,10 @@ inline std::ostream &operator<<(std::ostream &os, OccupationType occupation_type
 	case EMPTY: return os << "EMPTY";
 	case HIT: return os << "HIT";
 	case MISS: return os << "MISS";
-	case SUBMARINE: return os << "SUBMARINE";
-	case BATTLESHIP: return os << "BATTLESHIP";
+	case SUBMARINE: return os << "Sottomarino";
+	case BATTLESHIP: return os << "Corazzata";
 	case SUPPORT_SHIP:
-	  return os << "SUPPORT_SHIP";
+	  return os << "Nave di supporto";
 	default: return os << (int)occupation_type;
   }
 }

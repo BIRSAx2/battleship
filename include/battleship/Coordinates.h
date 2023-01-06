@@ -31,6 +31,7 @@ class Coordinates {
   bool operator>=(const Coordinates &rhs) const;
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
   static Coordinates ParseCoordinate(std::string &coordinates);
+  static std::pair<Coordinates, Coordinates> ParsePlacementCoordinates(std::string bow_stern);
 };
 struct CoordinatesHashFunction {
   size_t operator()(const Coordinates &point) const;

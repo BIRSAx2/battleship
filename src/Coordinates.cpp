@@ -72,6 +72,14 @@ std::pair<Coordinates, Coordinates> Coordinates::FromUserCoordinates(const std::
 
   return std::make_pair(from, to);
 }
+
+std::pair<Coordinates, Coordinates> Coordinates::ParsePlacementCoordinates(std::string bow_stern) {
+  std::vector<std::string> coordinate_pair = split(bow_stern, ' ');
+
+  std::cout << coordinate_pair.at(0) << std::endl;
+  std::cout << coordinate_pair.at(1) << std::endl;
+  return std::make_pair(ParseCoordinate(coordinate_pair.at(0)), ParseCoordinate(coordinate_pair.at(1)));
+}
 Coordinates Coordinates::ParseCoordinate(std::string &origin) {
   std::map<char, int> map{{'A', 0}, {'B', 1}, {'C', 2}, {'D', 3}, {'E', 4}, {'F', 5}, {'G', 6}, {'H', 7}, {'I', 8}, {'L', 9}, {'M', 10}, {'N', 11}};
 
@@ -97,7 +105,7 @@ std::vector<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates sta
   std::vector<Coordinates> coordinates;
   for (auto offset : offsets) {
 	Coordinates tmp = {starting.GetRow() + offset.first, starting.GetCol() + offset.second};
-	if (tmp.IsInBounds(0, 12)) {
+	if (tmp.IsInBounds()) {
 	  coordinates.push_back(tmp);
 	}
   }

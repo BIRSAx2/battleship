@@ -27,11 +27,11 @@ bool GameBoard::OverlapsOtherShip(const int width, const Orientation orientation
   if (!first_cell.IsInBounds(0, size_)) throw std::invalid_argument("Invalid Coordinates");
 
   if (orientation == HORIZONTAL) {
-	for (int i = 0; i < first_cell.GetCol() + width; ++i) {
+	for (int i = first_cell.GetCol(); i < first_cell.GetCol() + width; ++i) {
 	  if (tiles_[first_cell.GetRow()][i].IsOccupied()) return true;
 	}
   } else {
-	for (int i = 0; i < first_cell.GetRow() + width; ++i) {
+	for (int i = first_cell.GetRow(); i < first_cell.GetRow() + width; ++i) {
 	  if (tiles_[i][first_cell.GetCol()].IsOccupied()) return true;
 	}
   }

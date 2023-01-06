@@ -8,7 +8,7 @@ void GameEngine::AddNearTargets(Coordinates target) {
 	if (already_shot_.find(item) == already_shot_.end()) targets_.insert(item);
   }
 }
-std::pair<Coordinates, Orientation> GameEngine::GetRandomShipPlacement(GameBoard &game_board, int ship_width) {
+std::pair<Coordinates, Orientation> GameEngine::GetRandomShipPlacement(GameBoard game_board, int ship_width) {
 
   // TODO: Refactor this to use a more deterministic approach, first generate a list of available positions and the choose randomly between it's elements
   Orientation orientation;
@@ -45,7 +45,7 @@ Coordinates GameEngine::GetRandomShipCoordinates(const std::map<Coordinates, Shi
   for (const auto &pair : ships) {
 	if (pair.second.GetHits() == 0) keys.emplace_back(pair.first);
   }
-std::cout << keys.size() << std::endl;
+  std::cout << keys.size() << std::endl;
   return keys.at(random_int_in_range(0, (int)keys.size() - 1));
 }
 
@@ -86,3 +86,5 @@ GameEngine::GameEngine() = default;
 
 // TODO: Change Coordinates to refer to the first cell
 // Convert the user coordinates to starting
+// DEBUG NOTES:
+// Probably the bug is in the ship's map
