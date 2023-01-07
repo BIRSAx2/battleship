@@ -43,8 +43,10 @@ bool GameBoard::ReceiveAttack(Coordinates target) {
   Tile &targetTile = tiles_.at(target.GetRow()).at(target.GetCol());
   if (targetTile.IsOccupied() || targetTile.GetOccupationType() == HIT) {
 	targetTile.SetOccupationType(HIT);
+	tiles_.at(target.GetRow()).at(target.GetCol()).GetShip()->IncreaseHits();
 	return true;
   }
+
   return false;
 }
 
@@ -65,7 +67,15 @@ void GameBoard::MarkTile(Coordinates target, OccupationType new_type) {
   if (target.GetCol() < 0 || target.GetCol() >= size_ || target.GetRow() < 0 || target.GetRow() >= size_)
 	throw std::invalid_argument("Target out of range");
 
-  tiles_[target.GetRow()][target.GetCol()].SetOccupationType(new_type);
+  tiles_.at(target.GetRow()).at(target.GetCol()).SetOccupationType(new_type);
+}
+
+void GameBoard::MarkTile(Coordinates target, OccupationType new_type, Ship *ship) {
+  if (target.GetCol() < 0 || target.GetCol() >= size_ || target.GetRow() < 0 || target.GetRow() >= size_)
+	throw std::invalid_argument("Target out of range");
+  Tile &tile = tiles_.at(target.GetRow()).at(target.GetCol());
+  tile.SetOccupationType(new_type);
+  tile.SetShip(ship);
 }
 
 void GameBoard::SetTiles(std::vector<std::vector<Tile>> tiles) {
@@ -91,35 +101,29 @@ std::ostream &operator<<(std::ostream &os, GameBoard board) {
 }
 
 bool GameBoard::MoveShip(Coordinates origin, Coordinates target, int width, Orientation orientation) {
-
-  std::cout << (*this) << std::endl;
-  // TODO: Cannot Move ship if it's hit
   // TODO: There might a bug here: The coordinates should point to the center of a ship
   std::cout << "Moving ship from  " << origin << " to " << target << std::endl;
 
   OccupationType occupation_type = tiles_.at(origin.GetRow()).at(origin.GetCol()).GetOccupationType();
 
-  if (occupation_type == HIT || occupation_type == BATTLESHIP) throw std::invalid_argument("Cannot move this ship either because it's already hit or because it's battleship");
+  if (occupation_type == BATTLESHIP) throw std::invalid_argument("Cannot move this ship either because it's a battleship");
 
   std::vector<Coordinates> occupied_tiles = Coordinates::GetAdjacentCoordinates(origin, orientation, width);
 
   // marking old ship position as empty
-  // TODO: Check if we need to keep a spot marked as shot or if when we move the ship it becomes empty regardless
-
-  std::cout << "Occupied cells: ";
+  // necessario per mantenere traccia di quali celle della nave sono state colpite
+  std::map<Coordinates, OccupationType> hits;
   for (auto cell : occupied_tiles) {
-	std::cout << cell << ' ' << tiles_.at(cell.GetRow()).at(cell.GetCol()).GetOccupationType();
+	hits.emplace(cell, tiles_.at(cell.GetRow()).at(cell.GetCol()).GetOccupationType());
 	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(EMPTY);
   }
-  std::cout << std::endl;
   // marking new ship position
   std::vector<Coordinates> new_tiles = Coordinates::GetAdjacentCoordinates(target, orientation, width);
-  std::cout << "New cells: ";
-  for (auto cell : new_tiles) {
-	std::cout << cell << ' ';
-	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(occupation_type);
+  for (int i = 0; i < new_tiles.size(); ++i) {
+	Coordinates old = occupied_tiles.at(i);
+	Coordinates cell = new_tiles.at(i);
+	tiles_.at(cell.GetRow()).at(cell.GetCol()).SetOccupationType(hits.at(old));
   }
-  std::cout << std::endl;
   return true;
 }
 
@@ -129,4 +133,54 @@ int GameBoard::GetSize() const {
 
 void GameBoard::SetSize(int size) {
   size_ = size;
+}
+
+bool GameBoard::PlaceShip(Ship ship, Coordinates bow, Coordinates stern) {
+
+  // Check if the position is inside the bounds of the board
+
+  if (!GameBoard::IsInsideBoard(ship.GetWidth(), ship.GetOrientation(), bow)) {
+	throw std::invalid_argument("Ship outside of the board's bounds");
+  }
+  // Check if the ship doesn't overlap other ships
+
+  if (OverlapsOtherShip(ship.GetWidth(), ship.GetOrientation(), bow)) {
+	throw std::invalid_argument("Ship overlaps another ship");
+  }
+
+  // Place the ship in the board
+
+  std::vector<Coordinates> tiles = Coordinates::GetAdjacentCoordinates(bow, ship.GetOrientation(), ship.GetWidth());
+  for (auto coordinate : tiles) {
+	MarkTile(coordinate, ship.GetOccupationType(), &ship);
+  }
+  // Add the ship to the user's roster
+  ships_.emplace(bow, std::move(ship));
+
+  return true;
+}
+
+bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
+
+  if (ships_.count(origin) == 0) throw std::invalid_argument("Ship not found");
+
+  Ship &ship = ships_.at(origin);
+  std::cout << ship << std::endl;
+  if (ship.IsSunk()) throw std::invalid_argument("This ship is sunk and cannot be moved");
+  MoveShip(origin, target, ship.GetWidth(), ship.GetOrientation());
+
+  ships_.erase(origin);
+  ships_.emplace(target, ship);
+  return true;
+}
+const std::map<Coordinates, Ship> &GameBoard::GetShips() const {
+  return ships_;
+}
+void GameBoard::SetShips(const std::map<Coordinates, Ship> &ships) {
+  ships_ = ships;
+}
+
+void GameBoard::IncreaseShipHits(Coordinates target) {
+  if (ships_.count(target) == 0) return;
+  ships_.at(target).IncreaseHits();
 }

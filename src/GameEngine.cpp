@@ -45,28 +45,21 @@ Coordinates GameEngine::GetRandomShipCoordinates(const std::map<Coordinates, Shi
   for (const auto &pair : ships) {
 	if (pair.second.GetHits() == 0) keys.emplace_back(pair.first);
   }
-  std::cout << keys.size() << std::endl;
   return keys.at(random_int_in_range(0, (int)keys.size() - 1));
 }
 
-std::pair<Coordinates, Coordinates> GameEngine::GetRandomMove(GameBoard &game_board, const std::map<Coordinates, Ship> &ships) {
+std::pair<Coordinates, Coordinates> GameEngine::GetRandomMove(GameBoard &game_board) {
 
   // A random move is generated in two steps:
   // First chose a ship randomly between the user's ships
   // If the ship if a battleship then find a target for it
   // Otherwise find a new placement for the ship
-
+  const std::map<Coordinates, Ship> &ships = game_board.GetShips();
   Coordinates origin = GetRandomShipCoordinates(ships);
 
   Ship &ship = const_cast<Ship &>(ships.at(origin));
-  do {
-	origin = GetRandomShipCoordinates(ships);
-	std::cout << origin << std::endl;
-	ship = ships.at(origin);
-	std::cout << ship << std::endl;
-  } while (ship.GetOccupationType() == BATTLESHIP);
-
-  if (ship.GetOccupationType() == BATTLESHIP) throw std::invalid_argument("Cannot move this ship because it's a battle ship");
+  origin = GetRandomShipCoordinates(ships);
+  ship = ships.at(origin);
 
   if (ship.GetOccupationType() == BATTLESHIP) return std::make_pair(origin, GetNextTarget());
 
@@ -83,8 +76,3 @@ Coordinates GameEngine::GetRandomShipPlacement(GameBoard &game_board, const Ship
   return placement;
 }
 GameEngine::GameEngine() = default;
-
-// TODO: Change Coordinates to refer to the first cell
-// Convert the user coordinates to starting
-// DEBUG NOTES:
-// Probably the bug is in the ship's map

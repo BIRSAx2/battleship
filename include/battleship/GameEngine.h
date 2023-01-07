@@ -31,7 +31,7 @@ class GameEngine {
   GameEngine();
   void AddNearTargets(Coordinates target);
   std::pair<Coordinates, Orientation> GetRandomShipPlacement(GameBoard game_board, int ship_width);
-  std::pair<Coordinates, Coordinates> GetRandomMove(GameBoard &game_board, const std::map<Coordinates, Ship> &ships);
+  std::pair<Coordinates, Coordinates> GetRandomMove(GameBoard &game_board);
   Coordinates GetRandomShipPlacement(GameBoard &game_board, const Ship &ship);
   Coordinates GetNextTarget(int board_size = GameBoard::DEFAULT_BOARD_SIZE);
   Coordinates GetRandomShipCoordinates(const std::map<Coordinates, Ship> &ships);

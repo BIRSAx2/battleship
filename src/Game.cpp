@@ -24,13 +24,15 @@ void Game::SetGameRecorder(const GameRecorder &game_recorder) {
   game_recorder_ = game_recorder;
 }
 Game::Game() {
+  player_a_ = Player("Bot 1");
+  player_b_ = Player("Bot 2");
 }
 bool Game::HandleAttack(Player &attacker, Player &opponent, Coordinates target) {
   bool attackResult = Battleship::Shoot(attacker.GetFiringBoard(), opponent.GetGameBoard(), target);
   // In caso di attacco andato a buon fine, incremento i colpi ricevuti dalla nave avversaria
 
   if (attackResult) {
-	opponent.IncreaseShipHits(target);
+	opponent.GetGameBoard().IncreaseShipHits(target);
 	attacker.AddPotentialTargets(target);
   }
   std::cout << "Attack result: " << attackResult << std::endl;
@@ -60,41 +62,30 @@ void Game::PlayRandomGame() {
   std::cout << player_b_ << std::endl;
 
   while (!player_a_.HasLost() || !player_b_.HasLost()) {
-	std::cout << rounds << " "
-			  << "Turno di : " << (playerATurn ? player_a_.GetName() : player_b_.GetName()) << std::endl;
-
 	Player &current_player = playerATurn ? player_a_ : player_b_;
+	Player &opponent = playerATurn ? player_b_ : player_a_;
+	std::cout << rounds << ") "
+			  << "Turno di : " << current_player.GetName() << std::endl;
+
 	auto move = current_player.GetRandomMove();
-	std::cout << move.first << " " << move.second << std::endl;
-	if (playerATurn) {
-	  std::cout << "Before" << std::endl;
-	  std::cout << player_a_ << std::endl;
-	  PlayMove(player_a_, player_b_, move);
-	  std::cout << "After" << std::endl;
-	  std::cout << player_a_ << std::endl;
-
-	} else {
-	  std::cout << "Before" << std::endl;
-	  std::cout << player_b_ << std::endl;
-
-	  PlayMove(player_b_, player_a_, move);
-	  std::cout << "After" << std::endl;
-	  std::cout << player_b_ << std::endl;
-	}
-
+	PlayMove(current_player, opponent, move);
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	playerATurn = !playerATurn;
 
+	std::cout << current_player << std::endl;
+	std::cout << opponent << std::endl;
+
 	if (rounds++ == 200) exit(1);
-	//	std::string c;
-	//	std::cin >> c;
+	std::string c;
+	std::cin >> c;
   }
 }
 
 void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coordinates> move) {
-  if (!player.GetShips().count(move.first)) throw std::invalid_argument("There is no ship at the specified location");
-  Ship &ship = const_cast<Ship &>(player.GetShips().at(move.first));
-  std::cout << ship << std::endl;
+  if (!player.GetGameBoard().GetShips().count(move.first)) throw std::invalid_argument("There is no ship at the specified location");
+  Ship &ship = const_cast<Ship &>(player.GetGameBoard().GetShips().at(move.first));
+
+  // TODO create a Perform Action on each Ship subclass and avoid using the occupation_type to perfom actions
   switch (ship.GetOccupationType()) {
 
 	case EMPTY:
@@ -104,15 +95,12 @@ void Game::PlayMove(Player &player, Player &opponent, std::pair<Coordinates, Coo
 	  return;
 	case SUBMARINE:
 	case SUPPORT_SHIP:
-	  if (player.GetShips().at(move.first).GetHits() != 0) throw std::invalid_argument("Cannot move ship because it's already shot");
-	  player.MoveShip(move.first, move.second, ship);
+	  player.GetGameBoard().MoveShip(move.first, move.second);
 	  break;
 	case BATTLESHIP:
 	  HandleAttack(player, opponent, move.second);
 	  break;
   }
-}
-Game::Game(Player playerA, Player playerB) {
 }
 void Game::PlayUserVsUserGame() {
   std::string player_a_name;
@@ -139,7 +127,6 @@ void Game::PlayUserVsUserGame() {
   PlaceSupportshipFromUser(player_a);
   PlaceSubmarineFromUser(player_a);
 
-
   PlaceBattleshipFromUser(player_b);
   PlaceSupportshipFromUser(player_b);
   PlaceSubmarineFromUser(player_b);
@@ -157,7 +144,7 @@ void Game::PlaceBattleshipFromUser(Player &player_a) const {
 	Coordinates stern = Coordinates::ParseCoordinate(input);
 
 	Battleship ship = Battleship(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
-	player_a.PlaceShip(ship, bow, stern);
+	player_a.GetGameBoard().PlaceShip(ship, bow, stern);
 
 	std::cout << player_a << std::endl;
   }
@@ -172,7 +159,7 @@ void Game::PlaceSupportshipFromUser(Player &player_a) const {
 	Coordinates stern = Coordinates::ParseCoordinate(input);
 
 	SupportShip ship = SupportShip(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
-	player_a.PlaceShip(ship, bow, stern);
+	player_a.GetGameBoard().PlaceShip(ship, bow, stern);
 
 	std::cout << player_a << std::endl;
   }
@@ -188,7 +175,7 @@ void Game::PlaceSubmarineFromUser(Player &player) const {
 	Coordinates stern = Coordinates::ParseCoordinate(input);
 
 	Submarine ship = Submarine(bow.GetRow() == stern.GetRow() ? HORIZONTAL : VERTICAL);
-	player.PlaceShip(ship, bow, stern);
+	player.GetGameBoard().PlaceShip(ship, bow, stern);
 
 	std::cout << player << std::endl;
   }

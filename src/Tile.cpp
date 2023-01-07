@@ -59,3 +59,9 @@ const Coordinates &Tile::GetCoordinates() const {
 void Tile::SetCoordinates(const Coordinates &coordinates) {
   coordinates_ = coordinates;
 }
+Ship *Tile::GetShip() const {
+  return ship_;
+}
+void Tile::SetShip(Ship *ship) {
+  ship_ = ship;
+}

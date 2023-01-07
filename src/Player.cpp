@@ -24,14 +24,6 @@ void Player::SetFiringBoard(const FiringBoard &firing_board) {
   firing_board_ = firing_board;
 }
 
-std::map<Coordinates, Ship> &Player::GetShips() {
-  return ships_;
-}
-
-void Player::SetShips(const std::map<Coordinates, Ship> &ships) {
-  ships_ = ships;
-}
-
 bool Player::operator==(const Player &rhs) const {
   return name_ == rhs.name_;
 }
@@ -44,10 +36,6 @@ Player::Player(std::string name) : name_(std::move(name)) {
   game_board_ = GameBoard();
   firing_board_ = FiringBoard();
   game_engine_ = GameEngine();
-}
-
-bool Player::HasLost() {
-  return std::all_of(ships_.begin(), ships_.end(), [](const std::pair<Coordinates, Ship> &pair) { return pair.second.IsSunk(); });
 }
 
 std::string Player::ToString() {
@@ -106,7 +94,7 @@ void Player::PlaceShipsRandomly() {
 	  bow = randomPosition.first;
 	  stern = {bow.GetRow() + ship.GetWidth() - 1, bow.GetCol()};
 	}
-	PlaceShip(ship, bow, stern);
+	game_board_.PlaceShip(ship, bow, stern);
   }
   // Tre Navi di supporto, dimensione 3
   for (int i = 0; i < 3; ++i) {
@@ -121,7 +109,7 @@ void Player::PlaceShipsRandomly() {
 	  bow = randomPosition.first;
 	  stern = {bow.GetRow() + support_ship.GetWidth() - 1, bow.GetCol()};
 	}
-	PlaceShip(support_ship, bow, stern);
+	game_board_.PlaceShip(support_ship, bow, stern);
   }
   // Due Sottomarini di esplorazione, dimensione 1
   for (int i = 0; i < 2; ++i) {
@@ -136,69 +124,17 @@ void Player::PlaceShipsRandomly() {
 	  bow = randomPosition.first;
 	  stern = {bow.GetRow() + submarine.GetWidth() - 1, bow.GetCol()};
 	}
-	PlaceShip(submarine, bow, stern);
+	game_board_.PlaceShip(submarine, bow, stern);
   }
-}
-
-bool Player::PlaceShip(Ship ship, Coordinates bow, Coordinates stern) {
-
-  // Check if the position is inside the bounds of the board
-
-  if (!GameBoard::IsInsideBoard(ship.GetWidth(), ship.GetOrientation(), bow)) {
-	throw std::invalid_argument("Ship outside of the board's bounds");
-  }
-  // Check if the ship doesn't overlap other ships
-
-  if (game_board_.OverlapsOtherShip(ship.GetWidth(), ship.GetOrientation(), bow)) {
-	throw std::invalid_argument("Ship overlaps another ship");
-  }
-
-  // Place the ship in the board
-
-  std::vector<Coordinates> tiles = Coordinates::GetAdjacentCoordinates(bow, ship.GetOrientation(), ship.GetWidth());
-  for (auto coordinate : tiles) {
-	game_board_.MarkTile(coordinate, ship.GetOccupationType());
-  }
-  // Add the ship to the user's roster
-  ships_.emplace(bow, std::move(ship));
-
-  return true;
-}
-//
-//bool Player::HandleAttack(Coordinates target) {
-//  if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target outside the board's bounds");
-//  bool result = Battleship::Shoot();
-//  // successfull attack
-//  if (result) {
-//	// TODO: Handle discrepancy between player ships and board ships
-//	ships_.at(target).IncreaseHits();
-//	game_engine_.AddNearTargets(target);
-//  }
-//  return result;
-//}
-
-bool Player::MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move) {
-  if (game_board_.GetTiles().at(target.GetRow()).at(target.GetCol()).GetOccupationType() == HIT) return false;
-  if (ship_to_move.GetHits() != 0) return false;
-
-  if (!ships_.count(origin)) throw std::invalid_argument("Ship not found");
-
-  game_board_.MoveShip(origin, target, ship_to_move.GetWidth(), ship_to_move.GetOrientation());
-  Ship &ship = ships_.at(origin);
-
-  ships_.erase(origin);
-  ships_.emplace(target, ship);
-  return true;
 }
 
 std::pair<Coordinates, Coordinates> Player::GetRandomMove() {
-  return game_engine_.GetRandomMove(game_board_, ships_);
+  return game_engine_.GetRandomMove(game_board_);
 }
 
 void Player::AddPotentialTargets(Coordinates target) {
   game_engine_.AddNearTargets(target);
 }
-void Player::IncreaseShipHits(Coordinates target) {
-  if (ships_.count(target) == 0) return;
-  ships_.at(target).IncreaseHits();
+bool Player::HasLost() {
+  return false;
 }

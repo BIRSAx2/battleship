@@ -3,17 +3,21 @@
 
 #include "Coordinates.h"
 #include "OccupationType.h"
+#include "Ship.h"
 #include <ostream>
 class Tile {
  private:
   OccupationType occupation_type_;
   Coordinates coordinates_;
+  Ship* ship_;
 
  public:
   Tile();
   Tile(int row, int column);
   Tile(Coordinates coordinates);
   OccupationType GetStatus() const;
+  Ship *GetShip() const;
+  void SetShip(Ship *ship);
   bool IsOccupied() const;
   bool IsRandomlyAvailable() const;
   friend std::ostream &operator<<(std::ostream &os, const Tile &tile);

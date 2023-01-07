@@ -20,13 +20,11 @@ class Player {
   GameBoard game_board_;
   FiringBoard firing_board_;
   GameEngine game_engine_;
-  std::map<Coordinates, Ship> ships_;
 
  public:
   Player();
   explicit Player(std::string name);
   bool HasLost();
-  void PlaceShips(const std::map<Coordinates, Ship> &ships);
   bool PlaceShip(Ship ship, Coordinates bow, Coordinates stern);
   void PlaceShipsRandomly();
   std::string ToString();
@@ -43,7 +41,7 @@ class Player {
   bool operator==(const Player &rhs) const;
   bool operator!=(const Player &rhs) const;
   friend std::ostream &operator<<(std::ostream &os, Player &player);
-  bool MoveShip(Coordinates origin, Coordinates target, const Ship &ship_to_move);
+  bool MoveShip(Coordinates origin, Coordinates target);
   void AddPotentialTargets(Coordinates target);
   std::pair<Coordinates, Coordinates> GetRandomMove();
   void IncreaseShipHits(Coordinates target);

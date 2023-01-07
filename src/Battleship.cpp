@@ -5,8 +5,7 @@ bool Battleship::Shoot(FiringBoard &attacker, GameBoard &opponent, Coordinates t
   if (!target.IsInBounds(0, 12)) throw std::invalid_argument("Target outside the board's bounds");
   std::cout << "Shooting at target: " << target << std::endl;
   // TODO: Handle protected areas by support ship
-  //  bool result = opponent.ReceiveAttack(target);
-  bool result = false;
+  bool result = opponent.ReceiveAttack(target);
 
   Tile &target_tile = opponent.GetTiles().at(target.GetRow()).at(target.GetCol());
 
