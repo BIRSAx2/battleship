@@ -4,7 +4,7 @@
 #include "SupportShip.h"
 #include <iostream>
 int main() {
-  Game game = Game(COMPUTER_VS_HUMAN);
+  Game game = Game(COMPUTER_VS_COMPUTER);
   game.PlayGame();
   return 0;
 }

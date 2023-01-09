@@ -2,10 +2,12 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
 
 #include <ostream>
-#include <utility>
+#include<iomanip>
 
 #include "FiringBoard.h"
 #include "GameBoard.h"
+#include "Utility.h"
+
 class Player {
  private:
   std::string name_;
