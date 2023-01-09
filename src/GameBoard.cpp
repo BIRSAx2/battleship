@@ -15,25 +15,7 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
 }
 
 std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
-  std::string horizontal_legend = "  1  2  3  4  5  6  7  8  9  10 11 12";
-
-  std::string arr[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
-  int legend = 0;
-  os << ColourText256(horizontal_legend, 8) << "\n";
-
-  for (int i = 0; i < board.GetRows(); ++i) {
-	os << ColourText256(std::string(arr[legend]), 8) << " ";
-	for (int j = 0; j < board.GetCols(); ++j) {
-
-	  if (board.occupied_locations_.count({i, j}) != 0) os << board.occupied_locations_.at({i, j})->ToString({i, j}) << "  ";
-	  else {
-		os << ColourText256("~", 87) << "  ";
-	  }
-	}
-	os << ColourText256(std::string(arr[legend]), 8) << "\n";
-	legend++;
-  }
-  return os << ColourText256(horizontal_legend, 8) << "\n";
+  return os << board.ToString();
 }
 
 bool GameBoard::ReceiveAttack(Coordinates target) {
@@ -81,4 +63,29 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 	occupied_locations_.emplace(loc, ship);
   }
   return true;
+}
+std::string GameBoard::ToString() const {
+
+  std::stringstream string_stream;
+
+  std::string horizontal_legend = "  1  2  3  4  5  6  7  8  9  10 11 12";
+
+  std::string vertical_legend[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
+  int legend = 0;
+  string_stream << ColourText256(horizontal_legend, 8) << "\n";
+
+  for (int i = 0; i < GetRows(); ++i) {
+	string_stream << ColourText256(std::string(vertical_legend[legend]), 8) << " ";
+	for (int j = 0; j < GetCols(); ++j) {
+
+	  if (occupied_locations_.count({i, j}) != 0) string_stream << occupied_locations_.at({i, j})->ToString({i, j}) << "  ";
+	  else {
+		string_stream << ColourText256("~", 87) << "  ";
+	  }
+	}
+	string_stream << ColourText256(std::string(vertical_legend[legend]), 8) << "\n";
+	legend++;
+  }
+  string_stream << ColourText256(horizontal_legend, 8) << "\n";
+  return string_stream.str();
 }

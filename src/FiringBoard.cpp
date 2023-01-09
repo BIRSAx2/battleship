@@ -14,16 +14,17 @@ void FiringBoard::Clear() {
 std::ostream &operator<<(std::ostream &os, const FiringBoard &board) {
   return os << board.ToString();
 }
+
 std::string FiringBoard::ToString() const {
   std::stringstream os;
   std::string horizontal_legend = "  1  2  3  4  5  6  7  8  9  10 11 12";
 
-  std::string arr[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
+  std::string vertical_legend[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N"};
   int legend = 0;
   os << ColourText256(horizontal_legend, 8) << "\n";
 
   for (int i = 0; i < GetRows(); ++i) {
-	os << ColourText256(std::string(arr[legend]), 8) << " ";
+	os << ColourText256(std::string(vertical_legend[legend]), 8) << " ";
 	for (int j = 0; j < GetCols(); ++j) {
 
 	  if (tiles_.count({i, j}) != 0) os << tiles_.at({i, j}) << "  ";
@@ -31,12 +32,13 @@ std::string FiringBoard::ToString() const {
 		os << ColourText256("~", 87) << "  ";
 	  }
 	}
-	os << ColourText256(std::string(arr[legend]), 8) << "\n";
+	os << ColourText256(std::string(vertical_legend[legend]), 8) << "\n";
 	legend++;
   }
   os << ColourText256(horizontal_legend, 8) << "\n";
   return os.str();
 }
+
 std::ostream &operator<<(std::ostream &os, OccupationType cat) {
   switch (cat) {
 	case EMPTY: os << "~"; break;

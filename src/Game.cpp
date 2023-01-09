@@ -13,6 +13,8 @@ void Game::PlayGame() {
 }
 
 void Game::PlayComputerVsComputerGame() {
+  player_a_.PlaceShipsRandomly();
+  player_b_.PlaceShipsRandomly();
   std::cout << player_a_ << std::endl;
   std::cout << player_b_ << std::endl;
 }
