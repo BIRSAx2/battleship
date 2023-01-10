@@ -34,9 +34,6 @@ bool Coordinates::operator==(const Coordinates &rhs) const {
 bool Coordinates::operator!=(const Coordinates &rhs) const {
   return !(rhs == *this);
 }
-bool Coordinates::operator<(const Coordinates &rhs) const {
-  return row_col_ < rhs.row_col_;
-}
 
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
   os << "(" << coordinates.row_col_.first << "," << coordinates.row_col_.second << ")";

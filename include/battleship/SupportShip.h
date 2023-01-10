@@ -27,9 +27,10 @@ class SupportShip : public Ship {
   /// \param target
   /// \return true nel caso sia stato possibile cambiare posizione della nave, altrimenti false. Per il momento restituisce sempre true.
   bool MoveShip(Coordinates target);
+
   /// Restituisce un vector contente le coordinate delle celle coperte dalla questa nave.
-  /// \return Un std::vector<Coordinate> contente le celle che questa nave copre dagli attacchi.
-  std::vector<Coordinates> GetProtectedCoordinates();
+  /// \return Un std::set<Coordinate> contente le celle che questa nave copre dagli attacchi.
+  static std::set<Coordinates> GetProtectedCoordinates(Coordinates current_position);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SUPPORTSHIP_H_
