@@ -32,6 +32,7 @@ class FiringBoard : public Board {
   friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
   std::string ToString() const;
   bool HasBeenAttacked(Coordinates coordinates);
+  void AddSubmarineSightings(const std::map<Coordinates, OccupationType>& map_1);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_

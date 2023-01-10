@@ -43,7 +43,7 @@ std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
 int Coordinates::CalculateOffsetTo(Coordinates coordinates) {
   if (GetRow() != coordinates.GetRow() && GetCol() != coordinates.GetCol()) throw std::invalid_argument("Cannot calculate offset. The two coordinates need to be either in the same row or in the same col");
 
-  if (Coordinates(1, 1) > coordinates) throw std::invalid_argument("The argument must be after the current coordinates");
+  if (*this > coordinates) throw std::invalid_argument("The argument must be after the current coordinates");
   // horizontal => the offset is the difference between columns
   if (coordinates.GetRow() == GetRow()) {
 

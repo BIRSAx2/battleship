@@ -41,10 +41,17 @@ std::string FiringBoard::ToString() const {
 bool FiringBoard::HasBeenAttacked(Coordinates target) {
   return tiles_.count(target) != 0;
 }
+void FiringBoard::AddSubmarineSightings(const std::map<Coordinates, OccupationType> &sightings) {
+
+  // TODO: We could ignore empty ones
+  for (auto pair : sightings) {
+	tiles_[pair.first] = pair.second;
+  }
+}
 
 std::ostream &operator<<(std::ostream &os, OccupationType cat) {
   switch (cat) {
-	case EMPTY: os << "~"; break;
+	case EMPTY: os << ColourText256("~", 87); break;
 	case HIT: os << ColourText256("X", 1); break;
 	case MISS: os << ColourText256("O", 220); break;
 	case OCCUPIED: os << ColourText256("Y", 100); break;

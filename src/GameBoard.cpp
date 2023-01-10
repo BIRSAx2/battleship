@@ -11,6 +11,13 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
 	occupied_locations_.emplace(loc, to_add);
   }
 
+  // if support ship we add the protected coordinate to protected_coordinates_
+  if (ship.GetShipType() == SUPPORTSHIP) {
+	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
+	  protected_coordinates_.insert(protected_coordinate);
+	}
+  }
+
   return true;
 }
 
@@ -20,6 +27,8 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
 
 bool GameBoard::ReceiveAttack(Coordinates target) {
   if (occupied_locations_.count(target) == 0) return false;
+  // TODO: Handle the fact that a support ship cannot protect itself
+  if (protected_coordinates_.count(target) != 0) return false;
   occupied_locations_.at(target)->HitLocation(target);
   // Remove a ship if it's sunk
   if (occupied_locations_.at(target)->IsSunk()) {
@@ -40,32 +49,44 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 
   auto current = ship->GetLocations();
 
-  // TODO: add check of already occupied positions
-  // TODO: add check if the ship is inside
-
-  // idea: take the item at the center of current, it's the center of the ship.
-
   //horizontal
-
-  Coordinates bow;
-  Coordinates stern;
-  if (ship->IsHorizontal()) {
-	bow = {target.GetRow(), target.GetCol() - ship->GetWidth() / 2};
-	stern = {target.GetRow(), target.GetCol() + ship->GetWidth() / 2};
-  } else {
-	bow = {target.GetRow() - ship->GetWidth() / 2, target.GetCol()};
-	stern = {target.GetRow() + ship->GetWidth() / 2, target.GetCol()};
-  }
+  std::pair<Coordinates, Coordinates> bow_stern = GetBowAndSternFromCenter(target, ship);
+  Coordinates bow = bow_stern.first;
+  Coordinates stern = bow_stern.second;
 
   Ship tmp = Ship();
   tmp.SetBow(bow);
   tmp.SetStern(stern);
 
   for (auto loc : tmp.GetLocations()) {
+
+	// if the loc is not empty, and it doesn't contain a part of this ship
 	if (occupied_locations_.count(loc) != 0 && std::count(current.begin(), current.end(), loc) == 0) {
 	  throw std::invalid_argument("The destination is already occupied by another ship");
 	}
   }
+
+  // TODO: refactor this, move it elsewhere.
+  if (ship->GetShipType() == SUPPORTSHIP) {
+	std::set<Coordinates> old_protected_tiles = SupportShip::GetProtectedCoordinates(origin);
+
+	std::set<Coordinates> new_protected_tiles = SupportShip::GetProtectedCoordinates(target);
+
+	for (auto to_remove : old_protected_tiles) {
+	  protected_coordinates_.erase(to_remove);
+	}
+
+	// remove this ship's occupied coordinates from the protected ones
+	// TODO: find a more elegant way to do this
+	for (auto to_remove : tmp.GetLocations()) {
+	  new_protected_tiles.erase(to_remove);
+	}
+
+	for (auto to_add : new_protected_tiles) {
+	  protected_coordinates_.insert(to_add);
+	}
+  }
+
 
   for (auto loc : current) {
 	occupied_locations_.erase(loc);
@@ -73,10 +94,25 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
   ship->SetBow(bow);
   ship->SetStern(stern);
 
+  if (!IsInsideBoard(*ship)) throw std::invalid_argument("The target is outside the board's bounds");
+
   for (auto loc : ship->GetLocations()) {
 	occupied_locations_.emplace(loc, ship);
   }
   return true;
+}
+std::pair<Coordinates, Coordinates> GameBoard::GetBowAndSternFromCenter(const Coordinates &Center, const std::shared_ptr<Ship> &ship) const {
+
+  Coordinates bow, stern;
+  if (ship->IsHorizontal()) {
+	bow = {Center.GetRow(), Center.GetCol() - ship->GetWidth() / 2};
+	stern = {Center.GetRow(), Center.GetCol() + ship->GetWidth() / 2};
+  } else {
+	bow = {Center.GetRow() - ship->GetWidth() / 2, Center.GetCol()};
+	stern = {Center.GetRow() + ship->GetWidth() / 2, Center.GetCol()};
+  }
+
+  return {bow, stern};
 }
 
 std::string GameBoard::ToString() const {

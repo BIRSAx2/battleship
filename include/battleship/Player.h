@@ -44,12 +44,14 @@ class Player {
   std::shared_ptr<Ship> GetShipAt(Coordinates location);
   bool ReceiveAttack(Coordinates coordinates);
   void MarkAttack(Coordinates coordinates, bool b);
-  bool MoveShip(Coordinates coordinates, Coordinates coordinates_1);
+  bool MoveShip(Coordinates origin, Coordinates target);
 
   const std::string &GetName() const;
   void SetName(const std::string &name);
   Coordinates GetNextTarget();
   void AddNextTargets(Coordinates coordinates);
+  OccupationType InquireState(Coordinates coordinates);
+  void UpdateSubmarineSightings(std::map<Coordinates, OccupationType> scan_from_submarine);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_

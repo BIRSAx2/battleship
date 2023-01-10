@@ -2,6 +2,7 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_SUBMARINE_H_
 
 #include "GameBoard.h"
+#include "Player.h"
 #include "Ship.h"
 class Submarine : public Ship {
  public:
@@ -10,7 +11,7 @@ class Submarine : public Ship {
   /// \throws std::invali_argument
   /// \param bow La prua della nave
   /// \param stern La poppa della nave
-  Submarine(Coordinates bow, Coordinates stern) : Ship('E', DEFAULT_SIZE, 100) {
+  Submarine(Coordinates bow, Coordinates stern) : Submarine() {
 	bow_ = bow;
 	stern_ = stern;
   };
@@ -23,9 +24,9 @@ class Submarine : public Ship {
 
   bool MoveShip(Coordinates target);
 
-  /// Scansiona le celle del campo di gioco avversario presenti in un raggio di 5 celle dal centro della nave.
+  /// Scansiona le celle del campo di gioco avversario presenti in un raggio di 5x5 al centro c'è il sottomarino.
   /// \return Un vector delle coordinate che contengono navi avversarie.
-  std::vector<Coordinates> ScanSurroundings(GameBoard opponent_board);
+  static std::map<Coordinates, OccupationType> ScanSurroundings(Player &opponent, Coordinates current_position);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SUBMARINE_H_

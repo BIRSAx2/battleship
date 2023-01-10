@@ -20,7 +20,7 @@ void Game::PlayComputerVsComputerGame() {
   std::cout << player_b_ << std::endl;
 
   bool player_a_turn = RandomIntInRange(0, 1);
-  for (int i = 0; i < 123; ++i) {
+  for (int i = 0; i < 10; ++i) {
 	std::cout << "---------------------------Turn " << i << "---------------------------------" << std::endl;
 	Player &current_player = player_a_turn ? player_a_ : player_b_;
 	Player &opponent = player_a_turn ? player_b_ : player_a_;
@@ -53,6 +53,7 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 	if (result) attacker.AddNextTargets(move.second);
 	return true;
   }
+
   // move ship
   std::cout << "Moving a ship " << std::endl;
 
@@ -62,5 +63,11 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 	return false;
   };
 
+  std::cout << ship->GetShipType() << std::endl;
+  if (ship->GetShipType() == SUBMARINE) {
+	// Update the sightings
+	std::map<Coordinates, OccupationType> scans = Submarine::ScanSurroundings(opponent, move.second);
+	attacker.UpdateSubmarineSightings(scans);
+  }
   return true;
 }

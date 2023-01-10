@@ -129,8 +129,9 @@ bool Player::ReceiveAttack(Coordinates coordinates) {
 void Player::MarkAttack(Coordinates target, bool is_successful) {
   firing_board_.MarkAttack(target, is_successful);
 }
-bool Player::MoveShip(Coordinates coordinates, Coordinates coordinates_1) {
-  return game_board_.MoveShip(coordinates, coordinates_1);
+bool Player::MoveShip(Coordinates origin, Coordinates target) {
+  bool successfully_moved = game_board_.MoveShip(origin, target);
+  return successfully_moved;
 }
 const std::string &Player::GetName() const {
   return name_;
@@ -154,4 +155,11 @@ void Player::AddNextTargets(Coordinates successfully_hit_target) {
 	if (firing_board_.HasBeenAttacked(target)) continue;
 	next_targets_.insert(target);
   }
+}
+OccupationType Player::InquireState(Coordinates coordinates) {
+  if (GetShipAt(coordinates) != nullptr) return OCCUPIED;
+  return EMPTY;
+}
+void Player::UpdateSubmarineSightings(std::map<Coordinates, OccupationType> scan_from_submarine) {
+  this->firing_board_.AddSubmarineSightings(scan_from_submarine);
 }
