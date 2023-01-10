@@ -31,6 +31,7 @@ class FiringBoard : public Board {
   /// Stampa il contenuto di GameBoard sotto forma di griglia rows_ x columns_
   friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
   std::string ToString() const;
+  bool HasBeenAttacked(Coordinates coordinates);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_

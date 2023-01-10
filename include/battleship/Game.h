@@ -15,6 +15,6 @@ class Game {
   void PlayGame();
   void PlayComputerVsComputerGame();
   void PlayComputerVsHumanGame();
+  bool PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, Coordinates> move);
 };
-
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_

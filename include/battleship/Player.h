@@ -1,8 +1,8 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
 
+#include <iomanip>
 #include <ostream>
-#include<iomanip>
 
 #include "FiringBoard.h"
 #include "GameBoard.h"
@@ -14,6 +14,9 @@ class Player {
   GameBoard game_board_;
   FiringBoard firing_board_;
   int alive_battleships_ = 3;
+
+  // This variables are used to avoid shooting randomly
+  std::set<Coordinates> next_targets_;
 
  public:
   Player(std::string name) : name_(std::move(name)){};
@@ -36,6 +39,17 @@ class Player {
   std::string ToString() const;
   /// Utilizza il metodo ToString() per stampare su os le griglie di gioco.
   friend std::ostream &operator<<(std::ostream &os, const Player &player);
+  std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width) const;
+  std::pair<Coordinates, Coordinates> GenerateRandomMove();
+  std::shared_ptr<Ship> GetShipAt(Coordinates location);
+  bool ReceiveAttack(Coordinates coordinates);
+  void MarkAttack(Coordinates coordinates, bool b);
+  bool MoveShip(Coordinates coordinates, Coordinates coordinates_1);
+
+  const std::string &GetName() const;
+  void SetName(const std::string &name);
+  Coordinates GetNextTarget();
+  void AddNextTargets(Coordinates coordinates);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
