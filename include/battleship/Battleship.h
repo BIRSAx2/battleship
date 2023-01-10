@@ -7,12 +7,14 @@
 
 class Battleship : public Ship {
  public:
+  static const int DEFAULT_SIZE = 5;
+
   /// Create una Ship di tipo Battleship a partire da prua e poppa. Se la distanza tra prua e poppa non corrisponde alla dimensione della nave lancia un std::invalid_argument
   /// \throws std::invali_argument
   /// \param bow La prua della nave
   /// \param stern La poppa della nave
   Battleship(Coordinates bow, Coordinates stern);
-  Battleship() : Ship('C', 5, 127) {
+  Battleship() : Ship('C', DEFAULT_SIZE, 127) {
 	ship_type_ = BATTLESHIP;
   }
   /// Colpisce la cella target del campo di gioco avversario.

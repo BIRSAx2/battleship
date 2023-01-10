@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include <map>
 #include <ostream>
+#include <set>
 class Coordinates {
  public:
   Coordinates() : row_col_{0, 0} {};
@@ -48,12 +49,28 @@ class Coordinates {
   /// \param start Coordinata di partenza
   /// \param end Coordinata di arrivo
   /// \return  Un vector delle coordinate che si trovano tra start ed end.
-  std::vector<Coordinates> GetCoordinatesBetween(Coordinates start, Coordinates end);
+  static std::vector<Coordinates> GetCoordinatesBetween(Coordinates start, Coordinates end);
+
+  /// Restituisce delle coordinate random all'interno della griglia
+  /// \return Delle coordinate random
+  static Coordinates GetRandomCoordinates();
+
+  /// Formatta le coordinate in questione nel formato voluto dall'utente.
+  std::string ToUserCoordinates() const;
+
+  /// Ritorna un vector composto dalle coordinate che si trovano immediatamente a destra, a sinistra, sopra e sotto current.
+  /// Esempio: (X = current)\n
+  /// A B C \n
+  /// D X E \n
+  /// F G H \n
+  /// In questo caso restiuisce un vector di B, D, E G
+  static std::set<Coordinates>GetAdjacentStarCoordinates(Coordinates current);
+
+  void SetRow(int row);
+  void SetCol(int col);
 
  private:
   std::pair<int, int> row_col_;
-  void SetRow(int row);
-  void SetCol(int col);
   /// Converte le coordinate fornite dall'utente in coordinate di sistema.
   Coordinates ParseCoordinates(std::string &coordinates);
 };

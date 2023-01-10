@@ -5,6 +5,8 @@
 #include "Utility.h"
 class SupportShip : public Ship {
  public:
+  static const int DEFAULT_SIZE = 3;
+
   /// Create una Ship di tipo SupportShip a partire da prua e poppa. Se la distanza tra prua e poppa non corrisponde alla dimensione della nave lancia un std::invalid_argument
   /// \throws std::invali_argument
   /// \param bow La prua della nave
@@ -17,7 +19,7 @@ class SupportShip : public Ship {
   /// \throws std::invali_argument
   /// \param bow La prua della nave
   /// \param stern La poppa della nave
-  SupportShip() : Ship('S', 3, 106) {
+  SupportShip() : Ship('S', DEFAULT_SIZE, 106) {
 	icon_color_ = 106;
 	ship_type_ = SUPPORTSHIP;
   };

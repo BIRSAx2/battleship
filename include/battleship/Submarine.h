@@ -5,15 +5,16 @@
 #include "Ship.h"
 class Submarine : public Ship {
  public:
+  static const int DEFAULT_SIZE = 1;
   /// Create una Ship di tipo Submarine a partire da prua e poppa. Se la distanza tra prua e poppa non corrisponde alla dimensione della nave lancia un std::invalid_argument
   /// \throws std::invali_argument
   /// \param bow La prua della nave
   /// \param stern La poppa della nave
-  Submarine(Coordinates bow, Coordinates stern) : Ship('E', 1, 100) {
+  Submarine(Coordinates bow, Coordinates stern) : Ship('E', DEFAULT_SIZE, 100) {
 	bow_ = bow;
 	stern_ = stern;
   };
-  Submarine() : Ship('E', 1, 100) {
+  Submarine() : Ship('E', DEFAULT_SIZE, 100) {
 	ship_type_ = SUBMARINE;
   };
   /// Cambia la prua e poppa di questa nave a partire da target. La prua e la poppa sono calcolate utilizzando target come cella centrale della nave.
