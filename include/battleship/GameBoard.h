@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "Coordinates.h"
 #include "Ship.h"
+#include "SupportShip.h"
 #include "Utility.h"
 #include <algorithm>
 #include <iostream>
@@ -12,6 +13,7 @@
 class GameBoard : public Board {
  private:
   std::map<Coordinates, std::shared_ptr<Ship>> occupied_locations_;
+  std::set<Coordinates> protected_coordinates_;
 
  public:
   GameBoard() : Board(12, 12){};
@@ -60,6 +62,7 @@ class GameBoard : public Board {
   const std::map<Coordinates, std::shared_ptr<Ship>> &GetOccupiedLocations() const;
   void SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations);
   void RemoveShip(Coordinates coordinates);
+  std::pair<Coordinates, Coordinates> GetBowAndSternFromCenter(const Coordinates &Center, const std::shared_ptr<Ship> &ship) const;
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

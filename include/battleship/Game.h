@@ -2,6 +2,7 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
 
 #include "Player.h"
+#include "Submarine.h"
 enum GameMode { COMPUTER_VS_COMPUTER,
 				COMPUTER_VS_HUMAN };
 class Game {
