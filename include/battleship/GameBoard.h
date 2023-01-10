@@ -59,6 +59,7 @@ class GameBoard : public Board {
 
   const std::map<Coordinates, std::shared_ptr<Ship>> &GetOccupiedLocations() const;
   void SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations);
+  void RemoveShip(Coordinates coordinates);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

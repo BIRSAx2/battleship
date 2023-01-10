@@ -5,7 +5,6 @@
 #include <iostream>
 int main() {
   Game game = Game(COMPUTER_VS_COMPUTER);
-  game.PlayGame();
-
+  //  game.PlayGame();
   return 0;
 }

@@ -21,6 +21,10 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
 bool GameBoard::ReceiveAttack(Coordinates target) {
   if (occupied_locations_.count(target) == 0) return false;
   occupied_locations_.at(target)->HitLocation(target);
+  // Remove a ship if it's sunk
+  if (occupied_locations_.at(target)->IsSunk()) {
+	RemoveShip(target);
+  }
   return true;
 }
 
@@ -116,4 +120,15 @@ const std::map<Coordinates, std::shared_ptr<Ship>> &GameBoard::GetOccupiedLocati
 }
 void GameBoard::SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations) {
   occupied_locations_ = occupied_locations;
+}
+void GameBoard::RemoveShip(Coordinates location) {
+  std::cout << ColourBackground256("A ship has been sunk and it's getting removed from the board", 34) << std::endl;
+
+  if (occupied_locations_.count(location) == 0) return;
+
+  std::shared_ptr<Ship> ship = GetShipAt(location);
+
+  for (auto loc : ship->GetLocations()) {
+	occupied_locations_.erase(occupied_locations_.find(loc));
+  }
 }

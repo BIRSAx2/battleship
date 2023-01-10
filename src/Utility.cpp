@@ -45,3 +45,18 @@ char GetLetterFromNumber(int code_point) {
   char letters[] = "ABCDEFGHILMN";
   return letters[code_point];
 }
+
+void Print256ColoursTxt() {
+  for (int i = 0; i < 256; i++) {
+	if (i % 16 == 0 && i != 0)
+	  std::cout << std::endl;
+	printf("\033[38;5;%dm %3d\033[m", i, i);
+  }
+}
+void Print256ColoursBackground() {
+  for (int i = 0; i < 256; i++) {
+	if (i % 16 == 0 && i != 0)
+	  std::cout << std::endl;
+	printf("\033[48;5;%dm %3d\033[m", i, i);
+  }
+}

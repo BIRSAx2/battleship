@@ -31,10 +31,18 @@ class Coordinates {
   /// \return true se sono diversi, false altrimenti.
   bool operator!=(const Coordinates &other) const;
 
-  /// Il confronto effettuato è il seguente (GetRow() < other.GetRow() || (GetRow() == other.GetRow() && GetCol() < other.GetCol())
+  /// Il confronto effettuato è il seguente:\n
+  /// (a.GetRow() > b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() > b.GetCol())
   /// \param other
   /// \return true se this si trova prima di other, false altrimenti.
-  bool operator<(const Coordinates &other) const;
+  friend bool operator>(const Coordinates &a, const Coordinates &b);
+
+  /// Il confronto effettuato è il seguente:\n
+  /// (a.GetRow() < b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() < b.GetCol())
+  /// \return true se this si trova prima di other, false altrimenti.
+  /// \param other
+  friend bool operator<(const Coordinates &a, const Coordinates &b);
+
 
   /// Restituisce le coordinate sotto forma di (row,col)
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
@@ -64,7 +72,7 @@ class Coordinates {
   /// D X E \n
   /// F G H \n
   /// In questo caso restiuisce un vector di B, D, E G
-  static std::set<Coordinates>GetAdjacentStarCoordinates(Coordinates current);
+  static std::set<Coordinates> GetAdjacentStarCoordinates(Coordinates current);
 
   void SetRow(int row);
   void SetCol(int col);
@@ -72,7 +80,7 @@ class Coordinates {
  private:
   std::pair<int, int> row_col_;
   /// Converte le coordinate fornite dall'utente in coordinate di sistema.
-  Coordinates ParseCoordinates(std::string &coordinates);
+  static Coordinates ParseCoordinates(std::string &coordinates);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

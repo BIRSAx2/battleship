@@ -13,4 +13,9 @@ int GetNumberFromLetter(char &c);
 char GetLetterFromNumber(int code_point);
 int RandomEvenIntInRange(int min, int max);
 
+// DEBUG ONLY
+void Print256ColoursTxt();
+
+void Print256ColoursBackground();
+
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_UTILITY_H_

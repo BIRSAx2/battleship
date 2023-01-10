@@ -29,14 +29,11 @@ int Coordinates::GetCol() const {
 bool Coordinates::IsValid(int row, int col) {
   return row >= 0 && row < 12 && col >= 0 && col < 12;
 }
-bool Coordinates::operator==(const Coordinates &rhs) const {
-  return row_col_ == rhs.row_col_;
+bool Coordinates::operator==(const Coordinates &other) const {
+  return GetCol() == other.GetCol() && GetRow() == other.GetRow();
 }
-bool Coordinates::operator!=(const Coordinates &rhs) const {
-  return !(rhs == *this);
-}
-bool Coordinates::operator<(const Coordinates &rhs) const {
-  return row_col_ < rhs.row_col_;
+bool Coordinates::operator!=(const Coordinates &other) const {
+  return !(other == *this);
 }
 
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
@@ -46,7 +43,7 @@ std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
 int Coordinates::CalculateOffsetTo(Coordinates coordinates) {
   if (GetRow() != coordinates.GetRow() && GetCol() != coordinates.GetCol()) throw std::invalid_argument("Cannot calculate offset. The two coordinates need to be either in the same row or in the same col");
 
-  // TODO: add check for this to work $coordinates must be after $this
+  if (Coordinates(1, 1) > coordinates) throw std::invalid_argument("The argument must be after the current coordinates");
   // horizontal => the offset is the difference between columns
   if (coordinates.GetRow() == GetRow()) {
 
@@ -106,4 +103,10 @@ std::set<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates curren
 	adjacent_coordinates.insert({current.GetRow() + offset.first, current.GetCol() + offset.second});
   }
   return adjacent_coordinates;
+}
+bool operator>(const Coordinates &a, const Coordinates &b) {
+  return a.GetRow() > b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() > b.GetCol());
+}
+bool operator<(const Coordinates &a, const Coordinates &b) {
+  return a.GetRow() < b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() < b.GetCol());
 }

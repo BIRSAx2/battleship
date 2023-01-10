@@ -147,6 +147,9 @@ Coordinates Player::GetNextTarget() {
 }
 void Player::AddNextTargets(Coordinates successfully_hit_target) {
   std::set<Coordinates> new_target = Coordinates::GetAdjacentStarCoordinates(successfully_hit_target);
+  // It's a hard task to develop an efficient and fast algorithm to play this variant of the battleship game.
+  // The main reason behind this is the fact that ships can move, so keeping track of where the enemy ships might be is basically useless, as an enemy can move the ship under attack right after an attack.
+  // Making it useless to hit the targets near the one just hit in search of the remaining parts of the ship.
   for (auto target : new_target) {
 	if (firing_board_.HasBeenAttacked(target)) continue;
 	next_targets_.insert(target);
