@@ -29,10 +29,19 @@ int RandomIntInRange(int min, int max) {
   return min + (rand() % static_cast<int>(max - min));
 }
 
+int RandomEvenIntInRange(int min, int max) {
+  return (min + (rand() % static_cast<int>(max / 2 - 1))) * 2;
+}
+
 int GetNumberFromLetter(char &c) {
   char letters[] = "ABCDEFGHILMN";
   for (int i = 0; i < 12; i++)
 	if (letters[i] == c)
 	  return i;
   return -1;
+}
+
+char GetLetterFromNumber(int code_point) {
+  char letters[] = "ABCDEFGHILMN";
+  return letters[code_point];
 }

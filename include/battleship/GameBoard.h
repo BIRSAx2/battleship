@@ -49,7 +49,7 @@ class GameBoard : public Board {
   /// Verifica che la nave ship non sovrasti alcuna altra nave all'interno della griglia.
   /// \param ship
   /// \return true: se ship sovrasta altre navi, false: se le celle occupate da ship sono tutte vuote.
-  bool OverlapsOtherShips(const Ship &ship) const;
+  bool CanPlaceShip(const Ship &ship) const;
 
   /// Verifica che ship sia dentro i margini della griglia di gioco. Nella pratica verifica che entrambi ship.GetBow() e ship.GetStern() siano interni ai bordi.
   /// \param ship

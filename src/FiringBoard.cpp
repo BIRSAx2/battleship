@@ -38,6 +38,9 @@ std::string FiringBoard::ToString() const {
   os << ColourText256(horizontal_legend, 8) << "\n";
   return os.str();
 }
+bool FiringBoard::HasBeenAttacked(Coordinates target) {
+  return tiles_.count(target) != 0;
+}
 
 std::ostream &operator<<(std::ostream &os, OccupationType cat) {
   switch (cat) {

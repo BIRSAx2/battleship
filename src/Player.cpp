@@ -54,7 +54,7 @@ void Player::PlaceShipsRandomly() {
   }
 
   // Due Sottomarini di esplicazione , dimensione 1
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 2; ++i) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
@@ -89,8 +89,7 @@ std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_widt
 
 	ship.SetBow(bow);
 	ship.SetStern(stern);
-  } while (!game_board_.IsInsideBoard(ship) && !game_board_.OverlapsOtherShips(ship));
-
+  } while (!game_board_.IsInsideBoard(ship) || !game_board_.CanPlaceShip(ship));
   return std::make_pair(bow, stern);
 }
 
@@ -111,7 +110,7 @@ std::pair<Coordinates, Coordinates> Player::GenerateRandomMove() {
 
   if (ship->GetShipType() == BATTLESHIP) {
 	// if battleship just generate a target to shoot at
-	return {origin, Coordinates::GetRandomCoordinates()};
+	return {origin, GetNextTarget()};
   }
 
   // if support ship or submarine we need to generate a valid coordinate to move it to
@@ -123,4 +122,33 @@ std::pair<Coordinates, Coordinates> Player::GenerateRandomMove() {
 
 std::shared_ptr<Ship> Player::GetShipAt(Coordinates location) {
   return game_board_.GetShipAt(location);
+}
+bool Player::ReceiveAttack(Coordinates coordinates) {
+  return game_board_.ReceiveAttack(coordinates);
+}
+void Player::MarkAttack(Coordinates target, bool is_successful) {
+  firing_board_.MarkAttack(target, is_successful);
+}
+bool Player::MoveShip(Coordinates coordinates, Coordinates coordinates_1) {
+  return game_board_.MoveShip(coordinates, coordinates_1);
+}
+const std::string &Player::GetName() const {
+  return name_;
+}
+void Player::SetName(const std::string &name) {
+  name_ = name;
+}
+Coordinates Player::GetNextTarget() {
+
+  if (next_targets_.empty()) return Coordinates::GetRandomCoordinates();
+  Coordinates target = *next_targets_.begin();
+  next_targets_.erase(target);
+  return target;
+}
+void Player::AddNextTargets(Coordinates successfully_hit_target) {
+  std::set<Coordinates> new_target = Coordinates::GetAdjacentStarCoordinates(successfully_hit_target);
+  for (auto target : new_target) {
+	if (firing_board_.HasBeenAttacked(target)) continue;
+	next_targets_.insert(target);
+  }
 }

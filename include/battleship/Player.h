@@ -15,6 +15,9 @@ class Player {
   FiringBoard firing_board_;
   int alive_battleships_ = 3;
 
+  // This variables are used to avoid shooting randomly
+  std::set<Coordinates> next_targets_;
+
  public:
   Player(std::string name) : name_(std::move(name)){};
   /// Posiziona una ship date le coordinate di prua e poppa
@@ -39,6 +42,14 @@ class Player {
   std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width) const;
   std::pair<Coordinates, Coordinates> GenerateRandomMove();
   std::shared_ptr<Ship> GetShipAt(Coordinates location);
+  bool ReceiveAttack(Coordinates coordinates);
+  void MarkAttack(Coordinates coordinates, bool b);
+  bool MoveShip(Coordinates coordinates, Coordinates coordinates_1);
+
+  const std::string &GetName() const;
+  void SetName(const std::string &name);
+  Coordinates GetNextTarget();
+  void AddNextTargets(Coordinates coordinates);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_

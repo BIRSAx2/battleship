@@ -53,6 +53,16 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 	stern = {target.GetRow() + ship->GetWidth() / 2, target.GetCol()};
   }
 
+  Ship tmp = Ship();
+  tmp.SetBow(bow);
+  tmp.SetStern(stern);
+
+  for (auto loc : tmp.GetLocations()) {
+	if (occupied_locations_.count(loc) != 0 && std::count(current.begin(), current.end(), loc) == 0) {
+	  throw std::invalid_argument("The destination is already occupied by another ship");
+	}
+  }
+
   for (auto loc : current) {
 	occupied_locations_.erase(loc);
   }
@@ -91,12 +101,12 @@ std::string GameBoard::ToString() const {
   return string_stream.str();
 }
 
-bool GameBoard::OverlapsOtherShips(const Ship& ship) const {
+bool GameBoard::CanPlaceShip(const Ship &ship) const {
 
   for (auto loc : Coordinates::GetCoordinatesBetween(ship.GetBow(), ship.GetStern())) {
-	if (occupied_locations_.count(loc) != 0) return true;
+	if (occupied_locations_.count(loc) != 0) return false;
   }
-  return false;
+  return true;
 }
 bool GameBoard::IsInsideBoard(const Ship &ship) const {
   return Coordinates::IsValid(ship.GetBow().GetRow(), ship.GetBow().GetCol()) && Coordinates::IsValid(ship.GetStern().GetRow(), ship.GetStern().GetCol());
