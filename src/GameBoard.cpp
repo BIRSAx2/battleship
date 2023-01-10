@@ -64,6 +64,7 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
   }
   return true;
 }
+
 std::string GameBoard::ToString() const {
 
   std::stringstream string_stream;
@@ -88,4 +89,21 @@ std::string GameBoard::ToString() const {
   }
   string_stream << ColourText256(horizontal_legend, 8) << "\n";
   return string_stream.str();
+}
+
+bool GameBoard::OverlapsOtherShips(const Ship& ship) const {
+
+  for (auto loc : Coordinates::GetCoordinatesBetween(ship.GetBow(), ship.GetStern())) {
+	if (occupied_locations_.count(loc) != 0) return true;
+  }
+  return false;
+}
+bool GameBoard::IsInsideBoard(const Ship &ship) const {
+  return Coordinates::IsValid(ship.GetBow().GetRow(), ship.GetBow().GetCol()) && Coordinates::IsValid(ship.GetStern().GetRow(), ship.GetStern().GetCol());
+}
+const std::map<Coordinates, std::shared_ptr<Ship>> &GameBoard::GetOccupiedLocations() const {
+  return occupied_locations_;
+}
+void GameBoard::SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations) {
+  occupied_locations_ = occupied_locations;
 }

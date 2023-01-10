@@ -49,13 +49,16 @@ class GameBoard : public Board {
   /// Verifica che la nave ship non sovrasti alcuna altra nave all'interno della griglia.
   /// \param ship
   /// \return true: se ship sovrasta altre navi, false: se le celle occupate da ship sono tutte vuote.
-  bool OverlapsOtherShips(Ship ship);
+  bool OverlapsOtherShips(const Ship &ship) const;
 
   /// Verifica che ship sia dentro i margini della griglia di gioco. Nella pratica verifica che entrambi ship.GetBow() e ship.GetStern() siano interni ai bordi.
   /// \param ship
   /// \return true: se la nave si trova entro i margini, false: altrimenti
-  bool IsInsideBoard(Ship ship);
+  bool IsInsideBoard(const Ship &ship) const;
   std::string ToString() const;
+
+  const std::map<Coordinates, std::shared_ptr<Ship>> &GetOccupiedLocations() const;
+  void SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

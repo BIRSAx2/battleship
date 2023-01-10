@@ -11,6 +11,7 @@ Coordinates::Coordinates(int row, int col) {
 }
 
 void Coordinates::SetRow(int row) {
+
   if (!IsValid(row, row_col_.second)) throw std::invalid_argument("Invalid coordinates");
   row_col_.first = row;
 }
@@ -52,7 +53,7 @@ int Coordinates::CalculateOffsetTo(Coordinates coordinates) {
 	return coordinates.GetCol() - GetCol();
   } else {
 	// vertical => the offset is the difference between rows
-	return GetRow() - coordinates.GetRow();
+	return coordinates.GetRow() - GetRow();
   }
 }
 
@@ -85,4 +86,9 @@ std::vector<Coordinates> Coordinates::GetCoordinatesBetween(Coordinates start, C
 	locations.emplace_back(Coordinates(i, start.GetCol()));
   }
   return locations;
+}
+Coordinates Coordinates::GetRandomCoordinates() {
+  return {
+	  RandomIntInRange(0, 12),
+	  RandomIntInRange(0, 12)};
 }

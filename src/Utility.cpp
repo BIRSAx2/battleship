@@ -26,7 +26,7 @@ std::string ColourBackground256(const std::string &text, int ansi_code) {
 int RandomIntInRange(int min, int max) {
   // TODO: rand() has limited randomness, use c++ random library instead
   // We still use rand() for testing, for prod change it
-  return min + (rand() % static_cast<int>(max - min + 1));
+  return min + (rand() % static_cast<int>(max - min));
 }
 
 int GetNumberFromLetter(char &c) {

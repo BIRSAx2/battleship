@@ -48,12 +48,18 @@ class Coordinates {
   /// \param start Coordinata di partenza
   /// \param end Coordinata di arrivo
   /// \return  Un vector delle coordinate che si trovano tra start ed end.
-  std::vector<Coordinates> GetCoordinatesBetween(Coordinates start, Coordinates end);
+  static std::vector<Coordinates> GetCoordinatesBetween(Coordinates start, Coordinates end);
+
+
+  /// Restituisce delle coordinate random all'interno della griglia
+  /// \return
+  static Coordinates GetRandomCoordinates();
+
+  void SetRow(int row);
+  void SetCol(int col);
 
  private:
   std::pair<int, int> row_col_;
-  void SetRow(int row);
-  void SetCol(int col);
   /// Converte le coordinate fornite dall'utente in coordinate di sistema.
   Coordinates ParseCoordinates(std::string &coordinates);
 };

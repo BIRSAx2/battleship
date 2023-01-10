@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "Battleship.h"
+#include "Submarine.h"
+#include "SupportShip.h"
 std::string Player::ToString() const {
 
   std::string attack_board_title = "Griglia di attacco";
@@ -26,20 +29,98 @@ std::string Player::ToString() const {
 
   return boards_side_by_side.str();
 }
+
 std::ostream &operator<<(std::ostream &os, const Player &player) {
   return os << player.ToString();
 }
+
 bool Player::PlaceShip(Coordinates bow, Coordinates stern, Ship &ship) {
   return game_board_.PlaceShip(bow, stern, ship);
 }
 
-bool Player::PlayMove(Coordinates origin, Coordinates target) {
-  return false;
-}
 void Player::PlaceShipsRandomly() {
-  // Get next ship
-  // Get random empty cell in game_board_ (the bow) the stern is bow.GetCol + width if horizontal, bow.GetRow() + width if vertical
-  // Try to fit the ship
-  	// if the ship doesn't fit, delete all and start from scratch
-  	// if ship fits, proceed to place the next ship.
+  // Tre Corazzate, dimensione 5
+  for (int i = 0; i < 3; ++i) {
+	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Battleship::DEFAULT_SIZE);
+	Battleship ship = Battleship(randomPosition.first, randomPosition.second);
+	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+  }
+
+  // Tre Navi di support, dimensione 3
+  for (int i = 0; i < 3; ++i) {
+	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(SupportShip::DEFAULT_SIZE);
+	SupportShip ship = SupportShip(randomPosition.first, randomPosition.second);
+	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+  }
+
+  // Due Sottomarini di esplicazione , dimensione 1
+  for (int i = 0; i < 3; ++i) {
+	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
+	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
+	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+  }
+}
+
+std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_width) const {
+
+  Coordinates bow;
+  Coordinates stern;
+  Ship ship;
+  ship.SetWidth(ship_width);
+
+  do {
+	bool is_horizontal = RandomIntInRange(0, 1);
+
+	bow.SetRow(RandomIntInRange(0, game_board_.GetRows()));
+
+	// Calculating the stern
+
+	if (is_horizontal) {
+	  bow.SetCol(RandomIntInRange(0, game_board_.GetCols() - ship_width));
+	  bow.SetRow(RandomIntInRange(0, game_board_.GetRows()));
+	  stern.SetRow(bow.GetRow());
+	  stern.SetCol(bow.GetCol() + ship_width - 1);
+	} else {
+	  bow.SetCol(RandomIntInRange(0, game_board_.GetCols()));
+	  bow.SetRow(RandomIntInRange(0, game_board_.GetRows() - ship_width));
+	  stern.SetCol(bow.GetCol());
+	  stern.SetRow(bow.GetRow() + ship_width - 1);
+	}
+
+	ship.SetBow(bow);
+	ship.SetStern(stern);
+  } while (!game_board_.IsInsideBoard(ship) && !game_board_.OverlapsOtherShips(ship));
+
+  return std::make_pair(bow, stern);
+}
+
+std::pair<Coordinates, Coordinates> Player::GenerateRandomMove() {
+
+  // Pick a random ship of the ones placed
+
+  std::vector<Coordinates> occupied_location;
+  for (const auto &loc : game_board_.GetOccupiedLocations()) {
+	occupied_location.emplace_back(loc.first);
+  }
+
+  Coordinates origin = occupied_location.at(RandomIntInRange(0, (int)occupied_location.size()));
+
+  std::shared_ptr<Ship> ship = game_board_.GetShipAt(origin);
+
+  origin = ship->GetShipCenter();
+
+  if (ship->GetShipType() == BATTLESHIP) {
+	// if battleship just generate a target to shoot at
+	return {origin, Coordinates::GetRandomCoordinates()};
+  }
+
+  // if support ship or submarine we need to generate a valid coordinate to move it to
+
+  std::pair<Coordinates, Coordinates> bow_stern = GetRandomShipPlacement(ship->GetWidth());
+  Coordinates target = Coordinates::GetCoordinatesBetween(bow_stern.first, bow_stern.second).at(ship->GetWidth() / 2);
+  return std::make_pair(origin, target);
+}
+
+std::shared_ptr<Ship> Player::GetShipAt(Coordinates location) {
+  return game_board_.GetShipAt(location);
 }

@@ -1,8 +1,8 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
 
+#include <iomanip>
 #include <ostream>
-#include<iomanip>
 
 #include "FiringBoard.h"
 #include "GameBoard.h"
@@ -36,6 +36,9 @@ class Player {
   std::string ToString() const;
   /// Utilizza il metodo ToString() per stampare su os le griglie di gioco.
   friend std::ostream &operator<<(std::ostream &os, const Player &player);
+  std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width) const;
+  std::pair<Coordinates, Coordinates> GenerateRandomMove();
+  std::shared_ptr<Ship> GetShipAt(Coordinates location);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_

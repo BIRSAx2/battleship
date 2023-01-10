@@ -23,6 +23,7 @@ class Ship {
   std::set<int> hit_locations_offset_;
 
  public:
+  Ship() = default;
   /// \param icon L'icona della nave
   /// \param width La dimensione della nave
   Ship(char icon, int width) : width_(width) {
