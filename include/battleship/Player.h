@@ -51,7 +51,9 @@ class Player {
   Coordinates GetNextTarget();
   void AddNextTargets(Coordinates coordinates);
   OccupationType InquireState(Coordinates coordinates);
-  void UpdateSubmarineSightings(std::map<Coordinates, OccupationType> scan_from_submarine);
+  void UpdateSubmarineSightings(const std::map<Coordinates, OccupationType>& scan_from_submarine);
+  void AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings);
+  bool HasLost();
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
