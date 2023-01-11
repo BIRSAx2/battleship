@@ -57,7 +57,6 @@ class Ship {
   int GetWidth() const;
   void SetWidth(int width);
   ShipType GetShipType() const;
-  void SetShipType(ShipType ship_type);
   const Coordinates &GetBow() const;
   void SetBow(const Coordinates &bow);
   const Coordinates &GetStern() const;
