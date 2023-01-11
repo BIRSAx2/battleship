@@ -1,5 +1,8 @@
 #include "Utility.h"
 
+std::string GetClearScreenANSISequence() {
+  return "\033[2J";
+}
 std::vector<std::string> Split(const std::string &s, char delimiter) {
   std::vector<std::string> tokens;
   std::string token;
@@ -26,11 +29,21 @@ std::string ColourBackground256(const std::string &text, int ansi_code) {
 int RandomIntInRange(int min, int max) {
   // TODO: rand() has limited randomness, use c++ random library instead
   // We still use rand() for testing, for prod change it
-  return min + (rand() % static_cast<int>(max - min));
+  //  return min + (rand() % static_cast<int>(max - min));
+  std::random_device rd;                                         // obtain a random number from hardware
+  std::mt19937 gen(rd());                                        // seed the generator
+  std::uniform_int_distribution<> int_distribution(min, max - 1);// define the range
+
+  return int_distribution(gen);
 }
 
 int RandomEvenIntInRange(int min, int max) {
-  return (min + (rand() % static_cast<int>(max / 2 - 1))) * 2;
+  //  return (min + (rand() % static_cast<int>(max / 2 - 1))) * 2;
+  std::random_device rd;                                             // obtain a random number from hardware
+  std::mt19937 gen(rd());                                            // seed the generator
+  std::uniform_int_distribution<> int_distribution(min, max / 2 - 1);// define the range
+
+  return int_distribution(gen) * 2;
 }
 
 int GetNumberFromLetter(char &c) {

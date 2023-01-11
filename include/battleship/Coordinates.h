@@ -8,6 +8,9 @@
 class Coordinates {
  public:
   Coordinates() : row_col_{0, 0} {};
+  // helper function
+  explicit Coordinates(std::pair<int, int> coordinates) : Coordinates(coordinates.first, coordinates.second){};
+
   /// A partire dalle coordinate dell'utente (XY, dove X è una lettera tra 'ABCDEFGHILMN' e Y è un numero tra 1 e 12), crea un oggetto Coordinate.
   /// Le coordinate vengono convertite secondo il seguente scema:
   /// X -> Un numero tra 0 e 11
@@ -19,6 +22,11 @@ class Coordinates {
   Coordinates(int row, int col);
   int GetRow() const;
   int GetCol() const;
+
+  // helper function
+  static bool IsValid(std::pair<int, int> row_col) {
+	return IsValid(row_col.first, row_col.second);
+  };
 
   /// \return Restituisce true se 0 <= row < 12 e 0 <= col < 12, false in tutti gli altri casi.
   static bool IsValid(int row, int col);
@@ -42,7 +50,6 @@ class Coordinates {
   /// \return true se this si trova prima di other, false altrimenti.
   /// \param other
   friend bool operator<(const Coordinates &a, const Coordinates &b);
-
 
   /// Restituisce le coordinate sotto forma di (row,col)
   friend std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);

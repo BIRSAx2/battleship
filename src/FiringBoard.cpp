@@ -39,7 +39,7 @@ std::string FiringBoard::ToString() const {
   return os.str();
 }
 bool FiringBoard::HasBeenAttacked(Coordinates target) {
-  return tiles_.count(target) != 0;
+  return tiles_.count(target) != 0 && tiles_.at(target) == HIT;
 }
 void FiringBoard::AddSubmarineSightings(const std::map<Coordinates, OccupationType> &sightings) {
 

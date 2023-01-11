@@ -14,8 +14,11 @@ class GameBoard : public Board {
  private:
   std::map<Coordinates, std::shared_ptr<Ship>> occupied_locations_;
   std::set<Coordinates> protected_coordinates_;
+  int available_battleships = 3;
 
  public:
+  int GetAvailableBattleships() const;
+  void SetAvailableBattleships(int available_battleships);
   GameBoard() : Board(12, 12){};
 
   ///

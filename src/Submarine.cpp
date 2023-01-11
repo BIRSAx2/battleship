@@ -8,18 +8,19 @@ std::map<Coordinates, OccupationType> Submarine::ScanSurroundings(Player &oppone
   std::vector<std::pair<int, int>> offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}, {-1, -1}, {1, 1}, {1, -1}, {-1, 1}};
   std::map<Coordinates, OccupationType> surroundings;
 
-  for (int i = 0; i < 3; ++i) {
-	for (int j = 0; j < 3; ++j) {
+  for (int row = 0; row < 3; ++row) {
+	for (int col = 0; col < 3; ++col) {
 
-	  if (Coordinates::IsValid(current_position.GetRow() + i, current_position.GetRow() + i)) {
-
-		Coordinates a = {current_position.GetRow() + i, current_position.GetRow() + i};
+	  std::pair<int, int> after = {current_position.GetRow() + row, current_position.GetCol() + col};
+	  if (Coordinates::IsValid(after)) {
+		Coordinates a = Coordinates(after);
 		surroundings.emplace(a, opponent.InquireState(a));
 	  }
-	  if (Coordinates::IsValid(current_position.GetRow() - i, current_position.GetRow() - i)) {
 
-		Coordinates b = {current_position.GetRow() - i, current_position.GetCol() - j};
+	  std::pair<int, int> before = {current_position.GetRow() - row, current_position.GetCol() - col};
 
+	  if (Coordinates::IsValid(before)) {
+		Coordinates b = Coordinates(before);
 		surroundings.emplace(b, opponent.InquireState(b));
 	  }
 	}

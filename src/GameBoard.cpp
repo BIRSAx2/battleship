@@ -27,11 +27,11 @@ std::ostream &operator<<(std::ostream &os, const GameBoard &board) {
 
 bool GameBoard::ReceiveAttack(Coordinates target) {
   if (occupied_locations_.count(target) == 0) return false;
-  // TODO: Handle the fact that a support ship cannot protect itself
   if (protected_coordinates_.count(target) != 0) return false;
   occupied_locations_.at(target)->HitLocation(target);
   // Remove a ship if it's sunk
   if (occupied_locations_.at(target)->IsSunk()) {
+	if (occupied_locations_.at(target)->GetShipType() == BATTLESHIP) available_battleships--;
 	RemoveShip(target);
   }
   return true;
@@ -86,7 +86,6 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 	  protected_coordinates_.insert(to_add);
 	}
   }
-
 
   for (auto loc : current) {
 	occupied_locations_.erase(loc);
@@ -167,4 +166,10 @@ void GameBoard::RemoveShip(Coordinates location) {
   for (auto loc : ship->GetLocations()) {
 	occupied_locations_.erase(occupied_locations_.find(loc));
   }
+}
+int GameBoard::GetAvailableBattleships() const {
+  return available_battleships;
+}
+void GameBoard::SetAvailableBattleships(int available_battleships) {
+  GameBoard::available_battleships = available_battleships;
 }

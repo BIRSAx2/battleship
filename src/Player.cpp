@@ -148,6 +148,8 @@ Coordinates Player::GetNextTarget() {
 }
 void Player::AddNextTargets(Coordinates successfully_hit_target) {
   std::set<Coordinates> new_target = Coordinates::GetAdjacentStarCoordinates(successfully_hit_target);
+  // TODO: Use submarine sighting to develop a more efficient algorithm
+
   // It's a hard task to develop an efficient and fast algorithm to play this variant of the battleship game.
   // The main reason behind this is the fact that ships can move, so keeping track of where the enemy ships might be is basically useless, as an enemy can move the ship under attack right after an attack.
   // Making it useless to hit the targets near the one just hit in search of the remaining parts of the ship.
@@ -156,10 +158,21 @@ void Player::AddNextTargets(Coordinates successfully_hit_target) {
 	next_targets_.insert(target);
   }
 }
+
+void Player::AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings) {
+  next_targets_.clear();
+  for (auto target : submarine_sightings) {
+	next_targets_.insert(target.first);
+  }
+}
 OccupationType Player::InquireState(Coordinates coordinates) {
   if (GetShipAt(coordinates) != nullptr) return OCCUPIED;
   return EMPTY;
 }
-void Player::UpdateSubmarineSightings(std::map<Coordinates, OccupationType> scan_from_submarine) {
+void Player::UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine) {
   this->firing_board_.AddSubmarineSightings(scan_from_submarine);
+}
+
+bool Player::HasLost() {
+  return game_board_.GetAvailableBattleships() == 0;
 }

@@ -16,11 +16,9 @@ void Game::PlayGame() {
 void Game::PlayComputerVsComputerGame() {
   player_a_.PlaceShipsRandomly();
   player_b_.PlaceShipsRandomly();
-  std::cout << player_a_ << std::endl;
-  std::cout << player_b_ << std::endl;
 
   bool player_a_turn = RandomIntInRange(0, 1);
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 2000 && !player_a_.HasLost() && !player_b_.HasLost(); ++i) {
 	std::cout << "---------------------------Turn " << i << "---------------------------------" << std::endl;
 	Player &current_player = player_a_turn ? player_a_ : player_b_;
 	Player &opponent = player_a_turn ? player_b_ : player_a_;
@@ -33,6 +31,9 @@ void Game::PlayComputerVsComputerGame() {
 
 	player_a_turn = !player_a_turn;
   }
+
+  if (player_a_.HasLost()) std::cout << "Player " << player_b_.GetName() << " has won!" << std::endl;
+  if (player_b_.HasLost()) std::cout << "Player " << player_a_.GetName() << " has won!" << std::endl;
 }
 void Game::PlayComputerVsHumanGame() {
   std::cout << player_a_ << std::endl;
@@ -44,6 +45,7 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
   if (attacker.GetShipAt(move.first) == nullptr) throw std::invalid_argument(std::string("No ship at the specified location"));
 
   std::shared_ptr<Ship> ship = attacker.GetShipAt(move.first);
+  std::cout << "Ship type: " << ship->GetShipType() << std::endl;
 
   if (ship->GetShipType() == BATTLESHIP) {
 	std::cout << "Attacking " << std::endl;
@@ -61,13 +63,13 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
   if (!ship_moved) {
 	std::cout << "Could not move this ship" << std::endl;
 	return false;
-  };
+  }
 
-  std::cout << ship->GetShipType() << std::endl;
   if (ship->GetShipType() == SUBMARINE) {
 	// Update the sightings
 	std::map<Coordinates, OccupationType> scans = Submarine::ScanSurroundings(opponent, move.second);
 	attacker.UpdateSubmarineSightings(scans);
+	attacker.AddNextTargets(scans);
   }
   return true;
 }
