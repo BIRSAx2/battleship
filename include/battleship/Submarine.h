@@ -18,13 +18,9 @@ class Submarine : public Ship {
   Submarine() : Ship('E', DEFAULT_SIZE, 100) {
 	ship_type_ = SUBMARINE;
   };
-  /// Cambia la prua e poppa di questa nave a partire da target. La prua e la poppa sono calcolate utilizzando target come cella centrale della nave.
-  /// \param target
-  /// \return true nel caso sia stato possibile cambiare posizione della nave, altrimenti false. Per il momento restituisce sempre true.
-
-  bool MoveShip(Coordinates target);
 
   /// Scansiona le celle del campo di gioco avversario presenti in un raggio di 5x5 al centro c'è il sottomarino.
+  /// Generare prima le coordinate e utilizzare il metodo InquireState() di Player per ottenere lo stato della cella.
   /// \return Un vector delle coordinate che contengono navi avversarie.
   static std::map<Coordinates, OccupationType> ScanSurroundings(Player &opponent, Coordinates current_position);
 };

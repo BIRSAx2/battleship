@@ -153,9 +153,6 @@ bool GameBoard::IsInsideBoard(const Ship &ship) const {
 const std::map<Coordinates, std::shared_ptr<Ship>> &GameBoard::GetOccupiedLocations() const {
   return occupied_locations_;
 }
-void GameBoard::SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations) {
-  occupied_locations_ = occupied_locations;
-}
 void GameBoard::RemoveShip(Coordinates location) {
   std::cout << ColourBackground256("A ship has been sunk and it's getting removed from the board", 34) << std::endl;
 

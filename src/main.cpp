@@ -1,11 +1,11 @@
-#include "Battleship.h"
 #include "Game.h"
-#include "GameBoard.h"
-#include "SupportShip.h"
-#include <iostream>
 int main() {
-  Game game = Game(COMPUTER_VS_COMPUTER);
-  game.PlayGame();
 
+  Print256ColoursTxt();
+  std::cout << std::endl;
+  Print256ColoursBackground();
+  std::cout << std::endl;
+  Game game = Game();
+  game.PlayGame();
   return 0;
 }
