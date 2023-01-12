@@ -99,6 +99,9 @@ Coordinates Coordinates::ParseCoordinates(std::string &coordinates) {
   // col - 1 because the string range is 1 - 12, but we use 0 - 11
   return {row, col - 1};
 }
+Coordinates Coordinates::GetRandomCoordinates() {
+  return {};
+}
 
 // operatrs
 bool operator==(const Coordinates &a, const Coordinates &b) {

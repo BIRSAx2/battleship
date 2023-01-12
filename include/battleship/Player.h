@@ -6,6 +6,7 @@
 
 #include "FiringBoard.h"
 #include "GameBoard.h"
+#include "GameRecorder.h"
 #include "Utility.h"
 
 class Player {
@@ -33,7 +34,7 @@ class Player {
   bool PlayMove(Coordinates origin, Coordinates target);
 
   /// Posiziona le navi in modo randomico sulla griglia.
-  void PlaceShipsRandomly();
+  void PlaceShipsRandomly(GameRecorder& game_recorder);
 
   /// Restituisce la griglia di attacco e di difesa fianco affianco.
   std::string ToString() const;
@@ -51,7 +52,7 @@ class Player {
   Coordinates GetNextTarget();
   void AddNextTargets(Coordinates coordinates);
   OccupationType InquireState(Coordinates coordinates);
-  void UpdateSubmarineSightings(const std::map<Coordinates, OccupationType>& scan_from_submarine);
+  void UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine);
   void AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings);
   bool HasLost();
 };

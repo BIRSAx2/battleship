@@ -15,13 +15,16 @@ void Game::PlayGame() {
 void Game::PlayComputerVsComputerGame() {
 
   std::cout << AsciiArt::GAME_TITLE << std::endl;
-  player_a_.PlaceShipsRandomly();
-  player_b_.PlaceShipsRandomly();
+  //  game_recorder_.SetIsPlayerATurn(true);
+  player_a_.PlaceShipsRandomly(game_recorder_);
+  //  game_recorder_.SetIsPlayerATurn(false);
+  player_b_.PlaceShipsRandomly(game_recorder_);
 
   bool player_a_turn = RandomIntInRange(0, 1);
+  //  game_recorder_.SetStartingPlayer(player_a_turn ? 1 : 2);
   int i;
   for (i = 0; i < 100 && !player_a_.HasLost() && !player_b_.HasLost(); ++i) {
-
+	//	game_recorder_.SetIsPlayerATurn(player_a_turn);
 	std::cout << ColourText256("\nTurn " + std::to_string(i), 6) << std::endl;
 	Player &current_player = player_a_turn ? player_a_ : player_b_;
 	Player &opponent = player_a_turn ? player_b_ : player_a_;
@@ -29,8 +32,13 @@ void Game::PlayComputerVsComputerGame() {
 
 	std::pair<Coordinates, Coordinates> move = current_player.GenerateRandomMove();
 	PlayMove(current_player, opponent, move);
+	//	game_recorder_.RecordMove(move);
 	player_a_turn = !player_a_turn;
   }
+
+  std::cout << AsciiArt::DIVIDER << std::endl;
+  //  std::cout << game_recorder_ << std::endl;
+  //  std::cout << AsciiArt::DIVIDER << std::endl;
   std::cout << AsciiArt::GAME_OVER << std::endl;
 
   if (!player_a_.HasLost() && !player_b_.HasLost()) {
@@ -39,12 +47,12 @@ void Game::PlayComputerVsComputerGame() {
   }
 
   Player &winner = player_a_.HasLost() ? player_b_ : player_a_;
-
-  std::cout << ColourText256("The winner is " + winner.GetName(), 50) << std::endl;
+  //  game_recorder_.PersistGameToLog();
 }
 void Game::PlayComputerVsHumanGame() {
-  std::cout << player_a_ << std::endl;
-  std::cout << player_b_ << std::endl;
+  // Get Ship placement from user
+  // Print the starting config
+  // Handle the special commands
 }
 
 bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, Coordinates> move) {

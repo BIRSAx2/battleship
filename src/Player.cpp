@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Battleship.h"
+#include "GameRecorder.h"
 #include "Submarine.h"
 #include "SupportShip.h"
 std::string Player::ToString() const {
@@ -38,12 +39,13 @@ bool Player::PlaceShip(Coordinates bow, Coordinates stern, Ship &ship) {
   return game_board_.PlaceShip(bow, stern, ship);
 }
 
-void Player::PlaceShipsRandomly() {
+void Player::PlaceShipsRandomly(GameRecorder &recorder) {
   // Tre Corazzate, dimensione 5
   for (int i = 0; i < 3; ++i) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Battleship::DEFAULT_SIZE);
 	Battleship ship = Battleship(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
   // Tre Navi di support, dimensione 3
@@ -51,6 +53,7 @@ void Player::PlaceShipsRandomly() {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(SupportShip::DEFAULT_SIZE);
 	SupportShip ship = SupportShip(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
   // Due Sottomarini di esplicazione , dimensione 1
@@ -58,6 +61,7 @@ void Player::PlaceShipsRandomly() {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
+//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 }
 
@@ -166,7 +170,12 @@ void Player::AddNextTargets(std::map<Coordinates, OccupationType> submarine_sigh
   }
 }
 OccupationType Player::InquireState(Coordinates coordinates) {
-  if (GetShipAt(coordinates) != nullptr) return OCCUPIED;
+  if (GetShipAt(coordinates) != nullptr) {
+	std::shared_ptr<Ship> ship = GetShipAt(coordinates);
+	if (ship->IsHit(coordinates)) return HIT;
+
+	return OCCUPIED;
+  }
   return EMPTY;
 }
 void Player::UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine) {

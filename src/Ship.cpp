@@ -3,28 +3,18 @@
 #include "Utility.h"
 #include <algorithm>
 #include <iostream>
-#include <utility>
 
 bool Ship::IsSunk() {
   return hit_locations_offset_.size() >= width_;
 }
 void Ship::HitLocation(Coordinates location) {
-  hit_locations_offset_.insert(bow_.CalculateOffsetTo(location));
+  int offset = bow_.CalculateOffsetTo(location);
+  if (offset >= 0 && offset < width_) {
+	hit_locations_offset_.insert(offset);
+  }
 }
 std::vector<Coordinates> Ship::GetLocations() {
-  std::vector<Coordinates> locations;
-
-  // ship is horizontal
-  if (bow_.GetRow() == stern_.GetRow()) {
-	for (int i = bow_.GetCol(); i <= stern_.GetCol(); ++i) {
-	  locations.emplace_back(Coordinates(bow_.GetRow(), i));
-	}
-  } else {
-	for (int i = bow_.GetRow(); i <= stern_.GetRow(); ++i) {
-	  locations.emplace_back(Coordinates(i, bow_.GetCol()));
-	}
-  }
-  return locations;
+  return Coordinates::GetCoordinatesBetween(bow_, stern_);
 }
 int Ship::GetWidth() const {
   return width_;
@@ -48,7 +38,13 @@ void Ship::SetStern(const Coordinates &stern) {
   stern_ = stern;
 }
 std::ostream &operator<<(std::ostream &os, const Ship &ship) {
-  os << "icon_: " << ship.icon_ << " width_: " << ship.width_ << " ship_type_: " << ship.ship_type_ << " bow_: " << ship.bow_ << " stern_: " << ship.stern_ << " hit_locations_: " << ship.hit_locations_offset_.size();
+  os << "Icon: " << ship.icon_ << " Width: " << ship.width_ << " Orientation: ";
+  if (ship.IsHorizontal()) {
+	os << "horizontal ";
+  } else {
+	os << "vertical ";
+  }
+  os << "Hits received: " << ship.hit_locations_offset_.size();
   return os;
 }
 bool Ship::IsHorizontal() const {
@@ -80,4 +76,8 @@ std::string Ship::ToString(Coordinates location) {
 Coordinates Ship::GetShipCenter() {
   auto locations = GetLocations();
   return locations.at(locations.size() / 2);
+}
+bool Ship::IsHit(Coordinates target) {
+  int offset = bow_.CalculateOffsetTo(target);
+  return hit_locations_offset_.count(offset) != 0;
 }

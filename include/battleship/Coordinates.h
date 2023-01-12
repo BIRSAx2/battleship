@@ -8,6 +8,11 @@
 class Coordinates {
  public:
   Coordinates() : row_col_{0, 0} {};
+  // helper function
+  explicit Coordinates(std::pair<int, int> coordinates) : Coordinates(coordinates.first, coordinates.second){};
+  static bool IsValid(std::pair<int, int> row_col) {
+	return IsValid(row_col.first, row_col.second);
+  };
 
   /// A partire dalle coordinate dell'utente (XY, dove X è una lettera tra 'ABCDEFGHILMN' e Y è un numero tra 1 e 12), crea un oggetto Coordinate.
   /// Le coordinate vengono convertite secondo il seguente scema:
