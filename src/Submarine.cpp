@@ -1,8 +1,5 @@
 #include "Submarine.h"
 
-bool Submarine::MoveShip(Coordinates target) {
-  return false;
-}
 std::map<Coordinates, OccupationType> Submarine::ScanSurroundings(Player &opponent, Coordinates current_position) {
 
   std::vector<std::pair<int, int>> offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}, {-1, -1}, {1, 1}, {1, -1}, {-1, 1}};

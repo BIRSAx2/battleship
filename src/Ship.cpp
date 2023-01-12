@@ -35,9 +35,6 @@ void Ship::SetWidth(int width) {
 ShipType Ship::GetShipType() const {
   return ship_type_;
 }
-void Ship::SetShipType(ShipType ship_type) {
-  ship_type_ = ship_type;
-}
 const Coordinates &Ship::GetBow() const {
   return bow_;
 }
@@ -83,4 +80,8 @@ std::string Ship::ToString(Coordinates location) {
 Coordinates Ship::GetShipCenter() {
   auto locations = GetLocations();
   return locations.at(locations.size() / 2);
+}
+bool Ship::IsHit(Coordinates target) {
+  int offset = bow_.CalculateOffsetTo(target);
+  return hit_locations_offset_.count(offset) != 0;
 }

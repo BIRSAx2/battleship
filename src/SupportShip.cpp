@@ -1,10 +1,7 @@
 #include "SupportShip.h"
 #include <iostream>
-bool SupportShip::MoveShip(Coordinates target) {
-  return false;
-}
 
-// TODO: Handle the fact that a supportship cannot protect itself.
+// TODO: Handle the fact that a support ship cannot protect itself.
 // Idea: There no need to keep track of which support ship protect which coordinates. Simply after generating the coordinates, before adding them to the protected coordinates, remove the one's that are occupied by the current ship.
 std::set<Coordinates> SupportShip::GetProtectedCoordinates(Coordinates current_position) {
   // The protected Coordinates are the ones in a 3x3 square with current_position as center.

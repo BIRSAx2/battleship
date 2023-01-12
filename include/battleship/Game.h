@@ -2,6 +2,7 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
 
 #include "AsciiArt.h"
+#include "GameRecorder.h"
 #include "Player.h"
 #include "Submarine.h"
 enum GameMode { COMPUTER_VS_COMPUTER,
@@ -12,6 +13,7 @@ class Game {
   Player player_a_;
   Player player_b_;
   GameMode game_mode_;
+  GameRecorder game_recorder_;
 
  public:
   Game();
@@ -20,7 +22,7 @@ class Game {
   void PlayComputerVsComputerGame();
   void PlayComputerVsHumanGame();
   bool PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, Coordinates> move);
-  int ReadyChoiceFromUser(std::set<int> availble_choices);
+  int ReadChoiceFromUser(std::set<int> availble_choices);
   int ReadChoiceFromUser(const std::set<int> &availble_choices);
 };
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
