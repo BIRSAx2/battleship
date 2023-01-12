@@ -1,5 +1,5 @@
 #include "Utility.h"
-#include "GameRecorder.h"
+#include <iomanip>
 
 std::string GetClearScreenANSISequence() {
   return "\033[2J";

@@ -61,7 +61,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
-	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
+//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 }
 
