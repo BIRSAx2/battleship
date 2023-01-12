@@ -1,4 +1,4 @@
-#include "Utility.h"
+#include "../include/battleship/Utility.h"
 
 std::vector<std::string> Split(const std::string &s, char delimiter) {
   std::vector<std::string> tokens;
@@ -35,4 +35,12 @@ int GetNumberFromLetter(char &c) {
 	if (letters[i] == c)
 	  return i;
   return -1;
+}
+
+char GetLetterFromNumber(int n){
+  int letter = 65 + n; 
+  // to avoit J and K letters
+  if(letter >= 75)
+    letter += 2;
+  return letter;
 }
