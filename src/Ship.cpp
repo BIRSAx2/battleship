@@ -35,9 +35,6 @@ void Ship::SetWidth(int width) {
 ShipType Ship::GetShipType() const {
   return ship_type_;
 }
-void Ship::SetShipType(ShipType ship_type) {
-  ship_type_ = ship_type;
-}
 const Coordinates &Ship::GetBow() const {
   return bow_;
 }

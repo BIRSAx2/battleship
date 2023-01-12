@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(battleship)
+project(battaglia_navale)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -8,4 +8,4 @@ include_directories("src")
 
 file(GLOB SOURCES "src/*.cpp" "src/*.hpp" "include/battleship/*.h")
 
-add_executable("${PROJECT_NAME}" ${SOURCES} )
+add_executable("${PROJECT_NAME}" ${SOURCES})
