@@ -35,6 +35,11 @@ class UserCommand {
   /// \param command
   /// \return true se command è comando considerato speciale, ovvero uno tra quelli presenti come chiave in SPECIAL_COMMANDS_, false altrimenti
   static bool IsSpecial(const std::string &command);
+
+  const std::pair<Coordinates, Coordinates> &GetMove() const;
+  void SetMove(const std::pair<Coordinates, Coordinates> &move);
+  CommandType GetCommandType() const;
+  void SetCommandType(CommandType command_type);
 };
 
 #endif//BATTAGLIA_NAVALE_INCLUDE_BATTLESHIP_USERCOMMAND_H_

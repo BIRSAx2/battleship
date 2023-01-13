@@ -89,7 +89,16 @@ void Game::PlayComputerVsHumanGame() {
 	  std::cout << ColourText256("Admiral, it's our turn!", 2) << std::endl;
 	  std::cout << "Type " << ColourText256("XX XX", 50) << " to view our current territory." << std::endl;
 	  std::cout << "Type " << ColourText256("AA AA", 50) << " to reset our submarine sightings." << std::endl;
-	  std::cout << "Type " << ColourText256("BB BB", 50) << " to reset our sonar completely." << std::endl;
+	  std::cout << "Type " << ColourText256("BB BB", 50) << " to reset our sonar completely from successful hits." << std::endl;
+	  std::cout << "Type " << ColourText256("CC CC", 50) << " to reset our sonar completely from unsuccessful hits" << std::endl;
+	  std::cout << "Type " << ColourText256("DD DD", 50) << " to reset our sonar completely." << std::endl;
+
+	  std::string promt = "Admiral, what's our next move?: ";
+	  UserCommand user_command = GetUserCommand(promt);
+
+	  switch (user_command.) {
+		
+	  }
 	}
 
 	player_a_turn = !player_a_turn;

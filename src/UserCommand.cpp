@@ -1,7 +1,9 @@
 #include "UserCommand.h"
 
 const std::map<std::string, CommandType> UserCommand::SPECIAL_COMMANDS_ =
-	{{"AA AA", CLEAR_SONAR}, {"XX XX", SHOW_GRID}, {"BB BB", CLEAR_HIT}, {"CC CC", CLEAR_MISS}, {"DD DD", CLEAR_ALL}};
+	{{"AA AA", CLEAR_SONAR}, {"XX XX", SHOW_GRID},
+	 {"BB BB", CLEAR_HIT}, {"CC CC", CLEAR_MISS},
+	 {"DD DD", CLEAR_ALL}};
 
 UserCommand::UserCommand(const std::pair<Coordinates, Coordinates> &move, CommandType command_type) {
   move_ = move;
@@ -29,4 +31,16 @@ UserCommand::UserCommand(const std::string &command) {
 }
 bool UserCommand::IsSpecial(const std::string &command) {
   return SPECIAL_COMMANDS_.count(command) != 0;
+}
+const std::pair<Coordinates, Coordinates> &UserCommand::GetMove() const {
+  return move_;
+}
+void UserCommand::SetMove(const std::pair<Coordinates, Coordinates> &move) {
+  move_ = move;
+}
+CommandType UserCommand::GetCommandType() const {
+  return command_type_;
+}
+void UserCommand::SetCommandType(CommandType command_type) {
+  command_type_ = command_type;
 }
