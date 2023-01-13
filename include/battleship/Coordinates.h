@@ -31,7 +31,6 @@ class Coordinates {
   /// \return Restituisce true se 0 <= row < 12 e 0 <= col < 12, false in tutti gli altri casi.
   static bool IsValid(int row, int col);
 
-
   /// Calcola l'offset tra this e coordinates. L'offset è calcolato solo se entrambe le coordinate si trovano sulla stessa riga oppure sulla stessa colonna.
   /// Se le coordinate non si trovano sulla stessa riga/colonna viene lanciata un eccezione std::invalid_argument
   /// \param coordinates
@@ -71,12 +70,12 @@ class Coordinates {
 /// Effettua il confronto tra this e other
 /// \param other
 /// \return true se sono uguali, false altrimenti.
-bool operator==(const Coordinates &a,const Coordinates &b);
+bool operator==(const Coordinates &a, const Coordinates &b);
 
 /// Effettua il confronto tra this e other
 /// \param other
 /// \return true se sono diversi, false altrimenti.
-bool operator!=(const Coordinates &a,const Coordinates &b);
+bool operator!=(const Coordinates &a, const Coordinates &b);
 
 /// Il confronto effettuato è il seguente:\n
 /// (a.GetRow() > b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() > b.GetCol())
