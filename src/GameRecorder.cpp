@@ -1,39 +1,77 @@
 #include "GameRecorder.h"
-const std::vector<Action> &GameRecorder::GetPlayerAActions() const {
-  return player_a_actions_;
+#include "Utility.h"
+
+const std::string GameRecorder::LOG_PATH = "../game_logs/";
+
+bool GameRecorder::IsPlayerATurn() const {
+  return player_a_turn_;
 }
-void GameRecorder::SetPlayerAActions(const std::vector<Action> &player_a_actions) {
-  player_a_actions_ = player_a_actions;
+void GameRecorder::SetIsPlayerATurn(bool is_player_a_turn) {
+  GameRecorder::player_a_turn_ = is_player_a_turn;
 }
-const std::vector<Action> &GameRecorder::GetPlayerBActions() const {
-  return player_b_actions_;
+void GameRecorder::RecordShipPlacement(Coordinates bow, Coordinates stern, int ship_with) {
+
+  if (player_a_turn_) {
+	player_a_ship_placement_.emplace(std::make_pair(bow, stern), ship_with);
+  } else {
+	player_b_ship_placement_.emplace(std::make_pair(bow, stern), ship_with);
+  }
 }
-void GameRecorder::SetPlayerBActions(const std::vector<Action> &player_b_actions) {
-  player_b_actions_ = player_b_actions;
+void GameRecorder::RecordMove(std::pair<Coordinates, Coordinates> move) {
+  moves_.emplace_back(move);
 }
-const GameBoard &GameRecorder::GetPlayerAInitialBoard() const {
-  return player_a_initial_board_;
+std::string GameRecorder::ToString() const {
+  std::stringstream string_stream;
+  // Starting player
+  string_stream << starting_player_ << '\n';
+  string_stream << "\n\n";
+
+  // Print Player A ship placement
+
+  for (auto placement : player_a_ship_placement_) {
+	string_stream << placement.first.first.ToUserCoordinates() << " " << placement.first.second.ToUserCoordinates() << " " << placement.second << '\n';
+  }
+
+  string_stream << "\n\n";
+  // Print Player B ship placement
+
+  for (auto placement : player_b_ship_placement_) {
+	string_stream << placement.first.first.ToUserCoordinates() << " " << placement.first.second.ToUserCoordinates() << " " << placement.second << '\n';
+  }
+  string_stream << "\n\n";
+
+  // Print all the moves
+
+  for (auto move : moves_) {
+	string_stream << move.first.ToUserCoordinates() << " " << move.second.ToUserCoordinates() << '\n';
+  }
+
+  return string_stream.str();
 }
-void GameRecorder::SetPlayerAInitialBoard(const GameBoard &player_a_initial_board) {
-  player_a_initial_board_ = player_a_initial_board;
+std::ostream &operator<<(std::ostream &os, const GameRecorder &recorder) {
+  return os << recorder.ToString();
 }
-const GameBoard &GameRecorder::GetPlayerBInitialBoard() const {
-  return player_b_initial_board_;
+int GameRecorder::GetStartingPlayer() const {
+  return starting_player_;
 }
-void GameRecorder::SetPlayerBInitialBoard(const GameBoard &player_b_initial_board) {
-  player_b_initial_board_ = player_b_initial_board;
+void GameRecorder::SetStartingPlayer(int starting_player) {
+  starting_player_ = starting_player;
 }
-GameRecorder::GameRecorder() {
+
+void GameRecorder::PersistGameToLog() {
+  std::string file_path = LOG_PATH + "game_" + GetTimestamp() + ".txt";
+  std::fstream log;
+  log.open(file_path, std::ios::out);
+  if (!log) {
+	std::cout << "ERROR! Could not open the file " + file_path + " to save the current game" << std::endl;
+	std::cout << "Please check if a directory named 'game_logs' exists in the root of the project, if it doesn't exit create it.";
+  }
+
+  log << ToString();
+  log.close();
 }
-GameRecorder::GameRecorder(GameBoard player_a_initial_board, GameBoard player_b_intial_board) {
-}
-void GameRecorder::RecordAction(Action action) {
-}
-void GameRecorder::RemoveLastAction() {
-}
-void GameRecorder::GetPlayerActions(Player player) {
-}
-void GameRecorder::SaveActionsToFile(std::string filePath) {
-}
-void GameRecorder::GetActionsFromFile(std::string filePath) {
+std::vector<std::string> GameRecorder::GetGameLogs() {
+
+  //
+  return std::vector<std::string>();
 }

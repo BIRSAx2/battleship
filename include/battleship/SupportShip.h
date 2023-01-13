@@ -23,11 +23,6 @@ class SupportShip : public Ship {
 	icon_color_ = 106;
 	ship_type_ = SUPPORTSHIP;
   };
-  /// Cambia la prua e poppa di questa nave a partire da target. La prua e la poppa sono calcolate utilizzando target come cella centrale della nave.
-  /// \param target
-  /// \return true nel caso sia stato possibile cambiare posizione della nave, altrimenti false. Per il momento restituisce sempre true.
-  bool MoveShip(Coordinates target);
-
   /// Restituisce un vector contente le coordinate delle celle coperte dalla questa nave.
   /// \return Un std::set<Coordinate> contente le celle che questa nave copre dagli attacchi.
   static std::set<Coordinates> GetProtectedCoordinates(Coordinates current_position);

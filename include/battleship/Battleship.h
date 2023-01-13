@@ -17,11 +17,6 @@ class Battleship : public Ship {
   Battleship() : Ship('C', DEFAULT_SIZE, 127) {
 	ship_type_ = BATTLESHIP;
   }
-  /// Colpisce la cella target del campo di gioco avversario.
-  /// \param opponent_board La griglia di gioco dell'avversario.
-  /// \param target La cella colpire.
-  /// \return true se l'attacco è andato a buon fine, false se invece non è andato a buon fine.
-  bool ShootAt(GameBoard opponent_board, Coordinates target);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_

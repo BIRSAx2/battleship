@@ -14,8 +14,11 @@ class GameBoard : public Board {
  private:
   std::map<Coordinates, std::shared_ptr<Ship>> occupied_locations_;
   std::set<Coordinates> protected_coordinates_;
+  int available_battleships = 3;
 
  public:
+  int GetAvailableBattleships() const;
+  void SetAvailableBattleships(int available_battleships);
   GameBoard() : Board(12, 12){};
 
   ///
@@ -60,9 +63,15 @@ class GameBoard : public Board {
   std::string ToString() const;
 
   const std::map<Coordinates, std::shared_ptr<Ship>> &GetOccupiedLocations() const;
-  void SetOccupiedLocations(const std::map<Coordinates, std::shared_ptr<Ship>> &occupied_locations);
+  /// Rimuove da occupied_locations_ la nave. Per ottenere le coordinate dove è presente la nave chiamare il metodo GetLocations() della nave ed eliminarle una ad una.
+  /// \param coordinates Il centro della nave.
   void RemoveShip(Coordinates coordinates);
-  std::pair<Coordinates, Coordinates> GetBowAndSternFromCenter(const Coordinates &Center, const std::shared_ptr<Ship> &ship) const;
+
+  /// Restituisce le coordinate della prua e della poppa a partire da quelle del centro. ship è necessaria per avere la larghezza e l'orientamento della nave.
+  /// \param Center
+  /// \param ship
+  /// \return
+  std::pair<Coordinates, Coordinates> GetBowAndSternFromCenter(const Coordinates &center, const std::shared_ptr<Ship> &ship) const;
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_GAMEBOARD_H_

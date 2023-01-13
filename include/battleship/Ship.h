@@ -57,7 +57,6 @@ class Ship {
   int GetWidth() const;
   void SetWidth(int width);
   ShipType GetShipType() const;
-  void SetShipType(ShipType ship_type);
   const Coordinates &GetBow() const;
   void SetBow(const Coordinates &bow);
   const Coordinates &GetStern() const;
@@ -78,6 +77,9 @@ class Ship {
   /// Stampa le caratteristiche principali della nave, come icona, larghezza, orientamento ed il numero di colpi ricevuto.
   /// \return
   friend std::ostream &operator<<(std::ostream &os, const Ship &ship);
+
+  /// Restituisce true se la cella target della nave è stata colpita.
+  bool IsHit(Coordinates target);
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_SHIP_H_
