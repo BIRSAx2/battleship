@@ -30,6 +30,8 @@ int Coordinates::CalculateOffsetTo(Coordinates other) const {
 std::vector<Coordinates> Coordinates::GetCoordinatesBetween(Coordinates start, Coordinates end) {
   std::vector<Coordinates> in_between;
 
+  if (start == end) return {start};
+
   if (start.GetRow() == end.GetRow())
 	while (start.GetCol() != end.GetCol()) {
 	  in_between.push_back(start);
@@ -100,10 +102,10 @@ Coordinates Coordinates::ParseCoordinates(std::string &coordinates) {
   return {row, col - 1};
 }
 Coordinates Coordinates::GetRandomCoordinates() {
-  return {};
+  return {RandomIntInRange(0, 12), RandomIntInRange(0, 12)};
 }
 
-// operatrs
+// operators
 bool operator==(const Coordinates &a, const Coordinates &b) {
   return (a.GetRow() == b.GetRow()) && (a.GetCol() == b.GetCol());
 }

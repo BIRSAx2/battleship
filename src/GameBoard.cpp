@@ -6,7 +6,9 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
 
   to_add->SetBow(bow);
   to_add->SetStern(stern);
-
+  for (auto loc : to_add->GetLocations()) {
+	if (occupied_locations_.count(loc) != 0) throw std::invalid_argument("Cannot place this ship hear, is position occupied by another ship!");
+  }
   for (auto loc : to_add->GetLocations()) {
 	occupied_locations_.emplace(loc, to_add);
   }

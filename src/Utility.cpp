@@ -48,6 +48,7 @@ int RandomEvenIntInRange(int min, int max) {
 }
 
 int GetNumberFromLetter(char &c) {
+  c = toupper(c);
   char letters[] = "ABCDEFGHILMN";
   for (int i = 0; i < 12; i++)
 	if (letters[i] == c)

@@ -1,6 +1,5 @@
 #include "Game.h"
 int main(int argc, char **argv) {
-
   if (argc <= 1) {
 	// Se nessuna opzione è specificata si fa scegliere all'utente mediante un menu.
 	Game game = Game();
@@ -23,3 +22,13 @@ int main(int argc, char **argv) {
 }
 
 //TODO: il sonar riporta lo stato e la posizione corrente della nave.
+
+/* TODO
+ * - Implement user vs pc game
+ * - Implement Game Recorder
+ * - Implement Special commands
+ * - Make the game recorder a executable
+ * - Make a parser for game recorder
+ */
+
+// todo: check why placing a submarine doesn't work (endless loop)

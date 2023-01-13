@@ -8,4 +8,4 @@ include_directories("src")
 
 file(GLOB SOURCES "src/*.cpp" "src/*.hpp" "include/battleship/*.h")
 
-add_executable("${PROJECT_NAME}" ${SOURCES} include/battleship/AsciiArt.h src/GameRecorder.cpp)
+add_executable("${PROJECT_NAME}" ${SOURCES} src/UserCommand.cpp)

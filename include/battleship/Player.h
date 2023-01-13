@@ -14,13 +14,14 @@ class Player {
   std::string name_;
   GameBoard game_board_;
   FiringBoard firing_board_;
+  bool is_human_;
   int alive_battleships_ = 3;
 
   // This variables are used to avoid shooting randomly
   std::set<Coordinates> next_targets_;
 
  public:
-  Player(std::string name) : name_(std::move(name)){};
+  Player(std::string name, bool is_human = false) : name_(std::move(name)), is_human_(is_human){};
   /// Posiziona una ship date le coordinate di prua e poppa
   /// \param bow Le coordinate della prua
   /// \param stern Le coordinate della poppa
@@ -34,7 +35,7 @@ class Player {
   bool PlayMove(Coordinates origin, Coordinates target);
 
   /// Posiziona le navi in modo randomico sulla griglia.
-  void PlaceShipsRandomly(GameRecorder& game_recorder);
+  void PlaceShipsRandomly(GameRecorder &game_recorder);
 
   /// Restituisce la griglia di attacco e di difesa fianco affianco.
   std::string ToString() const;
@@ -55,6 +56,10 @@ class Player {
   void UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine);
   void AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings);
   bool HasLost();
+
+  bool IsHuman() const {return is_human_;};
+
+  std::string GameBoardToString() const { return game_board_.ToString(); };
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_PLAYER_H_
