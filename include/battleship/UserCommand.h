@@ -13,6 +13,7 @@ enum CommandType { MOVE,
 class UserCommand {
   std::pair<Coordinates, Coordinates> move_;
   CommandType command_type_;
+
   static const std::map<std::string, CommandType> SPECIAL_COMMANDS_;
 
  public:
@@ -35,6 +36,7 @@ class UserCommand {
   /// \param command
   /// \return true se command è comando considerato speciale, ovvero uno tra quelli presenti come chiave in SPECIAL_COMMANDS_, false altrimenti
   static bool IsSpecial(const std::string &command);
+
 };
 
 #endif//BATTAGLIA_NAVALE_INCLUDE_BATTLESHIP_USERCOMMAND_H_
