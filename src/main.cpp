@@ -1,6 +1,5 @@
 #include "Game.h"
 int main(int argc, char **argv) {
-
   if (argc <= 1) {
 	// Se nessuna opzione è specificata si fa scegliere all'utente mediante un menu.
 	Game game = Game();
@@ -21,5 +20,3 @@ int main(int argc, char **argv) {
   }
   return 0;
 }
-
-//TODO: il sonar riporta lo stato e la posizione corrente della nave.

@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Submarine.h"
 #include "Battleship.h"
+#include "UserCommand.h"
 #include <thread>
 #include <chrono>
 #include <tuple>

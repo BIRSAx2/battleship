@@ -9,7 +9,8 @@ enum CommandType { MOVE,
 				   CLEAR_SONAR,
 				   CLEAR_ALL,
 				   CLEAR_HIT,
-				   CLEAR_MISS };
+				   CLEAR_MISS,
+				   SHOW_COMMANDS_MENU };
 class UserCommand {
   std::pair<Coordinates, Coordinates> move_;
   CommandType command_type_;

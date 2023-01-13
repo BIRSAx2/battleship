@@ -43,9 +43,19 @@ bool FiringBoard::HasBeenAttacked(Coordinates target) {
 }
 void FiringBoard::AddSubmarineSightings(const std::map<Coordinates, OccupationType> &sightings) {
 
-  // TODO: We could ignore empty ones
   for (auto pair : sightings) {
+	if (pair.second != HIT && pair.second != OCCUPIED) continue;
 	tiles_[pair.first] = pair.second;
+  }
+}
+void FiringBoard::ClearSuccessfulHits() {
+  for (auto it = tiles_.begin(); it != tiles_.end();) {
+	(it->second == HIT) ? tiles_.erase(it++) : (++it);
+  }
+}
+void FiringBoard::ClearUnsuccessfulHits() {
+  for (auto it = tiles_.begin(); it != tiles_.end();) {
+	(it->second == MISS) ? tiles_.erase(it++) : (++it);
   }
 }
 

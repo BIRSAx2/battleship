@@ -30,6 +30,8 @@ int Coordinates::CalculateOffsetTo(Coordinates other) const {
 std::vector<Coordinates> Coordinates::GetCoordinatesBetween(Coordinates start, Coordinates end) {
   std::vector<Coordinates> in_between;
 
+  if (start == end) return {start};
+
   if (start.GetRow() == end.GetRow())
 	while (start.GetCol() != end.GetCol()) {
 	  in_between.push_back(start);
@@ -60,17 +62,13 @@ std::string Coordinates::ToUserCoordinates() const {
 }
 
 std::set<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates current) {
-  std::set<Coordinates> adjacent;
-  // top coord
-  adjacent.insert(Coordinates(current.GetRow() - 1, current.GetCol()));
-  // left
-  adjacent.insert(Coordinates(current.GetRow(), current.GetCol() - 1));
-  // right
-  adjacent.insert(Coordinates(current.GetRow(), current.GetCol() + 1));
-  // bottom
-  adjacent.insert(Coordinates(current.GetRow() + 1, current.GetCol()));
-
-  return adjacent;
+  std::vector<std::pair<int, int>> offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+  std::set<Coordinates> adjacent_coordinates;
+  for (auto offset : offsets) {
+	if (!IsValid(current.GetRow() + offset.first, current.GetCol() + offset.second)) continue;
+	adjacent_coordinates.insert({current.GetRow() + offset.first, current.GetCol() + offset.second});
+  }
+  return adjacent_coordinates;
 }
 
 void Coordinates::SetRow(int row) {
@@ -100,10 +98,10 @@ Coordinates Coordinates::ParseCoordinates(std::string &coordinates) {
   return {row, col - 1};
 }
 Coordinates Coordinates::GetRandomCoordinates() {
-  return {};
+  return {RandomIntInRange(0, 12), RandomIntInRange(0, 12)};
 }
 
-// operatrs
+// operators
 bool operator==(const Coordinates &a, const Coordinates &b) {
   return (a.GetRow() == b.GetRow()) && (a.GetCol() == b.GetCol());
 }

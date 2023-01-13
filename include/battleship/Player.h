@@ -54,10 +54,14 @@ class Player {
   void AddNextTargets(Coordinates coordinates);
   OccupationType InquireState(Coordinates coordinates);
   void UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine);
+  void ClearSubmarineSightings();
+  void ClearSuccessfulHits();
+  void ClearUnsuccessfulHits();
+  void ClearAllHits();
   void AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings);
   bool HasLost();
 
-  bool IsHuman() const {return is_human_;};
+  bool IsHuman() const { return is_human_; };
 
   std::string GameBoardToString() const { return game_board_.ToString(); };
 };
