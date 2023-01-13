@@ -61,7 +61,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
-//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
+	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 }
 
@@ -184,4 +184,16 @@ void Player::UpdateSubmarineSightings(const std::map<Coordinates, OccupationType
 
 bool Player::HasLost() {
   return game_board_.GetAvailableBattleships() == 0;
+}
+void Player::ClearSubmarineSightings() {
+  firing_board_.ClearSubmarineSightings();
+}
+void Player::ClearSuccessfulHits() {
+  firing_board_.ClearSuccessfulHits();
+}
+void Player::ClearUnsuccessfulHits() {
+  firing_board_.ClearUnsuccessfulHits();
+}
+void Player::ClearAllHits() {
+  firing_board_.Clear();
 }

@@ -1,9 +1,7 @@
 #include "UserCommand.h"
 
 const std::map<std::string, CommandType> UserCommand::SPECIAL_COMMANDS_ =
-	{{"AA AA", CLEAR_SONAR}, {"XX XX", SHOW_GRID},
-	 {"BB BB", CLEAR_HIT}, {"CC CC", CLEAR_MISS},
-	 {"DD DD", CLEAR_ALL}};
+	{{"AA AA", CLEAR_SONAR}, {"XX XX", SHOW_GRID}, {"BB BB", CLEAR_HIT}, {"CC CC", CLEAR_MISS}, {"DD DD", CLEAR_ALL}, {{"SS SS"}, SHOW_COMMANDS_MENU}};
 
 UserCommand::UserCommand(const std::pair<Coordinates, Coordinates> &move, CommandType command_type) {
   move_ = move;

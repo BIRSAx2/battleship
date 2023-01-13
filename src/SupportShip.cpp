@@ -8,8 +8,9 @@ std::set<Coordinates> SupportShip::GetProtectedCoordinates(Coordinates current_p
   std::vector<std::pair<int, int>> offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}, {-1, -1}, {1, 1}, {1, -1}, {-1, 1}};
   std::set<Coordinates> adjacent_coordinates;
   for (auto offset : offsets) {
-	if (Coordinates::IsValid(current_position.GetRow() + offset.first, current_position.GetCol() + offset.second))
-	  adjacent_coordinates.insert({current_position.GetRow() + offset.first, current_position.GetCol() + offset.second});
+	std::pair<int, int> generated = {current_position.GetRow() + offset.first, current_position.GetCol() + offset.second};
+	if (Coordinates::IsValid(generated))
+	  adjacent_coordinates.insert({generated.first, generated.second});
   }
   return adjacent_coordinates;
 }

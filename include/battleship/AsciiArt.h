@@ -1,5 +1,6 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
+#include "Utility.h"
 #include <string>
 
 namespace AsciiArt {
@@ -60,5 +61,11 @@ const std::string MAIN_MENU = "Welcome to Battleship 1.0!\n"
 							  "1) Play a new Human vs Bot game.\n"
 							  "2) Watch a Bot vs Bot game.\n"
 							  "3) Replay game from log file.\n";
+
+const std::string COMMANDS_MENU ="\nType " + ColourText256("XX XX", 50) + " to view our current territory."
+	+ "\nType " + ColourText256("AA AA", 50) + " to reset our submarine sightings."
+	+ "\nType " + ColourText256("BB BB", 50) + " to reset our sonar completely from successful hits."
+	+ "\nType " + ColourText256("CC CC", 50) + " to reset our sonar completely from unsuccessful hits"
+	+ "\nType " + ColourText256("DD DD", 50) + " to reset our sonar completely.\n";
 }// namespace AsciiArt
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_

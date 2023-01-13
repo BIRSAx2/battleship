@@ -4,7 +4,7 @@ Game::Game(GameMode mode) : player_a_(Player("Bot 1")), player_b_(Player("Bot 2"
 
   if (mode == COMPUTER_VS_HUMAN) {
 	player_a_ = Player("Bot");
-	player_b_ = Player("Admiral");
+	player_b_ = Player("Admiral", true);
   }
 }
 void Game::PlayGame() {
@@ -57,6 +57,7 @@ void Game::PlayComputerVsHumanGame() {
   std::cout
 	  << ColourText256("Admiral, you're tasked with defending a territory that is 12 units wide by 12 units tall: ", 98) << '\n';
   std::cout << player_b_.GameBoardToString() << std::endl;
+
   std::cout << "Your fleet is composed of:\n-> 3 Battleships (5 units wide)\n-> 3 Support ships (3 units wide)\n-> 2 Submarines (1 unit wide)\n";
   std::cout << std::endl;
 
@@ -75,6 +76,7 @@ void Game::PlayComputerVsHumanGame() {
 
   int turn = 1;
   while (!player_a_.HasLost() || player_b_.HasLost()) {
+	std::cout << AsciiArt::CLEAR_SCREEN << std::endl;
 	std::cout << ColourText256("\nTurn " + std::to_string(turn), 6) << std::endl;
 
 	Player &current_player = player_a_turn ? player_a_ : player_b_;
@@ -83,27 +85,55 @@ void Game::PlayComputerVsHumanGame() {
 	if (player_a_turn) {
 	  std::cout << ColourText256("The enemy is making their move.", 1) << std::endl;
 	  std::pair<Coordinates, Coordinates> move = current_player.GenerateRandomMove();
+	  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	  PlayMove(current_player, opponent, move);
 
 	} else {
-	  std::cout << ColourText256("Admiral, it's our turn!", 2) << std::endl;
-	  std::cout << "Type " << ColourText256("XX XX", 50) << " to view our current territory." << std::endl;
-	  std::cout << "Type " << ColourText256("AA AA", 50) << " to reset our submarine sightings." << std::endl;
-	  std::cout << "Type " << ColourText256("BB BB", 50) << " to reset our sonar completely from successful hits." << std::endl;
-	  std::cout << "Type " << ColourText256("CC CC", 50) << " to reset our sonar completely from unsuccessful hits" << std::endl;
-	  std::cout << "Type " << ColourText256("DD DD", 50) << " to reset our sonar completely." << std::endl;
 
-	  std::string promt = "Admiral, what's our next move?: ";
-	  UserCommand user_command = GetUserCommand(promt);
+	  std::cout << ColourText256("Admiral, it's our turn!", 2) << "\n To view all the available special commands, type SS SS" << std::endl;
+	  bool executed_move = false;
+	  std::string prompt = "Admiral, what's our next move?: ";
+	  while (!executed_move) {
 
-	  switch (user_command.) {
-		
+		UserCommand user_command = GetUserCommand(prompt);
+
+		switch (user_command.GetCommandType()) {
+
+		  case SHOW_COMMANDS_MENU:
+			std::cout << AsciiArt::COMMANDS_MENU << std::endl;
+			break;
+		  case SHOW_GRID:
+			std::cout << current_player << std::endl;
+			break;
+		  case CLEAR_SONAR:
+			current_player.ClearSubmarineSightings();
+			break;
+		  case CLEAR_ALL:
+			current_player.ClearAllHits();
+			break;
+		  case CLEAR_HIT:
+			current_player.ClearSuccessfulHits();
+			break;
+		  case CLEAR_MISS:
+			current_player.ClearUnsuccessfulHits();
+			break;
+		  case MOVE:
+			try {
+
+			  executed_move = PlayMove(current_player, opponent, user_command.GetMove());
+			} catch (std::invalid_argument &ex) {
+			  std::cout << ColourText256(ex.what(), 1) << std::endl;
+			  executed_move = false;
+			}
+			break;
+		}
 	  }
 	}
 
 	player_a_turn = !player_a_turn;
-	if (turn == 2) break;
+	//	if (turn == 4) break;
 	turn++;
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
 }
 
@@ -115,25 +145,23 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 
   if (ship->GetShipType() == BATTLESHIP) {
 	// handle attack
-	if (attacker.IsHuman()) {
-	  std::cout << "The enemy is attacking the square " << move.second.ToUserCoordinates() << std::endl;
-	} else {
-	  std::cout << "We are attacking the square " << move.second.ToUserCoordinates() << std::endl;
-	}
+	std::cout << "Attacking the square " << move.second.ToUserCoordinates() << std::endl;
 	bool result = opponent.ReceiveAttack(move.second);
 	attacker.MarkAttack(move.second, result);
+
+	// TODO: refactor this to Player
 	if (result) {
 	  attacker.AddNextTargets(move.second);
 	  if (attacker.IsHuman()) {
-		std::cout << ColourText256("HIT!", 31) << " We got em!" << std::endl;
+		std::cout << ColourText256("HIT!", 82) << " We got em!" << std::endl;
 	  } else {
-		std::cout << ColourText256("HIT!", 32) << " They got us!" << std::endl;
+		std::cout << ColourText256("HIT!", 1) << " They got us!" << std::endl;
 	  }
 	} else {
 	  if (attacker.IsHuman()) {
-		std::cout << ColourText256("SPLASH!", 32) << " We missed!" << std::endl;
+		std::cout << ColourText256("SPLASH!", 1) << " We missed!" << std::endl;
 	  } else {
-		std::cout << ColourText256("SPLASH!", 31) << " They missed, those fools!" << std::endl;
+		std::cout << ColourText256("SPLASH!", 82) << " They missed, those fools!" << std::endl;
 	  }
 	}
 
@@ -190,22 +218,23 @@ int Game::ReadChoiceFromUser(const std::set<int> &available_choices) {
 
 void Game::PlaceShipsFromUser(Player &player) {
 
-  std::stringstream promt;
+  std::stringstream prompt;
   bool placed = false;
 
   // 3 Corazzate
   Battleship battleship = Battleship();
   for (int i = 0; i < 3; ++i) {
-	promt << ColourText256("Where do you wish to place the battleship n. ", 68) << i + 1 << " (5 units wide) "
-		  << ": ";
+	prompt << ColourText256("Where do you wish to place the battleship n. ", 68) << i + 1 << " (5 units wide) "
+		   << ": ";
 	while (!placed) {
-	  std::pair<Coordinates, Coordinates> placement = GetUserCommand(promt.str());
-	  placed = AttemptToPlaceAShip(player, placement, battleship);
+	  UserCommand command = GetUserCommand(prompt.str());
+	  if (command.GetCommandType() != MOVE) continue;
+	  placed = AttemptToPlaceAShip(player, command.GetMove(), battleship);
 	}
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
 	std::cout << player.GameBoardToString() << std::endl;
-	promt = std::stringstream();
+	prompt = std::stringstream();
   }
 
   std::cout << ColourText256("All the battleship have been placed successfully!", 20) << std::endl;
@@ -214,32 +243,34 @@ void Game::PlaceShipsFromUser(Player &player) {
 
   SupportShip support_ship = SupportShip();
   for (int i = 0; i < 3; ++i) {
-	promt << ColourText256("Where do you wish to place the support ship n. ", 68) << i + 1 << " (3 units wide) "
-		  << ": ";
+	prompt << ColourText256("Where do you wish to place the support ship n. ", 68) << i + 1 << " (3 units wide) "
+		   << ": ";
 	while (!placed) {
-	  std::pair<Coordinates, Coordinates> placement = GetUserCommand(promt.str());
-	  placed = AttemptToPlaceAShip(player, placement, support_ship);
+	  UserCommand command = GetUserCommand(prompt.str());
+	  if (command.GetCommandType() != MOVE) continue;
+	  placed = AttemptToPlaceAShip(player, command.GetMove(), support_ship);
 	}
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
 	std::cout << player.GameBoardToString() << std::endl;
-	promt = std::stringstream();
+	prompt = std::stringstream();
   }
 
   // 2 Sottomarini
 
   Submarine submarine = Submarine();
   for (int i = 0; i < 2; ++i) {
-	promt << ColourText256("Where do you wish to place the submarine n. ", 68) << i + 1 << " (1 unit wide) "
-		  << ": ";
+	prompt << ColourText256("Where do you wish to place the submarine n. ", 68) << i + 1 << " (1 unit wide) "
+		   << ": ";
 	while (!placed) {
-	  std::pair<Coordinates, Coordinates> placement = GetUserCommand(promt.str());
-	  placed = AttemptToPlaceAShip(player, placement, submarine);
+	  UserCommand command = GetUserCommand(prompt.str());
+	  if (command.GetCommandType() != MOVE) continue;
+	  placed = AttemptToPlaceAShip(player, command.GetMove(), submarine);
 	}
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
 	std::cout << player << std::endl;
-	promt = std::stringstream();
+	prompt = std::stringstream();
   }
 
   std::cout << AsciiArt::CLEAR_SCREEN << std::endl;
@@ -256,6 +287,17 @@ UserCommand Game::GetUserCommand(const std::string &promt) {
 
 	  getline(std::cin, input);
 
+	  // TODO: DEBUG ONLY
+	  	if(input == "SHOW") {
+
+		std::cout << player_a_ << std::endl;
+		std::cout << player_b_ << std::endl;
+		input = "";
+		continue ;
+		}
+	  //
+
+	  if (input.size() < 5) throw std::invalid_argument("Invalid command syntax!");
 	  if (UserCommand::IsSpecial(input)) {
 		return UserCommand(input);
 	  }
@@ -265,20 +307,20 @@ UserCommand Game::GetUserCommand(const std::string &promt) {
 	  std::vector<std::string> coordinate_pair = Split(input, ' ');
 	  // Bow
 
-	  if (coordinate_pair.at(0).size() > 3 || coordinate_pair.at(0).size() < 2) throw std::invalid_argument("Invalid syntax!");
-	  if (coordinate_pair.at(1).size() > 3 || coordinate_pair.at(1).size() < 2) throw std::invalid_argument("Invalid syntax!");
+	  if (coordinate_pair.at(0).size() > 3 || coordinate_pair.at(0).size() < 2 || coordinate_pair.at(1).size() > 3 || coordinate_pair.at(1).size() < 2)
+		throw std::invalid_argument("Invalid  command syntax!");
 
 	  bow = Coordinates(coordinate_pair.at(0));
 	  stern = Coordinates(coordinate_pair.at(1));
 
 	} catch (std::invalid_argument &ex) {
 	  std::cout << ColourText256(ex.what(), 1) << std::endl;
+	  input = "";
 	  continue;
 	}
-	break;
+	return {{bow, stern}, MOVE};
   }
-  return {{bow, stern}, MOVE};
-};
+}
 
 bool Game::AttemptToPlaceAShip(Player &player, std::pair<Coordinates, Coordinates> bow_stern, Ship &ship) {
   try {
@@ -289,3 +331,5 @@ bool Game::AttemptToPlaceAShip(Player &player, std::pair<Coordinates, Coordinate
   }
   return true;
 }
+
+// TODO: The SupportShip does not cover other ships from shots, but it repairs them.

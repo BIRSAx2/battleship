@@ -33,6 +33,8 @@ class FiringBoard : public Board {
   std::string ToString() const;
   bool HasBeenAttacked(Coordinates coordinates);
   void AddSubmarineSightings(const std::map<Coordinates, OccupationType>& map_1);
+  void ClearSuccessfulHits();
+  void ClearUnsuccessfulHits();
 };
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_
