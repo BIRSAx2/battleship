@@ -17,24 +17,38 @@ class FiringBoard : public Board {
 
  public:
   FiringBoard() : Board(12, 12){};
-  /// Segna la cella target, quella sotto attacco, con il risultato dell'attacco (is_hit). Se is_hit è true, la cella corrispondente viene segnata con il valore HIT, altrimenti come MISS.
-  /// \param target La cella sotto attacco
-  /// \param is_hit true: successo, false: attacco fallito.
+
+  /// Marks the \p target coordinate as HIT if is_hit is true, or with MISS otherwise.
+  /// \param target The coordinate under attack
+  /// \param is_hit true: successful attack, false: unsuccessful.
   void MarkAttack(Coordinates target, bool is_hit);
 
-  /// Elimina tutti gli avvistamenti del sottomarino (occupation_type = OCCUPIED)
+  /// Clears all the submarine sightings marked on the board.
   void ClearSubmarineSightings();
 
-  // Elimina sia gli avvistamenti del sottomarino che i vari risultati degli attacchi.
+  // Clears the board completely.
   void Clear();
 
-  /// Stampa il contenuto di GameBoard sotto forma di griglia rows_ x columns_
-  friend std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
+
+  /// \return FiringBoard as a string  in the form of a grid  rows_ x columns_
   std::string ToString() const;
+
+  /// \return true if \p coordinates has been attacked (HIT/MISS), false otherwise.
+
   bool HasBeenAttacked(Coordinates coordinates);
-  void AddSubmarineSightings(const std::map<Coordinates, OccupationType>& map_1);
+
+  /// Adds the sightings from the submarine to the board. The sightings are marked in the grid with OCCUPIED if a ship is present in the opponent board, but not yet hit,
+  /// or with HIT if it's present and hit.
+  /// \param sightings A map of coordinates and their status in the opponent's board.
+  void AddSubmarineSightings(const std::map<Coordinates, OccupationType>& sightings);
+
+  /// Clears all the coordinates with status HIT from the board.
   void ClearSuccessfulHits();
+
+  /// Clears all the coordinates with status MISS from the board.
   void ClearUnsuccessfulHits();
 };
 
+/// Prints the FiringBoard to \p os in the form of a grid  rows_ x columns_
+std::ostream &operator<<(std::ostream &os, const FiringBoard &board);
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_FIRINGBOARD_H_

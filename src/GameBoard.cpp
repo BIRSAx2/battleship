@@ -2,12 +2,15 @@
 bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) {
 
   std::shared_ptr<Ship> to_add = std::make_shared<Ship>(ship);
-  if (bow.CalculateOffsetTo(stern) + 1 != ship.GetWidth()) throw std::invalid_argument("Le coordinate specificate per prua e poppa non sono sufficienti per contenere la nave");
+  if (bow.CalculateOffsetTo(stern) + 1 != ship.GetWidth())
+	throw std::invalid_argument("The units between bow and stern must contain exactly the ship. Ship width: "
+								+ std::to_string(ship.GetWidth()) + ", space between bow and stern: "
+								+ std::to_string(bow.CalculateOffsetTo(stern) + 1));
 
   to_add->SetBow(bow);
   to_add->SetStern(stern);
   for (auto loc : to_add->GetLocations()) {
-	if (occupied_locations_.count(loc) != 0) throw std::invalid_argument("Cannot place this ship hear, is position occupied by another ship!");
+	if (occupied_locations_.count(loc) != 0) throw std::invalid_argument("Cannot place this ship here, location " + loc.ToUserCoordinates() + " is already occupied by another ship!");
   }
   for (auto loc : to_add->GetLocations()) {
 	occupied_locations_.emplace(loc, to_add);
@@ -47,7 +50,7 @@ std::shared_ptr<Ship> GameBoard::GetShipAt(Coordinates location) {
 bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 
   std::shared_ptr<Ship> ship = GetShipAt(origin);
-  if (ship == nullptr) throw std::invalid_argument("no ship scemo");
+  if (ship == nullptr) throw std::invalid_argument("There is no ship at the specified location.");
 
   auto current = ship->GetLocations();
 
@@ -64,7 +67,7 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 
 	// if the loc is not empty, and it doesn't contain a part of this ship
 	if (occupied_locations_.count(loc) != 0 && std::count(current.begin(), current.end(), loc) == 0) {
-	  throw std::invalid_argument("The destination is already occupied by another ship");
+	  throw std::invalid_argument("Cannot move this ship, the location " + loc.ToUserCoordinates() + " is already occupied by another ship!");
 	}
   }
 

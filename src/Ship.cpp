@@ -38,13 +38,13 @@ void Ship::SetStern(const Coordinates &stern) {
   stern_ = stern;
 }
 std::ostream &operator<<(std::ostream &os, const Ship &ship) {
-  os << "Icon: " << ship.icon_ << " Width: " << ship.width_ << " Orientation: ";
+  os << "Icon: " << ship.GetIcon() << " Width: " << ship.GetWidth() << " Orientation: ";
   if (ship.IsHorizontal()) {
 	os << "horizontal ";
   } else {
 	os << "vertical ";
   }
-  os << "Hits received: " << ship.hit_locations_offset_.size();
+  os << "Hits received: " << ship.GetHitLocationsOffset().size();
   return os;
 }
 bool Ship::IsHorizontal() const {

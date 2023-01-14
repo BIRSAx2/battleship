@@ -7,7 +7,7 @@ class Board {
   int cols_;
 
  public:
-  /// Crea un oggetto Board con rows righe e cols colonne
+  /// Create a Board object of dimension rows x cols
   /// \param rows
   /// \param cols
   Board(int rows, int cols) : rows_{rows}, cols_{cols} {};

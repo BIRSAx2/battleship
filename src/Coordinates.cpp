@@ -8,7 +8,7 @@ Coordinates::Coordinates(std::string &user_coordinates) {
 
 Coordinates::Coordinates(int row, int col) {
   if (!IsValid(row, col))
-	throw std::invalid_argument("Invalid coordinates");
+	throw std::invalid_argument("The specified coordinates (" + std::to_string(row) + "," + std::to_string(col) + ") are outside the bounds of the board.");
   row_col_.first = row;
   row_col_.second = col;
 }
@@ -24,7 +24,7 @@ int Coordinates::CalculateOffsetTo(Coordinates other) const {
   if (GetCol() == other.GetCol())
 	return other.GetRow() - GetRow();
 
-  throw std::invalid_argument("Cannot calculate offset. The two coordinates need to be either in the same row or in the same col");
+  throw std::invalid_argument("Cannot calculate offset. The two coordinates need to be either in the same row or in the same col.");
 }
 
 std::vector<Coordinates> Coordinates::GetCoordinatesBetween(Coordinates start, Coordinates end) {
@@ -45,7 +45,7 @@ std::vector<Coordinates> Coordinates::GetCoordinatesBetween(Coordinates start, C
 	}
 
   if (in_between.empty())
-	throw std::invalid_argument("Cannot generate in between coordinate if end and start are not on the same row/col");
+	throw std::invalid_argument("Cannot generate the coordinates between  " + start.ToUserCoordinates() + " and " + end.ToUserCoordinates() + " because they are not on the same row/col");
 
   in_between.push_back(end);
   return in_between;
@@ -73,14 +73,14 @@ std::set<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates curren
 
 void Coordinates::SetRow(int row) {
   if (!IsValid(row, row_col_.second))
-	throw std::invalid_argument("Invalid coordinates");
+	throw std::invalid_argument("Invalid coordinates: (" + std::to_string(row) + ", " + std::to_string(row_col_.second) + ")");
 
   row_col_.first = row;
 }
 
 void Coordinates::SetCol(int col) {
   if (!IsValid(row_col_.first, col))
-	throw std::invalid_argument("Invalid coordinates");
+	throw std::invalid_argument("Invalid coordinates: (" + std::to_string(row_col_.first) + ", " + std::to_string(col) + ")");
 
   row_col_.second = col;
 }

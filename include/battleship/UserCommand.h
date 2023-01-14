@@ -17,24 +17,30 @@ class UserCommand {
   static const std::map<std::string, CommandType> SPECIAL_COMMANDS_;
 
  public:
-  /// Crea uno UserCommand a partire da un pair di Coordinates (origin, target) e un CommandType
-  /// \param move
-  /// \param command_type
+  /// Creates a UserCommand from a pair of Coordinates (origin, target) and CommandType
+  /// \param move A pair of Coordinates representing the origin and the target of a move.
+  /// \param command_type The CommandType
   UserCommand(const std::pair<Coordinates, Coordinates> &move, CommandType command_type);
-  /// Crea uno UserCommand a partire da un CommandType
+
+  /// Create a UserCommand from a CommandType
   /// \param command_type
   explicit UserCommand(CommandType command_type);
 
-  /// Crea uno UserCommand a partire da una stringa rappresentate il comando dell'utente. Se il comando è tra quelli speciali
-  /// setta semplicemente la variabile di classe command_type_, altrimenti imposta command_type_ = MOVE e
+  /// Create a UserCommand from a string representing the user's command. If the \p command is one of te special commands (\p UserCommand::SPECIAL_COMMANDS_)
+  /// it creates a UserCommand simply by setting the command_type, otherwise it tries to parse the string \p command and extract a pair of coordinates from it.
+  /// Uses \p Coordinates(std::string) constructor for the parsing.
+  /// \throws std::invalid_argument if the provided string is not a valid command.
   explicit UserCommand(const std::string &command);
 
-  /// Restituisce true se questo oggetto rappresenta un comando speciale.
+  /// Checks whether this is a special command or not.
+  /// @return true if it's a special command
+  /// @return false if it's not
   bool IsSpecial() const { return command_type_ != MOVE; };
 
-  /// Verifica se il comando passato è tra quelli speciali o meno.
+  /// Checks where the string passed is a special command.
   /// \param command
-  /// \return true se command è comando considerato speciale, ovvero uno tra quelli presenti come chiave in SPECIAL_COMMANDS_, false altrimenti
+  /// \return true if \p command is one of the special commands defined in \p UserCommand::SPECIAL_COMMANDS_
+  /// \return false if it's not a special command.
   static bool IsSpecial(const std::string &command);
 
   const std::pair<Coordinates, Coordinates> &GetMove() const;

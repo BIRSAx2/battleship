@@ -5,8 +5,8 @@
 #include "SupportShip.h"
 std::string Player::ToString() const {
 
-  std::string attack_board_title = "Griglia di attacco";
-  std::string defence_board_title = "Griglia di difesa";
+  std::string attack_board_title = "Attack board";
+  std::string defence_board_title = "Defence board";
   std::stringstream attack;
   attack << firing_board_.ToString();
 
@@ -134,14 +134,10 @@ void Player::MarkAttack(Coordinates target, bool is_successful) {
   firing_board_.MarkAttack(target, is_successful);
 }
 bool Player::MoveShip(Coordinates origin, Coordinates target) {
-  bool successfully_moved = game_board_.MoveShip(origin, target);
-  return successfully_moved;
+  return game_board_.MoveShip(origin, target);
 }
 const std::string &Player::GetName() const {
   return name_;
-}
-void Player::SetName(const std::string &name) {
-  name_ = name;
 }
 Coordinates Player::GetNextTarget() {
 
@@ -154,9 +150,6 @@ void Player::AddNextTargets(Coordinates successfully_hit_target) {
   std::set<Coordinates> new_target = Coordinates::GetAdjacentStarCoordinates(successfully_hit_target);
   // TODO: Use submarine sighting to develop a more efficient algorithm
 
-  // It's a hard task to develop an efficient and fast algorithm to play this variant of the battleship game.
-  // The main reason behind this is the fact that ships can move, so keeping track of where the enemy ships might be is basically useless, as an enemy can move the ship under attack right after an attack.
-  // Making it useless to hit the targets near the one just hit in search of the remaining parts of the ship.
   for (auto target : new_target) {
 	if (firing_board_.HasBeenAttacked(target)) continue;
 	next_targets_.insert(target);
@@ -178,7 +171,7 @@ OccupationType Player::InquireState(Coordinates coordinates) {
   }
   return EMPTY;
 }
-void Player::UpdateSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine) {
+void Player::AddSubmarineSightings(const std::map<Coordinates, OccupationType> &scan_from_submarine) {
   this->firing_board_.AddSubmarineSightings(scan_from_submarine);
 }
 

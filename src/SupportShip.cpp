@@ -1,7 +1,6 @@
 #include "SupportShip.h"
 #include <iostream>
 
-// Idea: There no need to keep track of which support ship protect which coordinates. Simply after generating the coordinates, before adding them to the protected coordinates, remove the one's that are occupied by the current ship.
 std::set<Coordinates> SupportShip::GetProtectedCoordinates(Coordinates current_position) {
   // The protected Coordinates are the ones in a 3x3 square with current_position as center.
   // For performance reasons we use a pre-define vector of offsets.
@@ -14,3 +13,5 @@ std::set<Coordinates> SupportShip::GetProtectedCoordinates(Coordinates current_p
   }
   return adjacent_coordinates;
 }
+
+// TODO: Handle the repair ships nearby method.

@@ -14,48 +14,50 @@ class Coordinates {
 	return IsValid(row_col.first, row_col.second);
   };
 
-  /// A partire dalle coordinate dell'utente (XY, dove X è una lettera tra 'ABCDEFGHILMN' e Y è un numero tra 1 e 12), crea un oggetto Coordinate.
-  /// Le coordinate vengono convertite secondo il seguente scema:
-  /// X -> Un numero tra 0 e 11
-  /// Y -> Il numero stesso -1
-  /// \param user_coordinates Le coordinate fornite dall'utente.
+  /// Starting from the user's coordinates (XY, where X is a letter in 'ABCDEFGHILMN' and Y is a number between 1 and 12), create a Coordinates object.
+  /// The coordinates are converted according to the following scheme:
+  /// X -> A number between 0 and 11
+  /// Y -> The number itself -1
+  /// \param user_coordinates Coordinates supplied by the user.
   explicit Coordinates(std::string &user_coordinates);
 
-  /// \param row La coordinata per la riga
-  /// \param col La coordinata per la colonna
+  /// \param row number representing the row
+  /// \param col number representing the col
+  /// \throws std::invalid_argument if the coordinates are not valid.
   Coordinates(int row, int col);
 
   int GetRow() const { return row_col_.first; };
   int GetCol() const { return row_col_.second; };
 
-  /// \return Restituisce true se 0 <= row < 12 e 0 <= col < 12, false in tutti gli altri casi.
+  /// \return Returns true if 0 <= row < 12 and 0 <= col < 12, false otherwise.
   static bool IsValid(int row, int col);
 
-  /// Calcola l'offset tra this e coordinates. L'offset è calcolato solo se entrambe le coordinate si trovano sulla stessa riga oppure sulla stessa colonna.
-  /// Se le coordinate non si trovano sulla stessa riga/colonna viene lanciata un eccezione std::invalid_argument
+  /// Calculates the offset between this and other. The offset is calculated only if both coordinates are in the same row or column.
+  /// If the coordinates are not on the same row/column an exception is thrown std::invalid_argument
   /// \param coordinates
-  /// \return Il numero di celle presente tra this e other, calcolato come differenza tra righe/colonne.
+  /// \throws std::invalid_argument if the coordinates are not in the same row/column
+  /// \return The number of cells between this and other, calculated as the difference between rows/columns.
   int CalculateOffsetTo(Coordinates other) const;
 
-  /// Restituisce le coordinate che si trovano tra start ed end (inclusi).
-  /// \param start Coordinata di partenza
-  /// \param end Coordinata di arrivo
-  /// \return  Un vector delle coordinate che si trovano tra start ed end.
+  /// Generates all coordinates between \p start and \p end
+  /// \param start
+  /// \param end
+  /// \return  A vector containing all the coordinates between \p start and \p end
   static std::vector<Coordinates> GetCoordinatesBetween(Coordinates start, Coordinates end);
 
-  /// Restituisce delle coordinate random all'interno della griglia
-  /// \return Delle coordinate random
+  /// Generates random coordinates
+  /// \return Random coordinates
   static Coordinates GetRandomCoordinates();
 
-  /// Formatta le coordinate in questione nel formato voluto dall'utente.
+  /// Formats the coordinates in the format: XY, where X is a letter in 'ABCDEFHILMN' and Y is a number between 1 and 12.
   std::string ToUserCoordinates() const;
 
-  /// Ritorna un vector composto dalle coordinate che si trovano immediatamente a destra, a sinistra, sopra e sotto current.
+  /// Returns a vector composed of the coordinates immediately to the right, left, above and below \p current.
   /// Esempio: (X = current)\n
   /// A B C \n
   /// D X E \n
   /// F G H \n
-  /// In questo caso restiuisce un vector di B, D, E G
+  /// In this case it returns { B, D, E, G}
   static std::set<Coordinates> GetAdjacentStarCoordinates(Coordinates current);
 
   void SetRow(int row);
@@ -63,33 +65,35 @@ class Coordinates {
 
  private:
   std::pair<int, int> row_col_;
-  /// Converte le coordinate fornite dall'utente in coordinate di sistema.
+  /// Starting from the user's coordinates (XY, where X is a letter in 'ABCDEFGHILMN' and Y is a number between 1 and 12), create a Coordinates object.
+  /// The coordinates are converted according to the following scheme:
+  /// X -> A number between 0 and 11
+  /// Y -> The number itself -1
   static Coordinates ParseCoordinates(std::string &coordinates);
 };
 
-/// Effettua il confronto tra this e other
+/// Compares a to b
 /// \param other
-/// \return true se sono uguali, false altrimenti.
+/// \return true if a and b are represent the same coordinate, false otherwise
 bool operator==(const Coordinates &a, const Coordinates &b);
 
-/// Effettua il confronto tra this e other
+/// Compares a to b
 /// \param other
-/// \return true se sono diversi, false altrimenti.
+/// \return true if a and b doesn't represent the same coordinate, false otherwise
 bool operator!=(const Coordinates &a, const Coordinates &b);
 
-/// Il confronto effettuato è il seguente:\n
+/// Compares a to b, the comparison made is the following:\n
 /// (a.GetRow() > b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() > b.GetCol())
 /// \param other
-/// \return true se this si trova prima di other, false altrimenti.
+/// \return true if a comes after b in the grid, false otherwise.
 bool operator>(const Coordinates &a, const Coordinates &b);
 
-/// Il confronto effettuato è il seguente:\n
+/// Compares a to b, the comparison made is the following:\n
 /// (a.GetRow() < b.GetRow() || (a.GetRow() == b.GetRow() && a.GetCol() < b.GetCol())
-/// \return true se this si trova prima di other, false altrimenti.
-/// \param other
+/// \return true
+/// \param other true if a comes before b in the grid, false otherwise.
 bool operator<(const Coordinates &a, const Coordinates &b);
 
-/// Restituisce le coordinate sotto forma di (row,col)
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

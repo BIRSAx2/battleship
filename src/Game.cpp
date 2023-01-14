@@ -181,7 +181,7 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
   if (ship->GetShipType() == SUBMARINE) {
 	// Update the sightings
 	std::map<Coordinates, OccupationType> scans = Submarine::ScanSurroundings(opponent, move.second);
-	attacker.UpdateSubmarineSightings(scans);
+	attacker.AddSubmarineSightings(scans);
 	attacker.AddNextTargets(scans);
   }
   return true;

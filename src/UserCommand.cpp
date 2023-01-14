@@ -18,7 +18,7 @@ UserCommand::UserCommand(const std::string &command) {
 
   std::vector<std::string> move = Split(command, ' ');
 
-  if (move.size() != 2) throw std::invalid_argument("Invalid command");
+  if (move.size() != 2) throw std::invalid_argument("Invalid command.");
 
   Coordinates origin = Coordinates(move.at(0));
   Coordinates target = Coordinates(move.at(1));

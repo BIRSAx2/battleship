@@ -1,9 +1,4 @@
 #include "Utility.h"
-#include <iomanip>
-
-std::string GetClearScreenANSISequence() {
-  return "\033[2J";
-}
 std::vector<std::string> Split(const std::string &s, char delimiter) {
   std::vector<std::string> tokens;
   std::string token;
@@ -43,7 +38,7 @@ int RandomEvenIntInRange(int min, int max) {
 }
 
 int GetNumberFromLetter(char &c) {
-  c = (char) toupper(c);
+  c = (char)toupper(c);
   char letters[] = "ABCDEFGHILMN";
   for (int i = 0; i < 12; i++)
 	if (letters[i] == c)
@@ -56,20 +51,6 @@ char GetLetterFromNumber(int code_point) {
   return letters[code_point];
 }
 
-void Print256ColoursTxt() {
-  for (int i = 0; i < 256; i++) {
-	if (i % 16 == 0 && i != 0)
-	  std::cout << std::endl;
-	printf("\033[38;5;%dm %3d\033[m", i, i);
-  }
-}
-void Print256ColoursBackground() {
-  for (int i = 0; i < 256; i++) {
-	if (i % 16 == 0 && i != 0)
-	  std::cout << std::endl;
-	printf("\033[48;5;%dm %3d\033[m", i, i);
-  }
-}
 std::string GetTimestamp() {
   auto now = std::chrono::system_clock::now();
   auto in_time_t = std::chrono::system_clock::to_time_t(now);
