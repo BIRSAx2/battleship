@@ -9,24 +9,19 @@ UserCommand::UserCommand(const std::pair<Coordinates, Coordinates> &move, Comman
 }
 UserCommand::UserCommand(CommandType command_type) : command_type_(command_type) {
 }
+
+
 UserCommand::UserCommand(const std::string &command) {
-
-  if (UserCommand::IsSpecial(command)) {
-	command_type_ = SPECIAL_COMMANDS_.at(command);
-	return;
+  auto special_command = SPECIAL_COMMANDS_.find(command);
+  if (special_command != SPECIAL_COMMANDS_.end()) {
+	command_type_ = special_command->second;
+  } else {
+	command_type_ = MOVE;
+	std::vector<std::string> splitCommand = Split(command, ' ');
+	move_ = std::make_pair(Coordinates(splitCommand[0]), Coordinates(splitCommand[1]));
   }
-
-  std::vector<std::string> move = Split(command, ' ');
-
-  if (move.size() != 2) throw std::invalid_argument("Invalid command.");
-
-  Coordinates origin = Coordinates(move.at(0));
-  Coordinates target = Coordinates(move.at(1));
-
-  move_.first = origin;
-  move_.second = target;
-  command_type_ = MOVE;
 }
+
 bool UserCommand::IsSpecial(const std::string &command) {
   return SPECIAL_COMMANDS_.count(command) != 0;
 }
