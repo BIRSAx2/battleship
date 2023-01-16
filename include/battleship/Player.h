@@ -46,8 +46,9 @@ class Player {
 
   /// Generates a random ship placement for a ship with width \p ship_width
   /// \param ship_width
+  /// \param true if the placement should be horizontal, false otherwise
   /// \return Pair of coordinates (bow, stern)
-  std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width) const;
+  std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width, bool is_horizontal) const;
 
   /// Generates a random move composed of a pair of coordinates (origin, target). Origin is the central cell of one of the ships placed in GameBoard.
   /// Target is generated randomly if the ship at origin is not a Battleship, or using GetNextTarget() if it's a battleship.
@@ -62,7 +63,7 @@ class Player {
   /// This is a helper method to call FiringBoard.ReceiveAttack without exposing the object FiringBoard.
   void MarkAttack(Coordinates coordinates, bool b);
 
-/// This is a helper method to call GameBoard.PlaceShip without exposing the object GameBoard.
+  /// This is a helper method to call GameBoard.PlaceShip without exposing the object GameBoard.
   bool MoveShip(Coordinates origin, Coordinates target);
 
   /// Returns the name of the current player.
@@ -107,7 +108,7 @@ class Player {
   /// This methods add all coordinates present in \p submarine_sightings to the set of next targets.
   /// The idea behind this is that every time a submarine detects an enemy ship at some coordinates there is a high chance that the ship
   /// has not moved yet by the time GetNextTarget() is called, so it makes sense to try to shoot there.
-  void AddNextTargets(const std::map<Coordinates, OccupationType>& submarine_sightings);
+  void AddNextTargets(const std::map<Coordinates, OccupationType> &submarine_sightings);
 
   /// A player loses when all of his Battleships are destroyed.
   bool HasLost();
@@ -119,9 +120,12 @@ class Player {
   /// \return a string representation of the internal GameBoard.
   std::string GameBoardToString() const { return game_board_.ToString(); };
 
-
-  /// Clears all the hits received by the ship at 
+  /// Clears all the hits received by the ship at
   void RepairShipAt(Coordinates coordinates);
+
+  /// Helper methods to print messages during the game
+  std::string GetAttackMessage(bool is_successful);
+  std::pair<Coordinates, Coordinates> GetRandomShipPlacement(int ship_width) const;
 };
 
 /// Uses the \p ToString() method to print to the output stream \p os the boards of the player.

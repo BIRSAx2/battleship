@@ -95,5 +95,6 @@ bool operator>(const Coordinates &a, const Coordinates &b);
 bool operator<(const Coordinates &a, const Coordinates &b);
 
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates);
+std::istream &operator>>(std::istream &is, Coordinates& coordinates);
 
 #endif//BATTLESHIP_INCLUDE_BATTLESHIP_COORDINATES_H_

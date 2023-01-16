@@ -16,12 +16,12 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
 	occupied_locations_.emplace(loc, to_add);
   }
 
-//  // if support ship we add the protected coordinate to protected_coordinates_
-//  if (ship.GetShipType() == SUPPORTSHIP) {
-//	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
-//	  protected_coordinates_.insert(protected_coordinate);
-//	}
-//  }
+  //  // if support ship we add the protected coordinate to protected_coordinates_
+  //  if (ship.GetShipType() == SUPPORTSHIP) {
+  //	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
+  //	  protected_coordinates_.insert(protected_coordinate);
+  //	}
+  //  }
 
   return true;
 }
@@ -54,7 +54,6 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 
   auto current = ship->GetLocations();
 
-  //horizontal
   std::pair<Coordinates, Coordinates> bow_stern = GetBowAndSternFromCenter(target, ship);
   Coordinates bow = bow_stern.first;
   Coordinates stern = bow_stern.second;
@@ -71,27 +70,6 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
 	}
   }
 
-  // TODO: refactor this, move it elsewhere.
-//  if (ship->GetShipType() == SUPPORTSHIP) {
-//	std::set<Coordinates> old_protected_tiles = SupportShip::GetProtectedCoordinates(origin);
-//
-//	std::set<Coordinates> new_protected_tiles = SupportShip::GetProtectedCoordinates(target);
-//
-//	for (auto to_remove : old_protected_tiles) {
-//	  protected_coordinates_.erase(to_remove);
-//	}
-//
-//	// remove this ship's occupied coordinates from the protected ones
-//	// TODO: find a more elegant way to do this
-//	for (auto to_remove : tmp.GetLocations()) {
-//	  new_protected_tiles.erase(to_remove);
-//	}
-//
-//	for (auto to_add : new_protected_tiles) {
-//	  protected_coordinates_.insert(to_add);
-//	}
-//  }
-
   for (auto loc : current) {
 	occupied_locations_.erase(loc);
   }
@@ -105,17 +83,18 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
   }
   return true;
 }
-std::pair<Coordinates, Coordinates> GameBoard::GetBowAndSternFromCenter(const Coordinates &Center, const std::shared_ptr<Ship> &ship) const {
+std::pair<Coordinates, Coordinates> GameBoard::GetBowAndSternFromCenter(const Coordinates &center, const std::shared_ptr<Ship> &ship) const {
 
   Coordinates bow, stern;
   if (ship->IsHorizontal()) {
-	bow = {Center.GetRow(), Center.GetCol() - ship->GetWidth() / 2};
-	stern = {Center.GetRow(), Center.GetCol() + ship->GetWidth() / 2};
-  } else {
-	bow = {Center.GetRow() - ship->GetWidth() / 2, Center.GetCol()};
-	stern = {Center.GetRow() + ship->GetWidth() / 2, Center.GetCol()};
-  }
 
+	//
+	bow = {center.GetRow(), center.GetCol() - ship->GetWidth() / 2};
+	stern = {center.GetRow(), center.GetCol() + ship->GetWidth() / 2};
+  } else {
+	bow = {center.GetRow() - ship->GetWidth() / 2, center.GetCol()};
+	stern = {center.GetRow() + ship->GetWidth() / 2, center.GetCol()};
+  }
   return {bow, stern};
 }
 
@@ -135,7 +114,7 @@ std::string GameBoard::ToString() const {
 
 	  if (occupied_locations_.count({i, j}) != 0) string_stream << occupied_locations_.at({i, j})->ToString({i, j}) << "  ";
 	  else {
-		string_stream << ColourText256("~", 87) << "  ";
+		string_stream << ColourText256(" ", 87) << "  ";
 	  }
 	}
 	string_stream << ColourText256(std::string(vertical_legend[legend]), 8) << "\n";
@@ -159,7 +138,7 @@ const std::map<Coordinates, std::shared_ptr<Ship>> &GameBoard::GetOccupiedLocati
   return occupied_locations_;
 }
 void GameBoard::RemoveShip(Coordinates location) {
-  std::cout << ColourBackground256("A ship has been sunk and it's getting removed from the board", 34) << std::endl;
+  //  std::cout << ColourBackground256("A ship has been sunk and it's getting removed from the board", 34) << std::endl;
 
   if (occupied_locations_.count(location) == 0) return;
 

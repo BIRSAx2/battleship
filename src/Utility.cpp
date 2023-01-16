@@ -32,7 +32,7 @@ int RandomIntInRange(int min, int max) {
 int RandomEvenIntInRange(int min, int max) {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> int_distribution(min, max / 2 - 1);
+  std::uniform_int_distribution<> int_distribution(min, (max - 1) / 2);
 
   return int_distribution(gen) * 2;
 }
@@ -48,6 +48,8 @@ int GetNumberFromLetter(char &c) {
 
 char GetLetterFromNumber(int code_point) {
   char letters[] = "ABCDEFGHILMN";
+
+  if (code_point < 0 || code_point > 11) throw std::invalid_argument("Invalid code point, can only convert numbers between 0 and 11 to letters! Received: " +std::to_string(code_point));
   return letters[code_point];
 }
 

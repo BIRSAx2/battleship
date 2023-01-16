@@ -66,6 +66,10 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 }
 
 std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_width) const {
+  bool is_horizontal = RandomIntInRange(0, 2);
+  return GetRandomShipPlacement(ship_width, is_horizontal);
+}
+std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_width, bool is_horizontal) const {
 
   Coordinates bow;
   Coordinates stern;
@@ -73,10 +77,6 @@ std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_widt
   ship.SetWidth(ship_width);
 
   do {
-	bool is_horizontal = RandomIntInRange(0, 1);
-
-	bow.SetRow(RandomIntInRange(0, game_board_.GetRows()));
-
 	// Calculating the stern
 
 	if (is_horizontal) {
@@ -94,6 +94,7 @@ std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_widt
 	ship.SetBow(bow);
 	ship.SetStern(stern);
   } while (!game_board_.CanPlaceShip(ship));
+
   return std::make_pair(bow, stern);
 }
 
@@ -106,6 +107,7 @@ std::pair<Coordinates, Coordinates> Player::GenerateRandomMove() {
 	occupied_location.emplace_back(loc.first);
   }
 
+  // picking a random ship
   Coordinates origin = occupied_location.at(RandomIntInRange(0, (int)occupied_location.size()));
 
   std::shared_ptr<Ship> ship = game_board_.GetShipAt(origin);
@@ -117,9 +119,7 @@ std::pair<Coordinates, Coordinates> Player::GenerateRandomMove() {
 	return {origin, GetNextTarget()};
   }
 
-  // if support ship or submarine we need to generate a valid coordinate to move it to
-
-  std::pair<Coordinates, Coordinates> bow_stern = GetRandomShipPlacement(ship->GetWidth());
+  std::pair<Coordinates, Coordinates> bow_stern = GetRandomShipPlacement(ship->GetWidth(), ship->IsHorizontal());
   Coordinates target = Coordinates::GetCoordinatesBetween(bow_stern.first, bow_stern.second).at(ship->GetWidth() / 2);
   return std::make_pair(origin, target);
 }
@@ -142,8 +142,10 @@ const std::string &Player::GetName() const {
 Coordinates Player::GetNextTarget() {
 
   if (next_targets_.empty()) return Coordinates::GetRandomCoordinates();
-  Coordinates target = *next_targets_.begin();
-  next_targets_.erase(target);
+  auto end = next_targets_.begin();
+  Coordinates target = *end;
+  next_targets_.erase(end);
+
   return target;
 }
 void Player::AddNextTargets(Coordinates successfully_hit_target) {
@@ -191,4 +193,22 @@ void Player::ClearAllHits() {
 void Player::RepairShipAt(Coordinates coordinates) {
   std::shared_ptr<Ship> ship = game_board_.GetShipAt(coordinates);
   if (ship != nullptr) ship->Repair();
+}
+std::string Player::GetAttackMessage(bool is_successful) {
+
+  std::stringstream stringstream;
+
+  if (is_successful && is_human_) {
+	return ColourText256("HIT!", 82) + " We got em!\n";
+  }
+
+  if (!is_successful && is_human_) {
+	return ColourText256("SPLASH!", 1) + " We missed!\n";
+  }
+
+  if (is_successful && !is_human_) {
+	return ColourText256("HIT!", 1) + " They got us!\n";
+  }
+
+  return ColourText256("SPLASH!", 82) + " They missed\n";
 }

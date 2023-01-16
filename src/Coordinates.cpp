@@ -65,8 +65,10 @@ std::set<Coordinates> Coordinates::GetAdjacentStarCoordinates(Coordinates curren
   std::vector<std::pair<int, int>> offsets = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
   std::set<Coordinates> adjacent_coordinates;
   for (auto offset : offsets) {
-	if (!IsValid(current.GetRow() + offset.first, current.GetCol() + offset.second)) continue;
-	adjacent_coordinates.insert({current.GetRow() + offset.first, current.GetCol() + offset.second});
+	std::pair<int, int> neighbour = {current.GetRow() + offset.first,
+									 current.GetCol() + offset.second};
+	if (!IsValid(neighbour)) continue;
+	adjacent_coordinates.insert(Coordinates(neighbour));
   }
   return adjacent_coordinates;
 }
@@ -98,6 +100,7 @@ Coordinates Coordinates::ParseCoordinates(std::string &coordinates) {
   return {row, col - 1};
 }
 Coordinates Coordinates::GetRandomCoordinates() {
+  // There no point in guessing every space, since most of the ships takes at least two spaces and ships cannot be placed diagonally
   return {RandomIntInRange(0, 12), RandomIntInRange(0, 12)};
 }
 
@@ -120,4 +123,11 @@ bool operator<(const Coordinates &a, const Coordinates &b) {
 
 std::ostream &operator<<(std::ostream &os, const Coordinates &coordinates) {
   return os << "(" << coordinates.GetRow() << "," << coordinates.GetCol() << ")";
+}
+
+std::istream &operator>>(std::istream &is, Coordinates &coordinates) {
+  std::string user_coordinates;
+  is >> user_coordinates;
+  coordinates = Coordinates(user_coordinates);
+  return is;
 }

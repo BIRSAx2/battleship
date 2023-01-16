@@ -1,5 +1,8 @@
 #include "Game.h"
+
 #include "UserCommand.h"
+#include <utility>
+
 Game::Game(GameMode mode) : player_a_(Player("Bot 1")), player_b_(Player("Bot 2")), game_mode_(mode), game_recorder_(mode) {
   if (mode == COMPUTER_VS_HUMAN) {
 	player_a_ = Player("Bot");
@@ -15,31 +18,33 @@ void Game::PlayGame() {
 void Game::PlayComputerVsComputerGame() {
 
   std::cout << AsciiArt::GAME_TITLE << std::endl;
-  game_recorder_.SetIsPlayerATurn(true);
+  if (LOGGING_ACTIVE) game_recorder_.SetIsPlayerATurn(true);
   player_a_.PlaceShipsRandomly(game_recorder_);
-  game_recorder_.SetIsPlayerATurn(false);
+  if (LOGGING_ACTIVE) game_recorder_.SetIsPlayerATurn(false);
   player_b_.PlaceShipsRandomly(game_recorder_);
 
   bool player_a_turn = RandomIntInRange(0, 1);
-  game_recorder_.SetStartingPlayer(player_a_turn ? 1 : 2);
+  if (LOGGING_ACTIVE) game_recorder_.SetStartingPlayer(player_a_turn ? 1 : 2);
   int i;
   for (i = 0; i < MAX_ROUNDS && !player_a_.HasLost() && !player_b_.HasLost(); ++i) {
-	game_recorder_.SetIsPlayerATurn(player_a_turn);
+	if (LOGGING_ACTIVE) game_recorder_.SetIsPlayerATurn(player_a_turn);
 	std::cout << ColourText256("\nTurn " + std::to_string(i), 6) << std::endl;
+
 	Player &current_player = player_a_turn ? player_a_ : player_b_;
 	Player &opponent = player_a_turn ? player_b_ : player_a_;
-	std::cout << ColourText256(current_player.GetName(), player_a_turn ? 32 : 220) << " is making his move." << std::endl;
 
+	std::cout << ColourText256(current_player.GetName(), player_a_turn ? 32 : 220) << " is making his move." << std::endl;
 	std::pair<Coordinates, Coordinates> move = current_player.GenerateRandomMove();
 	PlayMove(current_player, opponent, move);
-	game_recorder_.RecordMove(move);
+
+	if (LOGGING_ACTIVE) game_recorder_.RecordMove(move);
 	player_a_turn = !player_a_turn;
   }
 
   std::cout << AsciiArt::DIVIDER << std::endl;
   std::cout << AsciiArt::GAME_OVER << std::endl;
 
-  game_recorder_.PersistGameToLog();
+  if (LOGGING_ACTIVE) game_recorder_.PersistGameToLog();
 
   if (!player_a_.HasLost() && !player_b_.HasLost()) {
 	std::cout << ColourText256("The game has ended after " + std::to_string(i) + " rounds without a winner.", 9) << std::endl;
@@ -50,7 +55,7 @@ void Game::PlayComputerVsComputerGame() {
 
   std::cout << ColourText256("The game has ended after " + std::to_string(i) + " rounds with " + winner.GetName() + " as winner.", 2) << std::endl;
 
-  //  game_recorder_.PersistGameToLog();
+  if (LOGGING_ACTIVE) game_recorder_.PersistGameToLog();
 }
 void Game::PlayComputerVsHumanGame() {
   std::cout << AsciiArt::GAME_TITLE << std::endl;
@@ -64,7 +69,7 @@ void Game::PlayComputerVsHumanGame() {
   std::cout << std::endl;
 
   // For testing only we generate the ships randomly
-  PlaceShipsFromUser(player_b_);
+  //  PlaceShipsFromUser(player_b_);
   player_b_.PlaceShipsRandomly(game_recorder_);
 
   std::cout << ColourText256("Admiral, the opposing fleet is getting into position.", 98) << std::endl;
@@ -89,6 +94,7 @@ void Game::PlayComputerVsHumanGame() {
 	  std::pair<Coordinates, Coordinates> move = current_player.GenerateRandomMove();
 	  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	  PlayMove(current_player, opponent, move);
+	  if (LOGGING_ACTIVE) game_recorder_.RecordMove(move);
 
 	} else {
 
@@ -128,6 +134,8 @@ void Game::PlayComputerVsHumanGame() {
 			}
 			break;
 		}
+
+		if (LOGGING_ACTIVE) game_recorder_.RecordMove(user_command.GetMove());
 	  }
 	}
 
@@ -136,7 +144,15 @@ void Game::PlayComputerVsHumanGame() {
 	turn++;
 	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   }
-  //  game_recorder_.PersistGameToLog();
+
+  if (LOGGING_ACTIVE) game_recorder_.PersistGameToLog();
+
+  Player &winner = player_a_.HasLost() ? player_b_ : player_a_;
+
+  std::cout << AsciiArt::DIVIDER << std::endl;
+  std::cout << AsciiArt::GAME_OVER << std::endl;
+
+  std::cout << ColourText256("The game has ended after " + std::to_string(turn) + " rounds with " + winner.GetName() + " as winner.", 2) << std::endl;
 }
 
 bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, Coordinates> move) {
@@ -147,26 +163,15 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 
   if (ship->GetShipType() == BATTLESHIP) {
 	// handle attack
-	std::cout << "Attacking the square " << move.second.ToUserCoordinates() << std::endl;
+	if (game_mode_ != REPLAY) std::cout << "Attacking the square " << move.second.ToUserCoordinates() << std::endl;
 	bool result = opponent.ReceiveAttack(move.second);
 	attacker.MarkAttack(move.second, result);
-
-	// TODO: refactor this to Player
+	// TODO: Add a message to inform the user that a ship has been sunk
 	if (result) {
 	  attacker.AddNextTargets(move.second);
-	  if (attacker.IsHuman()) {
-		std::cout << ColourText256("HIT!", 82) << " We got em!" << std::endl;
-	  } else {
-		std::cout << ColourText256("HIT!", 1) << " They got us!" << std::endl;
-	  }
-	} else {
-	  if (attacker.IsHuman()) {
-		std::cout << ColourText256("SPLASH!", 1) << " We missed!" << std::endl;
-	  } else {
-		std::cout << ColourText256("SPLASH!", 82) << " They missed, those fools!" << std::endl;
-	  }
 	}
 
+	if (game_mode_ != REPLAY) std::cout << attacker.GetAttackMessage(result) << std::endl;
 	return true;
   }
 
@@ -178,7 +183,7 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 	return false;
   }
 
-  std::cout << "The player has moved one of his ships!" << std::endl;
+  if (game_mode_ != REPLAY) std::cout << "The player has moved one of his ships!" << std::endl;
 
   if (ship->GetShipType() == SUBMARINE) {
 	// Update the sightings
@@ -186,38 +191,10 @@ bool Game::PlayMove(Player &attacker, Player &opponent, std::pair<Coordinates, C
 	attacker.AddSubmarineSightings(scans);
 	attacker.AddNextTargets(scans);
   }
+
+  if (ship->GetShipType() == SUPPORTSHIP) SupportShip::RepairNearbyShips(attacker, move.second);
   return true;
 }
-Game::Game() : player_a_(Player("Bot 1")), player_b_(Player("Bot 2")), game_mode_(COMPUTER_VS_COMPUTER) {
-
-  std::cout << AsciiArt::GAME_TITLE << std::endl;
-  std::cout << AsciiArt::DIVIDER_WITH_AUTORS << std::endl;
-  std::cout << "\n"
-			<< AsciiArt::MAIN_MENU << std::endl;
-  int mode = ReadChoiceFromUser({1, 2, 3});
-
-  switch (mode) {
-	case 1: game_mode_ = COMPUTER_VS_HUMAN; break;
-	case 2: game_mode_ = COMPUTER_VS_COMPUTER; break;
-	default:
-	  std::cout << "Not implemented yet!" << std::endl;
-	  break;
-  }
-}
-
-int Game::ReadChoiceFromUser(const std::set<int> &available_choices) {
-  std::string input;
-  int choice;
-  do {
-	std::cout << "Select a voice from the menu: ";
-	std::cin >> input;
-	std::stringstream(input) >> choice;
-	if (available_choices.count(choice) == 0) std::cout << "Invalid choice!" << std::endl;
-  } while (available_choices.count(choice) == 0);
-
-  return choice;
-}
-
 void Game::PlaceShipsFromUser(Player &player) {
 
   std::stringstream prompt;
@@ -234,7 +211,7 @@ void Game::PlaceShipsFromUser(Player &player) {
 	  if (command.GetCommandType() != MOVE) continue;
 	  placed = AttemptToPlaceAShip(player, command.GetMove(), battleship);
 	}
-	game_recorder_.RecordMove(command.GetMove());
+	if (LOGGING_ACTIVE) game_recorder_.RecordMove(command.GetMove());
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
 	std::cout << player.GameBoardToString() << std::endl;
@@ -254,7 +231,7 @@ void Game::PlaceShipsFromUser(Player &player) {
 	  if (command.GetCommandType() != MOVE) continue;
 	  placed = AttemptToPlaceAShip(player, command.GetMove(), support_ship);
 	}
-	game_recorder_.RecordMove(command.GetMove());
+	if (LOGGING_ACTIVE) game_recorder_.RecordMove(command.GetMove());
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
 	std::cout << player.GameBoardToString() << std::endl;
@@ -272,10 +249,10 @@ void Game::PlaceShipsFromUser(Player &player) {
 	  if (command.GetCommandType() != MOVE) continue;
 	  placed = AttemptToPlaceAShip(player, command.GetMove(), submarine);
 	}
-	game_recorder_.RecordMove(command.GetMove());
+	if (LOGGING_ACTIVE) game_recorder_.RecordMove(command.GetMove());
 	placed = false;
 	std::cout << ColourText256("Ship placed successfully!", 2) << std::endl;
-	std::cout << player << std::endl;
+	std::cout << player.GameBoardToString() << std::endl;
 	prompt = std::stringstream();
   }
 
@@ -336,4 +313,81 @@ bool Game::AttemptToPlaceAShip(Player &player, std::pair<Coordinates, Coordinate
 	return false;
   }
   return true;
+}
+Game::Game(GameRecorder game_recorder) : player_a_(Player("Player 1")), player_b_(Player("Player 2")), game_mode_(REPLAY) {
+  game_recorder_ = std::move(game_recorder);
+}
+std::string Game::Replay(bool to_ostream) {
+
+  std::stringstream stringstream;
+  bool player_a_turn = game_recorder_.GetStartingPlayer() == 1;
+
+  std::map<std::pair<Coordinates, Coordinates>, int> player_a_placement = game_recorder_.GetPlayerAShipPlacement();
+  std::map<std::pair<Coordinates, Coordinates>, int> player_b_placement = game_recorder_.GetPlayerBShipPlacement();
+
+  std::vector<std::pair<Coordinates, Coordinates>> moves = game_recorder_.GetMoves();
+
+  // Placing player A's ships
+
+  Submarine submarine = Submarine();
+  Battleship battleship = Battleship();
+  SupportShip support_ship = SupportShip();
+
+  for (auto placement : player_a_placement) {
+
+	switch (placement.second) {
+	  case 1:
+		player_a_.PlaceShip(placement.first.first, placement.first.second, submarine);
+		break;
+	  case 3:
+		player_a_.PlaceShip(placement.first.first, placement.first.second, support_ship);
+		break;
+	  case 5:
+		player_a_.PlaceShip(placement.first.first, placement.first.second, battleship);
+		break;
+	  default:
+		throw std::invalid_argument("Unknown ship");
+		break;
+	}
+  }
+
+  // Placing player B's ships
+
+  for (auto placement : player_b_placement) {
+
+	switch (placement.second) {
+	  case 1:
+		player_b_.PlaceShip(placement.first.first, placement.first.second, submarine);
+		break;
+	  case 3:
+		player_b_.PlaceShip(placement.first.first, placement.first.second, support_ship);
+		break;
+	  case 5:
+		player_b_.PlaceShip(placement.first.first, placement.first.second, battleship);
+		break;
+	  default:
+		throw std::invalid_argument("Unknown ship");
+		break;
+	}
+  }
+
+  // Playing the moves;
+  int rounds = 0;
+  for (auto move : moves) {
+	Player &current_player = player_a_turn ? player_a_ : player_b_;
+	Player &opponent = player_a_turn ? player_b_ : player_a_;
+	PlayMove(current_player, opponent, move);
+
+	if (to_ostream) {
+	  std::cout << current_player << std::endl;
+	  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	} else {
+	  stringstream << current_player << "\n\n";
+	}
+
+	player_a_turn = !player_a_turn;
+	rounds++;
+  }
+
+  return stringstream.str();
 }
