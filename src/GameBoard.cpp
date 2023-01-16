@@ -172,6 +172,3 @@ void GameBoard::RemoveShip(Coordinates location) {
 int GameBoard::GetAvailableBattleships() const {
   return available_battleships;
 }
-void GameBoard::SetAvailableBattleships(int available_battleships) {
-  GameBoard::available_battleships = available_battleships;
-}

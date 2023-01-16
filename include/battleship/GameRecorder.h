@@ -2,9 +2,9 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAMERECORDER_H_
 
 #include "Coordinates.h"
+#include "GameMode.h"
 #include "Ship.h"
 #include "Utility.h"
-#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -18,13 +18,12 @@ class GameRecorder {
   std::vector<std::pair<Coordinates, Coordinates>> moves_;
   bool player_a_turn_;
   int starting_player_;
+  GameMode game_mode_;
 
  public:
   static const std::string LOG_PATH;
-  GameRecorder() {
-	player_a_turn_ = false;
-	starting_player_ = 0;
-  };
+  GameRecorder() : game_mode_(COMPUTER_VS_COMPUTER), player_a_turn_(false), starting_player_(0){};
+  GameRecorder(GameMode game_mode) : game_mode_(game_mode), player_a_turn_(false), starting_player_(0){};
   void RecordShipPlacement(Coordinates bow, Coordinates stern, int ship_with);
   void RecordMove(std::pair<Coordinates, Coordinates> move);
   void LoadGameFromLog(std::string log_path);

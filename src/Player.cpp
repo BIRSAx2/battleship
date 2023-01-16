@@ -45,7 +45,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Battleship::DEFAULT_SIZE);
 	Battleship ship = Battleship(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
-	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
+	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
   // 3 Support ships of width 3
@@ -53,7 +53,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(SupportShip::DEFAULT_SIZE);
 	SupportShip ship = SupportShip(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
-	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
+	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
   // 2 submarines of width 1
@@ -61,7 +61,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
 	game_board_.PlaceShip(randomPosition.first, randomPosition.second, ship);
-	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
+	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 }
 

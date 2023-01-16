@@ -59,7 +59,7 @@ void GameRecorder::SetStartingPlayer(int starting_player) {
 }
 
 void GameRecorder::PersistGameToLog() {
-  std::string file_path = LOG_PATH + "game_" + GetTimestamp() + ".txt";
+  std::string file_path = LOG_PATH + (game_mode_ == COMPUTER_VS_COMPUTER ? "cc" : "pc") + "_game_" + GetTimestamp() + ".txt";
   std::fstream log;
   log.open(file_path, std::ios::out);
   if (!log) {

@@ -1,10 +1,10 @@
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_BATTLESHIP_H_
 
-#include <string>
 #include "GameBoard.h"
 #include "Ship.h"
 #include "Utility.h"
+#include <string>
 
 class Battleship : public Ship {
  public:

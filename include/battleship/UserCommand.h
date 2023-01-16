@@ -17,6 +17,7 @@ class UserCommand {
   static const std::map<std::string, CommandType> SPECIAL_COMMANDS_;
 
  public:
+  UserCommand() { command_type_ = MOVE; };
   /// Creates a UserCommand from a pair of Coordinates (origin, target) and CommandType
   /// \param move A pair of Coordinates representing the origin and the target of a move.
   /// \param command_type The CommandType

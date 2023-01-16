@@ -2,6 +2,7 @@
 #define BATTLESHIP_INCLUDE_BATTLESHIP_GAME_H_
 
 #include "AsciiArt.h"
+#include "GameMode.h"
 #include "GameRecorder.h"
 #include "Player.h"
 #include "Submarine.h"
@@ -12,17 +13,14 @@
 #include <chrono>
 #include <tuple>
 
-enum GameMode { COMPUTER_VS_COMPUTER,
-				COMPUTER_VS_HUMAN,
-				REPLAY };
 class Game {
  private:
-  const int MAX_ROUNDS = 100;
+  const int MAX_ROUNDS = 200;
   Player player_b_;
   // By convention the player_b_ in the games COMPUTER_VS_HUMAN is the human player.
   Player player_a_;
   GameMode game_mode_;
-  GameRecorder game_recorder_;
+  GameRecorder game_recorder_ ;
 
  public:
 
