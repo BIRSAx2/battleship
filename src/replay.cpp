@@ -1,3 +1,5 @@
+// Author: Mouhieddine Sabir
+
 #include "Game.h"
 #include "GameMode.h"
 #include "GameRecorder.h"

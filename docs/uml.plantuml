@@ -1,9 +1,0 @@
-@startuml
-class Ship
-{
-- string icon_
-- int icon_color_
-- string hit_icon_
-=
-}
-@enduml

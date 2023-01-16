@@ -1,3 +1,5 @@
+// Author: Alessandro Trigolo
+
 #include "FiringBoard.h"
 #include "Utility.h"
 void FiringBoard::MarkAttack(Coordinates target, bool is_hit) {

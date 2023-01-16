@@ -1,3 +1,5 @@
+// Author: Antonio Tangaro
+
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_SHIP_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_SHIP_H_
 #include "Coordinates.h"

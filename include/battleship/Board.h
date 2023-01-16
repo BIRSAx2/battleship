@@ -1,3 +1,5 @@
+// Author: Alessandro Trigolo
+
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_BOARD_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_BOARD_H_
 

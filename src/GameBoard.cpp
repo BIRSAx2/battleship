@@ -1,3 +1,5 @@
+// Author: Alessandro Trigolo
+
 #include "GameBoard.h"
 bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) {
 
@@ -15,13 +17,6 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
   for (auto loc : to_add->GetLocations()) {
 	occupied_locations_.emplace(loc, to_add);
   }
-
-  //  // if support ship we add the protected coordinate to protected_coordinates_
-  //  if (ship.GetShipType() == SUPPORTSHIP) {
-  //	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
-  //	  protected_coordinates_.insert(protected_coordinate);
-  //	}
-  //  }
 
   return true;
 }

@@ -1,5 +1,6 @@
-#include "Game.h"
+// Author: Mouhieddine Sabir
 
+#include "Game.h"
 #include "UserCommand.h"
 #include <utility>
 

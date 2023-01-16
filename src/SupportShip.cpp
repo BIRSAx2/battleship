@@ -1,3 +1,5 @@
+// Author: Antonio Tangaro
+
 #include "SupportShip.h"
 #include <iostream>
 

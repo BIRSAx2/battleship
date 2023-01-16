@@ -1,3 +1,5 @@
+// Author: Alessandro Trigolo
+
 #include "Coordinates.h"
 
 Coordinates::Coordinates(std::string &user_coordinates) {

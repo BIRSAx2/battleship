@@ -1,3 +1,5 @@
+// Author: Mouhieddine Sabir
+
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
 #include "Utility.h"
