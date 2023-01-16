@@ -81,3 +81,6 @@ bool Ship::IsHit(Coordinates target) {
   int offset = bow_.CalculateOffsetTo(target);
   return hit_locations_offset_.count(offset) != 0;
 }
+void Ship::Repair() {
+  hit_locations_offset_.clear();
+}

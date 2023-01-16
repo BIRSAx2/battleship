@@ -4,7 +4,6 @@
 #include "Board.h"
 #include "Coordinates.h"
 #include "Ship.h"
-#include "SupportShip.h"
 #include "Utility.h"
 #include <algorithm>
 #include <iostream>
@@ -17,8 +16,6 @@ class GameBoard : public Board {
   int available_battleships = 3;
 
  public:
-  int GetAvailableBattleships() const;
-  void SetAvailableBattleships(int available_battleships);
   GameBoard() : Board(12, 12){};
 
   /// Places a ship inside this board.
@@ -69,6 +66,9 @@ class GameBoard : public Board {
   /// \param ship
   /// \return
   std::pair<Coordinates, Coordinates> GetBowAndSternFromCenter(const Coordinates &center, const std::shared_ptr<Ship> &ship) const;
+
+  /// Returns the number of active battleships in the board.
+  int GetAvailableBattleships() const;
 };
 
 /// Prints the FiringBoard to \p os in the form of a grid  rows_ x columns_

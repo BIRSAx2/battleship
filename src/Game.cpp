@@ -96,7 +96,6 @@ void Game::PlayComputerVsHumanGame() {
 	  while (!executed_move) {
 
 		UserCommand user_command = GetUserCommand(prompt);
-
 		switch (user_command.GetCommandType()) {
 
 		  case SHOW_COMMANDS_MENU:
@@ -133,7 +132,7 @@ void Game::PlayComputerVsHumanGame() {
 	player_a_turn = !player_a_turn;
 	//	if (turn == 4) break;
 	turn++;
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   }
 }
 
@@ -288,13 +287,13 @@ UserCommand Game::GetUserCommand(const std::string &promt) {
 	  getline(std::cin, input);
 
 	  // TODO: DEBUG ONLY
-	  	if(input == "SHOW") {
+	  if (input == "SHOW") {
 
 		std::cout << player_a_ << std::endl;
 		std::cout << player_b_ << std::endl;
 		input = "";
-		continue ;
-		}
+		continue;
+	  }
 	  //
 
 	  if (input.size() < 5) throw std::invalid_argument("Invalid command syntax!");
@@ -331,5 +330,3 @@ bool Game::AttemptToPlaceAShip(Player &player, std::pair<Coordinates, Coordinate
   }
   return true;
 }
-
-// TODO: The SupportShip does not cover other ships from shots, but it repairs them.

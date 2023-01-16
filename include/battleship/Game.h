@@ -5,6 +5,7 @@
 #include "GameRecorder.h"
 #include "Player.h"
 #include "Submarine.h"
+#include "SupportShip.h"
 #include "Battleship.h"
 #include "UserCommand.h"
 #include <thread>

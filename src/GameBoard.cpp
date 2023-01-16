@@ -16,12 +16,12 @@ bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) 
 	occupied_locations_.emplace(loc, to_add);
   }
 
-  // if support ship we add the protected coordinate to protected_coordinates_
-  if (ship.GetShipType() == SUPPORTSHIP) {
-	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
-	  protected_coordinates_.insert(protected_coordinate);
-	}
-  }
+//  // if support ship we add the protected coordinate to protected_coordinates_
+//  if (ship.GetShipType() == SUPPORTSHIP) {
+//	for (auto protected_coordinate : SupportShip::GetProtectedCoordinates(to_add->GetShipCenter())) {
+//	  protected_coordinates_.insert(protected_coordinate);
+//	}
+//  }
 
   return true;
 }
@@ -72,25 +72,25 @@ bool GameBoard::MoveShip(Coordinates origin, Coordinates target) {
   }
 
   // TODO: refactor this, move it elsewhere.
-  if (ship->GetShipType() == SUPPORTSHIP) {
-	std::set<Coordinates> old_protected_tiles = SupportShip::GetProtectedCoordinates(origin);
-
-	std::set<Coordinates> new_protected_tiles = SupportShip::GetProtectedCoordinates(target);
-
-	for (auto to_remove : old_protected_tiles) {
-	  protected_coordinates_.erase(to_remove);
-	}
-
-	// remove this ship's occupied coordinates from the protected ones
-	// TODO: find a more elegant way to do this
-	for (auto to_remove : tmp.GetLocations()) {
-	  new_protected_tiles.erase(to_remove);
-	}
-
-	for (auto to_add : new_protected_tiles) {
-	  protected_coordinates_.insert(to_add);
-	}
-  }
+//  if (ship->GetShipType() == SUPPORTSHIP) {
+//	std::set<Coordinates> old_protected_tiles = SupportShip::GetProtectedCoordinates(origin);
+//
+//	std::set<Coordinates> new_protected_tiles = SupportShip::GetProtectedCoordinates(target);
+//
+//	for (auto to_remove : old_protected_tiles) {
+//	  protected_coordinates_.erase(to_remove);
+//	}
+//
+//	// remove this ship's occupied coordinates from the protected ones
+//	// TODO: find a more elegant way to do this
+//	for (auto to_remove : tmp.GetLocations()) {
+//	  new_protected_tiles.erase(to_remove);
+//	}
+//
+//	for (auto to_add : new_protected_tiles) {
+//	  protected_coordinates_.insert(to_add);
+//	}
+//  }
 
   for (auto loc : current) {
 	occupied_locations_.erase(loc);

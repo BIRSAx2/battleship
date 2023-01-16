@@ -95,6 +95,9 @@ class Ship {
   /// \return true: the unit at \p target has been hit
   /// \return false: the unit at \p target has not been hit.
   bool IsHit(Coordinates target);
+
+  /// Clears all hits received by this ship restoring the health.
+  void Repair();
 };
 
 /// Prints to the output stream \p os the string the main characteristics of this this ship, like width, hits received etc.

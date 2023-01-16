@@ -43,6 +43,7 @@ int GetNumberFromLetter(char &c);
 /// \param c
 /// \return An char between A and N
 char GetLetterFromNumber(int num);
+
 /// Generate an even random int from \p min to \p max (excluded)
 /// \param min Lower bound
 /// \param max Upper bound (excluded)

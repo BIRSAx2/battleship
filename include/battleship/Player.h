@@ -107,7 +107,7 @@ class Player {
   /// This methods add all coordinates present in \p submarine_sightings to the set of next targets.
   /// The idea behind this is that every time a submarine detects an enemy ship at some coordinates there is a high chance that the ship
   /// has not moved yet by the time GetNextTarget() is called, so it makes sense to try to shoot there.
-  void AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings);
+  void AddNextTargets(const std::map<Coordinates, OccupationType>& submarine_sightings);
 
   /// A player loses when all of his Battleships are destroyed.
   bool HasLost();
@@ -118,6 +118,10 @@ class Player {
   /// It is used during the placement of the various ships.
   /// \return a string representation of the internal GameBoard.
   std::string GameBoardToString() const { return game_board_.ToString(); };
+
+
+  /// Clears all the hits received by the ship at 
+  void RepairShipAt(Coordinates coordinates);
 };
 
 /// Uses the \p ToString() method to print to the output stream \p os the boards of the player.

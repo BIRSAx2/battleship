@@ -40,7 +40,7 @@ bool Player::PlaceShip(Coordinates bow, Coordinates stern, Ship &ship) {
 }
 
 void Player::PlaceShipsRandomly(GameRecorder &recorder) {
-  // Tre Corazzate, dimensione 5
+  // 3 Battleships of width 5
   for (int i = 0; i < 3; ++i) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Battleship::DEFAULT_SIZE);
 	Battleship ship = Battleship(randomPosition.first, randomPosition.second);
@@ -48,7 +48,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
-  // Tre Navi di support, dimensione 3
+  // 3 Support ships of width 3
   for (int i = 0; i < 3; ++i) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(SupportShip::DEFAULT_SIZE);
 	SupportShip ship = SupportShip(randomPosition.first, randomPosition.second);
@@ -56,7 +56,7 @@ void Player::PlaceShipsRandomly(GameRecorder &recorder) {
 	//	recorder.RecordShipPlacement(randomPosition.first, randomPosition.second, ship.GetWidth());
   }
 
-  // Due Sottomarini di esplicazione , dimensione 1
+  // 2 submarines of width 1
   for (int i = 0; i < 2; ++i) {
 	std::pair<Coordinates, Coordinates> randomPosition = GetRandomShipPlacement(Submarine::DEFAULT_SIZE);
 	Submarine ship = Submarine(randomPosition.first, randomPosition.second);
@@ -93,7 +93,7 @@ std::pair<Coordinates, Coordinates> Player::GetRandomShipPlacement(int ship_widt
 
 	ship.SetBow(bow);
 	ship.SetStern(stern);
-  } while (!game_board_.IsInsideBoard(ship) || !game_board_.CanPlaceShip(ship));
+  } while (!game_board_.CanPlaceShip(ship));
   return std::make_pair(bow, stern);
 }
 
@@ -148,15 +148,13 @@ Coordinates Player::GetNextTarget() {
 }
 void Player::AddNextTargets(Coordinates successfully_hit_target) {
   std::set<Coordinates> new_target = Coordinates::GetAdjacentStarCoordinates(successfully_hit_target);
-  // TODO: Use submarine sighting to develop a more efficient algorithm
-
   for (auto target : new_target) {
 	if (firing_board_.HasBeenAttacked(target)) continue;
 	next_targets_.insert(target);
   }
 }
 
-void Player::AddNextTargets(std::map<Coordinates, OccupationType> submarine_sightings) {
+void Player::AddNextTargets(const std::map<Coordinates, OccupationType> &submarine_sightings) {
   next_targets_.clear();
   for (auto target : submarine_sightings) {
 	next_targets_.insert(target.first);
@@ -189,4 +187,8 @@ void Player::ClearUnsuccessfulHits() {
 }
 void Player::ClearAllHits() {
   firing_board_.Clear();
+}
+void Player::RepairShipAt(Coordinates coordinates) {
+  std::shared_ptr<Ship> ship = game_board_.GetShipAt(coordinates);
+  if (ship != nullptr) ship->Repair();
 }
