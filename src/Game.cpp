@@ -270,16 +270,6 @@ UserCommand Game::GetUserCommand(const std::string &prompt) {
 
 	  getline(std::cin, input);
 
-	  // TODO: DEBUG ONLY
-	  if (input == "SHOW") {
-
-		std::cout << player_a_ << std::endl;
-		std::cout << player_b_ << std::endl;
-		input = "";
-		continue;
-	  }
-	  //
-
 	  if (input.size() < 5) throw std::invalid_argument("Invalid command syntax!");
 	  if (UserCommand::IsSpecial(input)) {
 		return UserCommand(input);
