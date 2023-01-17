@@ -70,7 +70,7 @@ void Game::PlayComputerVsHumanGame() {
   std::cout << std::endl;
 
   // For testing you can generate ships randomly by using player_b_.PlaceShipsRandomly(game_recorder_);
-  player_b_.PlaceShipsRandomly(game_recorder_);
+  PlaceShipsFromUser(player_b_);
 
   std::cout << ColourText256("Admiral, the opposing fleet is getting into position.", 98) << std::endl;
   player_a_.PlaceShipsRandomly(game_recorder_);
