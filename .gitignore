@@ -4,3 +4,9 @@ cmake-build-debug-coverage
 build
 /compile_commands.json
 /.clang-uml
+html/
+latex/
+/battleship
+/doxygen.sty
+/footer.tex
+/header.tex

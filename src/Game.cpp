@@ -69,8 +69,8 @@ void Game::PlayComputerVsHumanGame() {
   std::cout << "Your fleet is composed of:\n-> 3 Battleships (5 units wide)\n-> 3 Support ships (3 units wide)\n-> 2 Submarines (1 unit wide)\n";
   std::cout << std::endl;
 
-  // For testing only we generate the ships randomly
-  //  PlaceShipsFromUser(player_b_);
+  // For testing you can generate ships randomly by using player_b_.PlaceShipsRandomly(game_recorder_);
+  PlaceShipsFromUser(player_b_);
   player_b_.PlaceShipsRandomly(game_recorder_);
 
   std::cout << ColourText256("Admiral, the opposing fleet is getting into position.", 98) << std::endl;

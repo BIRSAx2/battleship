@@ -60,6 +60,7 @@ int GameRecorder::GetStartingPlayer() const {
   return starting_player_;
 }
 void GameRecorder::SetStartingPlayer(int starting_player) {
+  if (starting_player != 1 && starting_player != 2) throw std::invalid_argument("Cannot use " + std::to_string(starting_player) + " as starting player. Use 1: for Player A and to for Player B");
   starting_player_ = starting_player;
 }
 
