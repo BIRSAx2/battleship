@@ -1,0 +1,349 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class Battleship {
+	+Battleship(Coordinates bow, Coordinates stern)
+	+Battleship()
+	+{static} DEFAULT_SIZE : static const int
+}
+
+
+class Board {
+	+Board(int rows, int cols)
+	+GetCols() : int 
+	+GetRows() : int 
+	-cols_ : int
+	-rows_ : int
+	+SetCols(int cols) : void
+	+SetRows(int rows) : void
+}
+
+
+class Coordinates {
+	+Coordinates()
+	+Coordinates(std::pair<int, int> coordinates)
+	+Coordinates(std::string& user_coordinates)
+	+Coordinates(int row, int col)
+	+{static} GetRandomCoordinates() : Coordinates
+	-{static} ParseCoordinates(std::string& coordinates) : Coordinates
+	+{static} IsValid(std::pair<int, int> row_col) : bool
+	+{static} IsValid(int row, int col) : bool
+	+CalculateOffsetTo(Coordinates other) : int 
+	+GetCol() : int 
+	+GetRow() : int 
+	-row_col_ : std::pair<int, int>
+	+{static} GetAdjacentStarCoordinates(Coordinates current) : std::set<Coordinates>
+	+ToUserCoordinates() : std::string 
+	+{static} GetCoordinatesBetween(Coordinates start, Coordinates end) : std::vector<Coordinates>
+	+SetCol(int col) : void
+	+SetRow(int row) : void
+}
+
+
+class FiringBoard {
+	+FiringBoard()
+	+HasBeenAttacked(Coordinates coordinates) : bool
+	-tiles_ : std::map<Coordinates, OccupationType>
+	+ToString() : std::string 
+	+AddSubmarineSightings(const std::map<Coordinates, OccupationType>& sightings) : void
+	+Clear() : void
+	+ClearSubmarineSightings() : void
+	+ClearSuccessfulHits() : void
+	+ClearUnsuccessfulHits() : void
+	+MarkAttack(Coordinates target, bool is_hit) : void
+}
+
+
+class Game {
+	+Game()
+	+Game(GameMode mode)
+	+Game(GameRecorder game_recorder)
+	-game_mode_ : GameMode
+	-game_recorder_ : GameRecorder
+	-player_a_ : Player
+	-player_b_ : Player
+	+GetUserCommand(const std::string& prompt) : UserCommand
+	+AttemptToPlaceAShip(Player& player, std::pair<Coordinates, Coordinates> bow_stern, Ship& ship) : bool
+	+PlayMove(Player& attacker, Player& opponent, std::pair<Coordinates, Coordinates> move) : bool
+	-LOGGING_ACTIVE : const bool
+	-MAX_ROUNDS : const int
+	+{static} ReadChoiceFromUser(const std::set<int>& available_choices) : int
+	+Replay(bool to_ostream) : std::string
+	+PlaceShipsFromUser(Player& player) : void
+	+PlayComputerVsComputerGame() : void
+	+PlayComputerVsHumanGame() : void
+	+PlayGame() : void
+}
+
+
+class GameBoard {
+	+GameBoard()
+	+CanPlaceShip(const Ship& ship) : bool 
+	+IsInsideBoard(const Ship& ship) : bool 
+	+MoveShip(Coordinates origin, Coordinates target) : bool
+	+PlaceShip(Coordinates bow, Coordinates stern, const Ship& ship) : bool
+	+ReceiveAttack(Coordinates target) : bool
+	+GetAvailableBattleships() : int 
+	-available_battleships : int
+	+GetOccupiedLocations() : std::map<Coordinates , std::shared_ptr<Ship>>& 
+	-occupied_locations_ : std::map<Coordinates, std::shared_ptr<Ship>>
+	+GetBowAndSternFromCenter(const Coordinates& center, const std::shared_ptr<Ship>& ship) : std::pair<Coordinates , Coordinates> 
+	-protected_coordinates_ : std::set<Coordinates>
+	+GetShipAt(Coordinates location) : std::shared_ptr<Ship>
+	+ToString() : std::string 
+	+RemoveShip(Coordinates coordinates) : void
+}
+
+
+class GameRecorder {
+	+GameRecorder()
+	+GameRecorder(GameMode game_mode)
+	-game_mode_ : GameMode
+	-player_a_turn_ : bool
+	+GetStartingPlayer() : int 
+	-starting_player_ : int
+	+{static} LOG_PATH : static const std::string
+	+operator<<(std::ostream& os, const GameRecorder& recorder) : std :: ostream&
+	+GetPlayerAShipPlacement() : std::map<std::pair<Coordinates , Coordinates>, int>& 
+	+GetPlayerBShipPlacement() : std::map<std::pair<Coordinates , Coordinates>, int>& 
+	-player_a_ship_placement_ : std::map<std::pair<Coordinates, Coordinates>, int>
+	-player_b_ship_placement_ : std::map<std::pair<Coordinates, Coordinates>, int>
+	+ToString() : std::string 
+	+GetMoves() : std::vector<std::pair<Coordinates , Coordinates>>& 
+	-moves_ : std::vector<std::pair<Coordinates, Coordinates>>
+	+LoadGameFromLog(const std::string& log_path) : void
+	+PersistGameToLog() : void
+	+RecordMove(std::pair<Coordinates, Coordinates> move) : void
+	+RecordShipPlacement(Coordinates bow, Coordinates stern, int ship_with) : void
+	+SetIsPlayerATurn(bool is_player_a_turn) : void
+	+SetStartingPlayer(int starting_player) : void
+}
+
+
+class Player {
+	+Player(std::string name, bool is_human)
+	+GetNextTarget() : Coordinates
+	-firing_board_ : FiringBoard
+	-game_board_ : GameBoard
+	+InquireState(Coordinates target) : OccupationType
+	+HasLost() : bool
+	+IsHuman() : bool 
+	+MoveShip(Coordinates origin, Coordinates target) : bool
+	+PlaceShip(Coordinates bow, Coordinates stern, Ship& ship) : bool
+	+PlayMove(Coordinates origin, Coordinates target) : bool
+	+ReceiveAttack(Coordinates coordinates) : bool
+	-is_human_ : bool
+	+GenerateRandomMove() : std::pair<Coordinates , Coordinates>
+	+GetRandomShipPlacement(int ship_width, bool is_horizontal) : std::pair<Coordinates , Coordinates> 
+	+GetRandomShipPlacement(int ship_width) : std::pair<Coordinates , Coordinates> 
+	-next_targets_ : std::set<Coordinates>
+	+GetShipAt(Coordinates location) : std::shared_ptr<Ship>
+	+GameBoardToString() : std::string 
+	+GetAttackMessage(bool is_successful) : std::string
+	+ToString() : std::string 
+	-name_ : std::string
+	+GetName() : std::string& 
+	+AddNextTargets(Coordinates coordinates) : void
+	+AddNextTargets(const std::map<Coordinates, OccupationType>& submarine_sightings) : void
+	+AddSubmarineSightings(const std::map<Coordinates, OccupationType>& scan_from_submarine) : void
+	+ClearAllHits() : void
+	+ClearSubmarineSightings() : void
+	+ClearSuccessfulHits() : void
+	+ClearUnsuccessfulHits() : void
+	+MarkAttack(Coordinates coordinates, bool b) : void
+	+PlaceShipsRandomly(GameRecorder& game_recorder) : void
+	+RepairShipAt(Coordinates coordinates) : void
+}
+
+
+class Ship {
+	+Ship()
+	+Ship(char icon, int width)
+	+Ship(char icon, int width, int icon_color)
+	+GetShipCenter() : Coordinates
+	#bow_ : Coordinates
+	#stern_ : Coordinates
+	+GetBow() : Coordinates& 
+	+GetStern() : Coordinates& 
+	#ship_type_ : ShipType
+	+IsHit(Coordinates target) : bool
+	+IsHorizontal() : bool 
+	+IsSunk() : bool
+	+GetShipType() : int 
+	+GetWidth() : int 
+	#hit_icon_color_ : int
+	#icon_color_ : int
+	#width_ : int
+	#hit_locations_offset_ : std::set<int>
+	+GetHitLocationsOffset() : std::set<int>& 
+	+ToString(Coordinates location) : std::string
+	#hit_icon_ : std::string
+	#icon_ : std::string
+	+GetHitIcon() : std::string& 
+	+GetIcon() : std::string& 
+	+GetLocations() : std::vector<Coordinates>
+	+HitLocation(Coordinates location) : void
+	+Repair() : void
+	+SetBow(const Coordinates& bow) : void
+	+SetHitIcon(const std::string& hit_icon) : void
+	+SetHitLocationsOffset(const std::set<int>& hit_locations_offset) : void
+	+SetIcon(const std::string& icon) : void
+	+SetStern(const Coordinates& stern) : void
+	+SetWidth(int width) : void
+}
+
+
+class Submarine {
+	+Submarine(Coordinates bow, Coordinates stern)
+	+Submarine()
+	+{static} DEFAULT_SIZE : static const int
+	+{static} ScanSurroundings(Player& opponent, Coordinates current_position) : std::map<Coordinates , OccupationType>
+}
+
+
+class SupportShip {
+	+SupportShip(Coordinates bow, Coordinates stern)
+	+SupportShip()
+	+{static} DEFAULT_SIZE : static const int
+	+{static} RepairNearbyShips(Player& player, Coordinates current_position) : void
+}
+
+
+class UserCommand {
+	+UserCommand()
+	+UserCommand(const std::pair<Coordinates, Coordinates>& move, CommandType command_type)
+	+UserCommand(CommandType command_type)
+	+UserCommand(const std::string& command)
+	-command_type_ : CommandType
+	+IsSpecial() : bool 
+	+{static} IsSpecial(const std::string& command) : bool
+	+GetCommandType() : int 
+	-{static} SPECIAL_COMMANDS_ : static const std::map<std::string, CommandType>
+	+GetMove() : std::pair<Coordinates , Coordinates>& 
+	-move_ : std::pair<Coordinates, Coordinates>
+	+SetCommandType(CommandType command_type) : void
+	+SetMove(const std::pair<Coordinates, Coordinates>& move) : void
+}
+
+
+enum CommandType {
+	CLEAR_ALL
+	CLEAR_HIT
+	CLEAR_MISS
+	CLEAR_SONAR
+	MOVE
+	SHOW_COMMANDS_MENU
+	SHOW_GRID
+}
+
+
+enum GameMode {
+	COMPUTER_VS_COMPUTER
+	COMPUTER_VS_HUMAN
+	REPLAY
+}
+
+
+enum OccupationType {
+	EMPTY
+	HIT
+	MISS
+	OCCUPIED
+}
+
+
+enum ShipType {
+	BATTLESHIP
+	SUBMARINE
+	SUPPORTSHIP
+	UNSET
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+.Board <|-- .FiringBoard
+
+
+.Board <|-- .GameBoard
+
+
+.Ship <|-- .Battleship
+
+
+.Ship <|-- .Submarine
+
+
+.Ship <|-- .SupportShip
+
+
+
+
+
+/' Aggregation relationships '/
+
+.FiringBoard *-- .Coordinates
+
+
+.FiringBoard *-- .OccupationType
+
+
+.Game *-- .GameMode
+
+
+.Game *-- .GameRecorder
+
+
+.Game "2" *-- .Player
+
+
+.GameBoard "2" *-- .Coordinates
+
+
+.GameBoard *-- .Ship
+
+
+.GameRecorder "3" *-- .Coordinates
+
+
+.GameRecorder *-- .GameMode
+
+
+.Player *-- .Coordinates
+
+
+.Player *-- .FiringBoard
+
+
+.Player *-- .GameBoard
+
+
+.Ship "2" *-- .Coordinates
+
+
+.Ship *-- .ShipType
+
+
+.UserCommand "2" *-- .CommandType
+
+
+.UserCommand *-- .Coordinates
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml

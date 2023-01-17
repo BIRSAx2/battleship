@@ -38,7 +38,13 @@ cmake --build .
 
 Documentazione
 
+Oltre alla documentazione presente all'interno del codice del progetto. Abbiamo generato un PDF con la documentazione
+delle classi principali del progetto e i digrammi delle interazioni delle varie classi. Il file si trova in in docs/docs
+.pdf
+Inoltre è disponibile anche un digramma UML delle classi, e si trova in docs/uml.svg.
+
 Note riguardo la progettazione
+
 
 
 
