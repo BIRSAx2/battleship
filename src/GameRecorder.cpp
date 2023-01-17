@@ -7,9 +7,6 @@
 
 const std::string GameRecorder::LOG_PATH = "../game_logs/";
 
-bool GameRecorder::IsPlayerATurn() const {
-  return player_a_turn_;
-}
 void GameRecorder::SetIsPlayerATurn(bool is_player_a_turn) {
   GameRecorder::player_a_turn_ = is_player_a_turn;
 }
@@ -99,6 +96,7 @@ void GameRecorder::LoadGameFromLog(const std::string &log_path) {
 
   if (!game_log) {
 	std::cout << "ERROR! Could not open the file " + log_path + ", please check if the file exists" << std::endl;
+	exit(1);
   }
 
   std::string line;
@@ -139,18 +137,9 @@ void GameRecorder::LoadGameFromLog(const std::string &log_path) {
 const std::map<std::pair<Coordinates, Coordinates>, int> &GameRecorder::GetPlayerAShipPlacement() const {
   return player_a_ship_placement_;
 }
-void GameRecorder::SetPlayerAShipPlacement(const std::map<std::pair<Coordinates, Coordinates>, int> &player_a_ship_placement) {
-  player_a_ship_placement_ = player_a_ship_placement;
-}
 const std::map<std::pair<Coordinates, Coordinates>, int> &GameRecorder::GetPlayerBShipPlacement() const {
   return player_b_ship_placement_;
 }
-void GameRecorder::SetPlayerBShipPlacement(const std::map<std::pair<Coordinates, Coordinates>, int> &player_b_ship_placement) {
-  player_b_ship_placement_ = player_b_ship_placement;
-}
 const std::vector<std::pair<Coordinates, Coordinates>> &GameRecorder::GetMoves() const {
   return moves_;
-}
-void GameRecorder::SetMoves(const std::vector<std::pair<Coordinates, Coordinates>> &moves) {
-  moves_ = moves;
 }

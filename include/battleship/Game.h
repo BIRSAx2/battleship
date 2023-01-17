@@ -19,7 +19,7 @@ class Game {
  private:
   const int MAX_ROUNDS = 200;
   // Change this to true to record new games and save them to log file
-  const bool LOGGING_ACTIVE = true;
+  const bool LOGGING_ACTIVE = false;
   Player player_b_;
   // By convention the player_b_ in the games COMPUTER_VS_HUMAN is the human player.
   Player player_a_;
