@@ -31,7 +31,6 @@ bool GameBoard::ReceiveAttack(Coordinates target) {
   occupied_locations_.at(target)->HitLocation(target);
   // Remove a ship if it's sunk
   if (occupied_locations_.at(target)->IsSunk()) {
-	if (occupied_locations_.at(target)->GetShipType() == BATTLESHIP) available_battleships--;
 	RemoveShip(target);
   }
   return true;
@@ -143,6 +142,6 @@ void GameBoard::RemoveShip(Coordinates location) {
 	occupied_locations_.erase(occupied_locations_.find(loc));
   }
 }
-int GameBoard::GetAvailableBattleships() const {
-  return available_battleships;
+bool GameBoard::AllShipsSunk() const {
+  return occupied_locations_.empty();
 }

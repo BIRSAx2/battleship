@@ -1,6 +1,5 @@
 // Author: Mouhieddine Sabir
 
-
 #include "Player.h"
 #include "Battleship.h"
 #include "GameRecorder.h"
@@ -179,7 +178,7 @@ void Player::AddSubmarineSightings(const std::map<Coordinates, OccupationType> &
 }
 
 bool Player::HasLost() {
-  return game_board_.GetAvailableBattleships() == 0;
+  return game_board_.AllShipsSunk();
 }
 void Player::ClearSubmarineSightings() {
   firing_board_.ClearSubmarineSightings();

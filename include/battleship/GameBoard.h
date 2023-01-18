@@ -15,7 +15,6 @@ class GameBoard : public Board {
  private:
   std::map<Coordinates, std::shared_ptr<Ship>> occupied_locations_;
   std::set<Coordinates> protected_coordinates_;
-  int available_battleships = 3;
 
  public:
   GameBoard() : Board(12, 12){};
@@ -49,7 +48,6 @@ class GameBoard : public Board {
   /// \return true: if ship doesn't overlap any other ship and it's inside the board , false otherwise.
   bool CanPlaceShip(const Ship &ship) const;
 
-
   /// Checks that ship is within the bounds of board. Basically check that both ship.GetBow() and ship.GetStern() are inside borders.
   /// \param ship
   /// \return true: if the ship is within the margins, false: otherwise
@@ -69,8 +67,8 @@ class GameBoard : public Board {
   /// \return
   std::pair<Coordinates, Coordinates> GetBowAndSternFromCenter(const Coordinates &center, const std::shared_ptr<Ship> &ship) const;
 
-  /// Returns the number of active battleships in the board.
-  int GetAvailableBattleships() const;
+  /// Returns the number of active in the board.
+  bool AllShipsSunk() const;
 };
 
 /// Prints the FiringBoard to \p os in the form of a grid  rows_ x columns_

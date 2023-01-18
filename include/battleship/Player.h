@@ -112,7 +112,7 @@ class Player {
   /// has not moved yet by the time GetNextTarget() is called, so it makes sense to try to shoot there.
   void AddNextTargets(const std::map<Coordinates, OccupationType> &submarine_sightings);
 
-  /// A player loses when all of his Battleships are destroyed.
+  /// A player loses when all of his ships are destroyed.
   bool HasLost();
 
   bool IsHuman() const { return is_human_; };
