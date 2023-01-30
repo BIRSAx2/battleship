@@ -1,5 +1,4 @@
-
-Battaglia navale
+# Battaglia navale
 
 Note prima dell'esecuzione:
 - I file di log si trovano nella cartella game_logs
@@ -8,10 +7,10 @@ computer.
 - Come richiesto dal progetto abbiamo generato due file di log per i due tipi differenti di partite, rispettivamente:
 cc_game_20230116194828.txt e pc_game_20230116195426.txt
 
-Compilazione
+# Compilazione
 
 Per compilare il progetto eseguire i seguenti comandi
-
+```bash
 # Creare la cartella build se non esite
 mkdir -p build
 
@@ -29,11 +28,13 @@ cmake --build .
 
 
 # Per effettuare il replay di un file con visualizzazione a schermo eseguire:
+
 ./replay v ../game_logs/cc_game_20230116194828.txt
 
 # Per effettuare il replay di un file con stampa output su file utilizzare:
 
 ./replay f ../game_logs/cc_game_20230116194828.txt output.txt
+```
 
 
 Documentazione
