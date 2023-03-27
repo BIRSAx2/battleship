@@ -1,5 +1,3 @@
-// Author: Alessandro Trigolo
-
 #include "FiringBoard.h"
 #include "Utility.h"
 void FiringBoard::MarkAttack(Coordinates target, bool is_hit) {
@@ -31,7 +29,7 @@ std::string FiringBoard::ToString() const {
 
 	  if (tiles_.count({i, j}) != 0) os << tiles_.at({i, j}) << "  ";
 	  else {
-		os << ColourText256(" ", 87) << "  ";
+		os << ColourText256("~", 87) << "  ";
 	  }
 	}
 	os << ColourText256(std::string(vertical_legend[legend]), 8) << "\n";
@@ -63,7 +61,7 @@ void FiringBoard::ClearUnsuccessfulHits() {
 
 std::ostream &operator<<(std::ostream &os, OccupationType cat) {
   switch (cat) {
-	case EMPTY: os << ColourText256(" ", 87); break;
+	case EMPTY: os << ColourText256("~", 87); break;
 	case HIT: os << ColourText256("X", 1); break;
 	case MISS: os << ColourText256("O", 220); break;
 	case OCCUPIED: os << ColourText256("Y", 100); break;

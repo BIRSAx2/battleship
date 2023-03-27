@@ -1,5 +1,3 @@
-// Author: Mouhieddine Sabir
-
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_ASCIIART_H_
 #include "Utility.h"
@@ -44,7 +42,7 @@ const std::string GAME_TITLE = "\n"
 							   "                                                  ▀                                                                    ";
 
 const std::string DIVIDER = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
-const std::string DIVIDER_WITH_AUTORS = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> By CTRL + C, CTRL + V";
+const std::string DIVIDER_WITH_AUTORS = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>> By Mouhieddine.dev";
 const std::string CLEAR_SCREEN = "\033[2J";
 
 const std::string GAME_OVER = "\n"

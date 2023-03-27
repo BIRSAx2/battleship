@@ -1,5 +1,3 @@
-// Author: Antonio Tangaro
-
 #include "UserCommand.h"
 
 const std::map<std::string, CommandType> UserCommand::SPECIAL_COMMANDS_ =

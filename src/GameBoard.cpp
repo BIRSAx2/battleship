@@ -1,5 +1,3 @@
-// Author: Alessandro Trigolo
-
 #include "GameBoard.h"
 bool GameBoard::PlaceShip(Coordinates bow, Coordinates stern, const Ship &ship) {
 
@@ -108,7 +106,7 @@ std::string GameBoard::ToString() const {
 
 	  if (occupied_locations_.count({i, j}) != 0) string_stream << occupied_locations_.at({i, j})->ToString({i, j}) << "  ";
 	  else {
-		string_stream << ColourText256(" ", 87) << "  ";
+		string_stream << ColourText256("~", 87) << "  ";
 	  }
 	}
 	string_stream << ColourText256(std::string(vertical_legend[legend]), 8) << "\n";

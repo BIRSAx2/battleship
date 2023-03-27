@@ -1,5 +1,3 @@
-// Author: Mouhieddine Sabir
-
 #ifndef BATTLESHIP_INCLUDE_BATTLESHIP_UTILITY_H_
 #define BATTLESHIP_INCLUDE_BATTLESHIP_UTILITY_H_
 #include <chrono>

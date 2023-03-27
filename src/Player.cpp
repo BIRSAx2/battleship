@@ -1,5 +1,3 @@
-// Author: Mouhieddine Sabir
-
 #include "Player.h"
 #include "Battleship.h"
 #include "GameRecorder.h"

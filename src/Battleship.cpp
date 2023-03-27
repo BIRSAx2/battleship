@@ -1,5 +1,3 @@
-// Author: Antonio Tangaro
-
 #include "Battleship.h"
 
 Battleship::Battleship(Coordinates bow, Coordinates stern) : Ship('C', DEFAULT_SIZE, 127) {

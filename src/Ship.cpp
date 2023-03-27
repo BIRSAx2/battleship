@@ -1,5 +1,3 @@
-// Author: Antonio Tangaro
-
 #include "Ship.h"
 #include "Submarine.h"
 #include "Utility.h"
